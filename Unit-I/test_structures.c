@@ -1,96 +1,68 @@
+# Test Cases for Structure Operations, Union Examples, Typedef Usage, and Enumeration Demonstrations in C
+
 #include <stdio.h>
 #include <string.h>
 
-// Basic Structures
-struct Point {
-    int x;
-    int y;
-};
-
-void test_basic_structures() {
-    struct Point p1 = {3, 4};
-    printf("Point p1: (%d, %d)\n", p1.x, p1.y);
-}
-
-// Self-Referential Structures
-struct Node {
-    int data;
-    struct Node* next;
-};
-
-void test_self_referential_structure() {
-    struct Node n1;
-    n1.data = 10;
-    n1.next = NULL;
-    printf("Node data: %d\n", n1.data);
-}
-
-// Union Types
-union Data {
-    int intVal;
-    float floatVal;
-    char charVal;
-};
-
-void test_union() {
-    union Data data;
-    data.intVal = 5;
-    printf("Union Data as int: %d\n", data.intVal);
-    data.floatVal = 4.5;
-    printf("Union Data as float: %f\n", data.floatVal);
-}
-
-// Bit Fields
-struct Flags {
-    unsigned int isVisible : 1;
-    unsigned int isEnabled : 1;
-};
-
-void test_bit_fields() {
-    struct Flags flags = {1, 0};
-    printf("Flags - isVisible: %d, isEnabled: %d\n", flags.isVisible, flags.isEnabled);
-}
-
-// Enumerations
-enum Color {
-    RED,
-    GREEN,
-    BLUE
-};
-
-void test_enumerations() {
-    enum Color myColor = GREEN;
-    printf("Color Enumeration: %d\n", myColor);
-}
-
-// Typedef
-typedef unsigned long ulong;
-void test_typedef() {
-    ulong largeNumber = 123456789;
-    printf("Typedef unsigned long: %lu\n", largeNumber);
-}
-
-// Complex Nested Structures
-struct Employee {
+// Structure Operations Test
+struct Student {
     char name[50];
-    struct Point location;
+    int age;
 };
 
-void test_complex_nested_structure() {
-    struct Employee emp;
-    strcpy(emp.name, "Alice");
-    emp.location.x = 10;
-    emp.location.y = 20;
-    printf("Employee Name: %s, Location: (%d, %d)\n", emp.name, emp.location.x, emp.location.y);
+void test_structure_operations() {
+    struct Student s1;
+    strcpy(s1.name, "Alice");
+    s1.age = 20;
+
+    printf("Name: %s, Age: %d\n", s1.name, s1.age);
+}
+
+// Union Examples Test
+union Data {
+    int i;
+    float f;
+    char str[20];
+};
+
+void test_union_examples() {
+    union Data data;
+    data.i = 10;
+    printf("Union int: %d\n", data.i);
+    data.f = 220.5;
+    printf("Union float: %f\n", data.f);
+    strcpy(data.str, "Hello");
+    printf("Union string: %s\n", data.str);
+}
+
+// Typedef Usage Test
+typedef unsigned long ulong;
+
+void test_typedef_usage() {
+    ulong num = 123456789;
+    printf("Typedef unsigned long: %lu\n", num);
+}
+
+// Enumeration Demonstrations Test
+enum Color {RED, GREEN, BLUE};
+
+void test_enum_demonstrations() {
+    enum Color myColor;
+    myColor = GREEN;
+    printf("Enumeration Color: %d\n", myColor);
 }
 
 int main() {
-    test_basic_structures();
-    test_self_referential_structure();
-    test_union();
-    test_bit_fields();
-    test_enumerations();
-    test_typedef();
-    test_complex_nested_structure();
+    printf("=== Structure Operations Test ===\n");
+    test_structure_operations();
+
+    printf("\n=== Union Examples Test ===\n");
+    test_union_examples();
+
+    printf("\n=== Typedef Usage Test ===\n");
+    test_typedef_usage();
+
+    printf("\n=== Enumeration Demonstrations Test ===\n");
+    test_enum_demonstrations();
+
     return 0;
 }
