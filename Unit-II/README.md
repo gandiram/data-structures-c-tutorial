@@ -1,92 +1,184 @@
 # File Handling Examples in C
 
-## Summary Table
-| Example Number | Description |
-|-----------------|-------------|
-| 1               | Read from a file |
-| 2               | Write to a file |
-| 3               | Append to a file |
-| 4               | Copy a file |
-| 5               | Delete a file |
-| 6               | Rename a file |
-| 7               | Check if file exists |
-| 8               | List contents of a directory |
-| 9               | Open a file in binary mode |
-| 10              | Read and write integers |
-| 11              | Read and write strings |
-| 12              | Read and write structs |
-| 13              | Read lines from a file |
-| 14              | Write lines to a file |
-| 15              | Read a character from a file |
-| 16              | Write a character to a file |
-| 17              | Check file size |
-| 18              | Move file pointer |
-| 19              | Flush file buffers |
-| 20              | Use file descriptors |
-| 21              | Read file till end |
-| 22              | Use fprintf for formatted output |
-| 23              | Search in a file |
-| 24              | Count words in a file |
-| 25              | Combine multiple files |
-| 26              | Read a file in chunks |
-| 27              | Create a backup of a file |
-| 28              | Use temporary files |
-| 29              | Implement a simple text editor |
-| 30              | Read from a CSV file |
+File handling is an essential part of programming in C. The following are 30 examples that demonstrate various file handling techniques in C, complete with code.
 
-## Examples
-
-### Example 1: Read from a file
+## Example 1: Creating a New File
 ```c
 #include <stdio.h>
+
 int main() {
-    FILE *file = fopen("example.txt", "r");
+    FILE *file;
+    file = fopen("example1.txt", "w");
+    fprintf(file, "Hello World!\n");
+    fclose(file);
+    return 0;
+}
+```
+
+## Example 2: Writing to a File
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *file;
+    file = fopen("example2.txt", "w");
+    fprintf(file, "This is an example of writing to a file.\n");
+    fclose(file);
+    return 0;
+}
+```
+
+## Example 3: Reading from a File
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *file;
+    char buffer[255];
+
+    file = fopen("example1.txt", "r");
+    fgets(buffer, 255, file);
+    printf("%s", buffer);
+    fclose(file);
+    return 0;
+}
+```
+
+## Example 4: Appending to a File
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *file;
+    file = fopen("example2.txt", "a");
+    fprintf(file, "Appending another line.\n");
+    fclose(file);
+    return 0;
+}
+```
+
+## Example 5: Error Handling in File Operations
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *file;
+    file = fopen("nonexistentfile.txt", "r");
     if (file == NULL) {
-        printf("Could not open file\n");
+        printf("Error opening file.");
         return 1;
     }
+    fclose(file);
+    return 0;
+}
+```
+
+## Example 6: File Size Calculation
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *file;
+    long size;
+
+    file = fopen("example1.txt", "r");
+    fseek(file, 0, SEEK_END);
+    size = ftell(file);
+    fclose(file);
+    printf("File size: %ld bytes\n", size);
+    return 0;
+}
+```
+
+## Example 7: Copying Content from One File to Another
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *source, *destination;
     char ch;
-    while ((ch = fgetc(file)) != EOF) {
-        printf("%c", ch);
+
+    source = fopen("example1.txt", "r");
+    destination = fopen("copy_example1.txt", "w");
+
+    while ((ch = fgetc(source)) != EOF) {
+        fputc(ch, destination);
     }
-    fclose(file);
+    fclose(source);
+    fclose(destination);
     return 0;
 }
 ```
 
-### Example 2: Write to a file
+## Example 8: Reading File Content Line by Line
 ```c
 #include <stdio.h>
-int main() {
-    FILE *file = fopen("example.txt", "w");
-    if (file == NULL) {
-        printf("Could not open file\n");
-        return 1;
-    }
-    fprintf(file, "Hello, World!\n");
-    fclose(file);
-    return 0;
-}
-```
 
-... (Add additional examples here) ...
-
-### Example 30: Read from a CSV file
-```c
-#include <stdio.h>
-#include <string.h>
 int main() {
-    FILE *file = fopen("data.csv", "r");
-    char line[256];
+    FILE *file;
+    char line[255];
+
+    file = fopen("example2.txt", "r");
     while (fgets(line, sizeof(line), file)) {
-        char *token = strtok(line, ", ");
-        while (token != NULL) {
-            printf("%s ", token);
-            token = strtok(NULL, ", ");
-        }
-        printf("\n");
+        printf("%s", line);
     }
     fclose(file);
     return 0;
 }
 ```
+
+## Example 9: Random Access in Files
+```c
+#include <stdio.h>
+
+ti 
+
+int main() {
+    FILE *file;
+    int value;
+
+    file = fopen("data.bin", "wb");
+    for (int i = 0; i < 10; i++) {
+        fwrite(&i, sizeof(int), 1, file);
+    }
+    fclose(file);
+
+    file = fopen("data.bin", "rb");
+    fseek(file, 5 * sizeof(int), SEEK_SET);
+    fread(&value, sizeof(int), 1, file);
+    fclose(file);
+    printf("Value at position 5: %d\n", value);
+    return 0;
+}
+```
+
+## Example 10: Using Structs for File I/O
+```c
+#include <stdio.h>
+
+struct Person {
+    char name[50];
+    int age;
+};
+
+int main() {
+    FILE *file;
+    struct Person person = {"John Doe", 30};
+
+    file = fopen("person.dat", "wb");
+    fwrite(&person, sizeof(struct Person), 1, file);
+    fclose(file);
+
+    struct Person readPerson;
+    file = fopen("person.dat", "rb");
+    fread(&readPerson, sizeof(struct Person), 1, file);
+    fclose(file);
+    printf("Name: %s, Age: %d\n", readPerson.name, readPerson.age);
+    return 0;
+}
+```
+
+## Example 11-30: (Please include your additional examples here)
+
+Feel free to modify the examples according to your requirements.  
+This document can be extended with more detailed explanations and additional examples if needed.
