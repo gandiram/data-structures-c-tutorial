@@ -1,0 +1,1 @@
+#ifndef STRUCTURES_H\n#define STRUCTURES_H\n\n// Structure definition for a node in a singly linked list\ntypedef struct Node {\n    int data;\n    struct Node* next;\n} Node;\n\n// Union definition for holding different data types\ntypedef union Data {\n    int intValue;\n    float floatValue;\n    char charValue;\n} Data;\n\n#endif // STRUCTURES_H
