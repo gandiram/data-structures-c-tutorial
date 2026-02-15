@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Structures Tutorial</title>
+    <style>
+        body { font-family: 'Times New Roman', serif; font-size: 12pt; }
+        h2 { color: blue; }
+        p { color: black; }
+        pre { color: green; background-color: #f0f0f0; padding: 10px; border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+<h1>Data Structures Overview</h1>
+
+<h2>1. Structures</h2>
+<p>Structures are a way to group different data types together. They are useful for managing complex data.</p>
+<pre>struct Student {
+    char name[50];
+    int age;
+    float gpa;
+};</pre>
+
+<h2>2. Unions</h2>
+<p>Unions allow storing different data types in the same memory location. Only one value can be stored at a time.</p>
+<pre>union Data {
+    int intValue;
+    float floatValue;
+    char charValue;
+};</pre>
+
+<h2>3. Typedef</h2>
+<p>Typedef provides a way to create aliases for existing data types.</p>
+<pre>typedef unsigned long ulong;
+ulong myVar;</pre>
+
+<h2>4. Enumerations</h2>
+<p>Enumerations define a variable that can be assigned a set of predefined constant values.</p>
+<pre>enum Day { Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday };
+enum Day today = Monday;</pre>
+
+<h2>Practical Examples</h2>
+<table>
+    <tr>
+        <th>Topic</th>
+        <th>Example</th>
+    </tr>
+    <tr>
+        <td>Structures</td>
+        <td><pre>struct Employee { char name[30]; int id; };</pre></td>
+    </tr>
+    <tr>
+        <td>Unions</td>
+        <td><pre>union Value { int num; float dec; };</pre></td>
+    </tr>
+    <tr>
+        <td>Typedef</td>
+        <td><pre>typedef struct { int x; int y; } Point;</pre></td>
+    </tr>
+    <tr>
+        <td>Enumerations</td>
+        <td><pre>enum Color { RED, GREEN, BLUE };</pre></td>
+    </tr>
+</table>
+
+<h2>Quick Reference</h2>
+<ul>
+    <li><strong>Structures:</strong> Group data types.</li>
+    <li><strong>Unions:</strong> Save memory, only one type at a time.</li>
+    <li><strong>Typedef:</strong> Create aliases for data types.</li>
+    <li><strong>Enumerations:</strong> Set of named integer constants.</li>
+</ul>
+
+<h2>Best Practices</h2>
+<p>Always ensure clear naming conventions for your structures, unions, and enums to maintain code readability.</p>
+</body>
+</html>
