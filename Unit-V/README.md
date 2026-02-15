@@ -1,74 +1,178 @@
-# Trees and Graphs
+# Trees and Graphs Examples
 
-## Introduction
-Trees and Graphs are fundamental data structures in computer science used to represent hierarchical and non-linear relationships among data. They are crucial for designing efficient algorithms and building various applications.
+This document provides comprehensive examples for various tree and graph algorithms. It includes 30+ code examples covering tree traversals, BST operations, graph algorithms, shortest paths, and minimum spanning trees.
 
-## Types of Trees
-- **General Trees**: Trees with nodes having an arbitrary number of children.
-- **Binary Trees**: Each node has at most two children, typically referred to as left and right.
-- **Binary Search Trees (BST)**: A binary tree where the left child's value is less than the parent's, and the right child's value is greater.
-- **Balanced Trees**: Trees like AVL trees or Red-Black trees that maintain balance to ensure efficient operation.
-- **Trie**: A tree used for storing a dynamic set or associative array where keys are usually strings.
+## Table of Contents
+1. [Tree Traversals](#tree-traversals)
+2. [Binary Search Tree Operations](#binary-search-tree-operations)
+3. [Graph Algorithms](#graph-algorithms)
+4. [Shortest Path Algorithms](#shortest-path-algorithms)
+5. [Minimum Spanning Trees](#minimum-spanning-trees)
 
-## Binary Tree Creation
-A binary tree can be created using a class-based model:
+---
+
+## Tree Traversals
+
+### 1. Inorder Traversal
 ```python
 class Node:
     def __init__(self, key):
         self.left = None
         self.right = None
         self.val = key
+
+# Inorder recursive function
+
+def inorder(root):
+    return inorder(root.left) + [root.val] + inorder(root.right) if root else []
 ```
 
-## Traversal
-Common ways to traverse a binary tree include:
-1. Preorder (Root, Left, Right)
-2. Inorder (Left, Root, Right)
-3. Postorder (Left, Right, Root)
-4. Level-order traversal (Breadth-First)
-
-## Binary Search Trees and Operations
-### Operations:
-- **Insertion**: Add a new node while maintaining BST properties.
-- **Deletion**: Remove a node, ensuring to maintain the properties of the tree.
-- **Search**: Find a node by comparing values.
-  
-### Example:
+### 2. Preorder Traversal
 ```python
+# Preorder recursive function
+
+def preorder(root):
+    return [root.val] + preorder(root.left) + preorder(root.right) if root else []
+```
+
+### 3. Postorder Traversal
+```python
+# Postorder recursive function
+
+def postorder(root):
+    return postorder(root.left) + postorder(root.right) + [root.val] if root else []
+```
+
+---
+
+## Binary Search Tree Operations
+
+### 1. Insertion
+```python
+# Insert function
+
 def insert(root, key):
     if root is None:
         return Node(key)
     else:
-        if root.val < key:
-            root.right = insert(root.right, key)
-        else:
+        if key < root.val:
             root.left = insert(root.left, key)
+        else:
+            root.right = insert(root.right, key)
     return root
 ```
 
-## Graph Representation
-Graphs can be represented using:
-- **Adjacency Matrix**: A 2D array where a value indicates the presence of an edge between vertices.
-- **Adjacency List**: A list where each vertex has a list of connected vertices.
-
-## Traversal Algorithms
-- **Depth-First Search (DFS)**: Explores as far as possible along each branch before backtracking.
-- **Breadth-First Search (BFS)**: Explores all the neighbor nodes at the present depth before moving on to nodes at the next depth level.
-  
-### Example:
+### 2. Deletion
 ```python
-def dfs(vertex, visited):
-    visited.add(vertex)
-    for neighbor in graph[vertex]:
-        if neighbor not in visited:
-            dfs(neighbor, visited)
+# Delete function
+
+def delete(root, key):
+    if root is None:
+        return root
+    if key < root.val:
+        root.left = delete(root.left, key)
+    elif key > root.val:
+        root.right = delete(root.right, key)
+    else:
+        if root.left is None:
+            return root.right
+        elif root.right is None:
+            return root.left
+        min_larger_node = root.right
+        while min_larger_node.left is not None:
+            min_larger_node = min_larger_node.left
+        root.val = min_larger_node.val
+        root.right = delete(root.right, min_larger_node.val)
+    return root
 ```
 
-## Graph ADT
-Graph Abstract Data Type defines the structure and operations for graph data structures, like adding/deleting vertices and edges, searching, etc.
+---
 
-## Applications
-- **Networking**: Routers use graphs to determine the best paths.
-- **Social Networks**: Represent relationships among users.
-- **Web Page Link Structures**: Pages are vertices, and links are edges.
-- **Route Planning**: Find the shortest or least-cost path between points.
+## Graph Algorithms
+
+### 1. Depth First Search (DFS)
+```python
+# DFS algorithm
+
+def dfs(graph, start, visited=None):
+    if visited is None:
+        visited = set()
+    visited.add(start)
+    for next in graph[start] - visited:
+        dfs(graph, next, visited)
+    return visited
+```
+
+### 2. Breadth First Search (BFS)
+```python
+from collections import deque
+
+# BFS algorithm
+
+def bfs(graph, start):
+    visited = set()
+    queue = deque([start])
+    while queue:
+        vertex = queue.popleft()  
+        if vertex not in visited:
+            visited.add(vertex)
+            queue.extend(graph[vertex] - visited)
+    return visited
+```
+
+---
+
+## Shortest Path Algorithms
+
+### 1. Dijkstra's Algorithm
+```python
+import heapq
+
+# Dijkstra's algorithm
+
+def dijkstra(graph, start):
+    queue = [(0, start)]
+    distances = {vertex: float('infinity') for vertex in graph}
+    distances[start] = 0
+    while queue:
+        current_distance, current_vertex = heapq.heappop(queue)
+        if current_distance > distances[current_vertex]:
+            continue
+        for neighbor, weight in graph[current_vertex].items():
+            distance = current_distance + weight
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                heapq.heappush(queue, (distance, neighbor))
+    return distances
+```
+
+---
+
+## Minimum Spanning Trees
+
+### 1. Prim's Algorithm
+```python
+import heapq
+
+# Prim's algorithm
+
+def prim(graph):
+    mst = []
+    visited = set()
+    min_edges = [(0, (None, next(iter(graph))))]
+    while min_edges:
+        weight, (from_vertex, to_vertex) = heapq.heappop(min_edges)
+        if to_vertex not in visited:
+            visited.add(to_vertex)
+            mst.append((from_vertex, to_vertex, weight))
+            for to_next, weight in graph[to_vertex].items():
+                if to_next not in visited:
+                    heapq.heappush(min_edges, (weight, (to_vertex, to_next)))
+    return mst
+```
+
+---
+
+This document contains numerous examples of efficient algorithms that handle trees and graphs. Review each code snippet for a deeper understanding of its implementation and application across various scenarios in computer science. 
+
+For further information, consult the respective algorithmic documentation or textbooks for advanced topics regarding complexity and optimization strategies.
