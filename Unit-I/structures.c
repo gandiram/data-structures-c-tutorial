@@ -1,92 +1,89 @@
-// structures.c
-
 /*
- * This file contains the implementations of linked list operations in C.
- * The operations provided include creating a node, inserting a node, displaying the list,
- * freeing the linked list, and displaying union data.
+ * structures.c
+ * This file contains comprehensive examples of structures, unions, typedef,
+ * enumerations, bit fields, and self-referential structures in C.
  */
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 
-// Definition of a Node in a linked list
-struct Node {
+/* Structure definition */
+typedef struct {
+    char name[50];
+    int age;
+} Person;
+
+/* Union definition */
+typedef union {
+    int intValue;
+    float floatValue;
+    char charValue;
+} Data;
+
+/* Enumeration definition */
+typedef enum {
+    RED,
+    GREEN,
+    BLUE
+} Color;
+
+/* Bit field example */
+typedef struct {
+    unsigned int isReady : 1;
+    unsigned int size : 3;
+    unsigned int type : 4;
+} Status;
+
+/* Self-referential structure */
+typedef struct Node {
     int data;
     struct Node* next;
-};
+} Node;
 
-/**
- * Function to create a new node.
- *
- * @param value The value to be stored in the new node.
- * @return A pointer to the newly created node.
- */
-struct Node* createNode(int value) {
-    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
-    if (!newNode) {
-        printf("Memory allocation failed!\n");
-        exit(1);
-    }
-    newNode->data = value;
-    newNode->next = NULL;
-    return newNode;
+void printPerson(Person p) {
+    printf("Name: %s, Age: %d\n", p.name, p.age);
 }
 
-/**
- * Function to insert a node at the end of the linked list.
- *
- * @param head A pointer to the pointer of the head of the list.
- * @param newNode A pointer to the new node to be inserted.
- */
-void insertNode(struct Node** head, struct Node* newNode) {
-    if (*head == NULL) {
-        *head = newNode;
-    } else {
-        struct Node* temp = *head;
-        while (temp->next) {
-            temp = temp->next;
-        }
-        temp->next = newNode;
+void demonstrateUnion() {
+    Data data;
+    data.intValue = 10;
+    printf("Union store integer: %d\n", data.intValue);
+    data.floatValue = 5.5;  // overwrites intValue
+    printf("Union store float: %.2f\n", data.floatValue);
+}
+
+void demonstrateEnumeration() {
+    Color myColor = GREEN;
+    if (myColor == GREEN) {
+        printf("Color is green.\n");
     }
 }
 
-/**
- * Function to display the linked list.
- *
- * @param head A pointer to the head of the list.
- */
-void displayList(struct Node* head) {
-    struct Node* temp = head;
-    while (temp != NULL) {
-        printf("%d -> ", temp->data);
-        temp = temp->next;
-    }
-    printf("NULL\n");
+void demonstrateBitField() {
+    Status status;
+    status.isReady = 1;
+    status.size = 3;
+    status.type = 2;
+    printf("Status - Is Ready: %d, Size: %d, Type: %d\n", status.isReady, status.size, status.type);
 }
 
-/**
- * Function to free the linked list.
- *
- * @param head A pointer to the head of the list.
- */
-void freeLinkedList(struct Node* head) {
-    struct Node* temp;
-    while (head != NULL) {
-        temp = head;
-        head = head->next;
-        free(temp);
-    }
+void demonstrateSelfReferential() {
+    Node node1;
+    node1.data = 10;
+    Node node2;
+    node2.data = 20;
+    node1.next = &node2;
+    printf("Node 1 data: %d, Node 2 data: %d\n", node1.data, node1.next->data);
 }
 
-/**
- * Function to display union of two linked lists.
- *
- * @param head1 A pointer to the head of the first list.
- * @param head2 A pointer to the head of the second list.
- */
-void displayUnionData(struct Node* head1, struct Node* head2) {
-    struct Node* temp;
-    printf("Union of the two lists: ");
-    // You can implement logic for union of two lists here
-}
+int main() {
+    Person p = {"Alice", 30};
+    printPerson(p);
 
+    demonstrateUnion();
+    demonstrateEnumeration();
+    demonstrateBitField();
+    demonstrateSelfReferential();
+
+    return 0;
+}
