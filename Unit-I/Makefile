@@ -1,30 +1,20 @@
 # Makefile
 
-# Compiler
 CC = gcc
+CFLAGS = -Wall -g
 
-# Compiler Flags
-CFLAGS = -Wall -Werror -g
+# Target for compiling structures
+structures: structures.o test_structures.o
+	$(CC) -o structures structures.o test_structures.o
 
-# Source Files
-SRCS = *.c
+# Target for compiling the structures object file
+structures.o: structures.c
+	$(CC) $(CFLAGS) -c structures.c
 
-# Object Files
-OBJS = $(SRCS:.c=.o)
+# Target for compiling the test_structures object file
+ test_structures.o: test_structures.c
+	$(CC) $(CFLAGS) -c test_structures.c
 
-# Executable file name
-EXEC = program
-
-# Default target
-all: $(EXEC)
-
-# Compile the program
-$(EXEC): $(OBJS)
-	$(CC) $(OBJS) -o $@
-
-# Test target
-# You can define your test logic here
-
-# Clean target
+# Clean up the compiled files
 clean:
-	rm -f $(OBJS) $(EXEC)
+	rm -f structures *.o
