@@ -1,27 +1,174 @@
-# Introduction to Data Structures
+# Linked List Examples
 
-Data structures are a way of organizing and storing data so that they can be accessed and modified efficiently. This unit will explore core concepts associated with data structures and their functionalities.
+Welcome to the comprehensive guide on linked lists. This document covers the following topics:
+- Node Creation
+- Insertion
+- Deletion
+- Search
+- Traversal
+- Doubly Linked Lists
+- Circular Linked Lists
+- Advanced Operations
 
-## Abstract Data Types
-An Abstract Data Type (ADT) is a mathematical model for data types in which a data type's behavior is defined by a set of values and a set of operations. The implementation details are hidden, allowing the user to interact with the data rather than its physical representation.
+## 1. Node Creation
+A linked list is made up of nodes, where each node contains data and a pointer/reference to the next node in the sequence.
 
-## Selecting a Data Structure
-Choosing the right data structure is crucial for optimizing algorithm efficiency. Factors to consider include:
-- **Time Complexity**: How fast operations are performed.
-- **Space Complexity**: How much memory the structure consumes.
-- **Ease of Implementation**: The ease of integrating the data structure into existing systems.
+```c
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+```
 
-## Linear Lists
-Linear lists are a sequential arrangement of elements where each element is connected to its predecessor and successor. They can be implemented as arrays or linked lists. 
+## 2. Insertion
+### 2.1 Insert at the Beginning
+```c
+void insertAtBeginning(Node** head_ref, int new_data) {
+    Node* new_node = (Node*) malloc(sizeof(Node));
+    new_node->data = new_data;
+    new_node->next = (*head_ref);
+    (*head_ref) = new_node;
+}
+```
 
-### Singly Linked Lists
-A singly linked list consists of nodes, where each node contains data and a pointer to the next node. It allows efficient insertion and deletion operations but requires traversal from the head to access elements.
+### 2.2 Insert at the End
+```c
+void insertAtEnd(Node** head_ref, int new_data) {
+    Node* new_node = (Node*) malloc(sizeof(Node));
+    Node* last = *head_ref;
+    new_node->data = new_data;
+    new_node->next = NULL;
 
-### Circular Linked Lists
-Circular linked lists are similar to singly linked lists, except that the last node points back to the first node instead of pointing to null. This structure allows for circular traversal.
+    if (*head_ref == NULL) {
+        *head_ref = new_node;
+        return;
+    }
 
-### Doubly Linked Lists
-A doubly linked list contains nodes that have pointers to both the next and previous nodes, allowing traversal in both directions. This flexibility makes it easier to manipulate the list but incurs additional memory overhead due to the extra pointer.
+    while (last->next != NULL) {
+        last = last->next;
+    }
+    last->next = new_node;
+}
+```
 
-### Conclusion
-Understanding these fundamental data structures is essential for effective programming and for solving complex problems efficiently.
+## 3. Deletion
+### 3.1 Delete a Node
+```c
+void deleteNode(Node** head_ref, int key) {
+    Node* temp = *head_ref, *prev = NULL;
+    
+    if (temp != NULL && temp->data == key) {
+        *head_ref = temp->next;
+        free(temp);
+        return;
+    }
+
+    while (temp != NULL && temp->data != key) {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    if (temp == NULL) return;
+    prev->next = temp->next;
+    free(temp);
+}
+```
+
+## 4. Search
+### Search for an Element
+```c
+bool search(Node* head, int key) {
+    Node* current = head;  
+    while (current != NULL) {
+        if (current->data == key) {
+            return true;
+        }
+        current = current->next;
+    }
+    return false;
+}
+```
+
+## 5. Traversal
+### Traverse the Linked List
+```c
+void traverse(Node* node) {
+    while (node != NULL) {
+        printf("%d -> ", node->data);
+        node = node->next;
+    }
+    printf("NULL\n");
+}
+```
+
+## 6. Doubly Linked Lists
+An extension of linked lists where each node has a reference to the next and the previous node.
+
+```c
+typedef struct DNode {
+    int data;
+    struct DNode* next;
+    struct DNode* prev;
+} DNode;
+```
+
+## 7. Circular Linked Lists
+A linked list where the last node points back to the first node instead of pointing to NULL.
+
+```c
+void insertInCircularList(Node** head_ref, int new_data) {
+    Node* new_node = (Node*) malloc(sizeof(Node));
+    Node* last = *head_ref;
+    new_node->data = new_data;
+    new_node->next = *head_ref;
+
+    if (*head_ref == NULL) {
+        *head_ref = new_node;
+        new_node->next = new_node;
+        return;
+    }
+
+    while (last->next != *head_ref) {
+        last = last->next;
+    }
+    last->next = new_node;
+}
+```
+
+## 8. Advanced Operations
+  - Reversing a linked list
+  - Finding the middle of the list
+  - Detecting cycles
+
+### Reverse the Linked List
+```c
+void reverse(Node** head_ref) {
+    Node* prev = NULL;
+    Node* current = *head_ref;
+    Node* next = NULL;
+    while (current != NULL) {
+        next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+    *head_ref = prev;
+}
+```
+
+### Detect Cycle
+```c
+bool hasCycle(Node* head) {
+    Node *slow = head, *fast = head;
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast) {
+            return true;
+        }
+    }
+    return false;
+}
+```
+
+For further operations and explanations, feel free to check the literature on linked lists. Happy Coding!
