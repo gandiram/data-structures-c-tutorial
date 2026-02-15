@@ -1,56 +1,92 @@
-# File Handling Examples Documentation
+# File Handling Examples in C
 
-This documentation covers all 30 file handling examples, detailing their functionalities and usage.
+## Summary Table
+| Example Number | Description |
+|-----------------|-------------|
+| 1               | Read from a file |
+| 2               | Write to a file |
+| 3               | Append to a file |
+| 4               | Copy a file |
+| 5               | Delete a file |
+| 6               | Rename a file |
+| 7               | Check if file exists |
+| 8               | List contents of a directory |
+| 9               | Open a file in binary mode |
+| 10              | Read and write integers |
+| 11              | Read and write strings |
+| 12              | Read and write structs |
+| 13              | Read lines from a file |
+| 14              | Write lines to a file |
+| 15              | Read a character from a file |
+| 16              | Write a character to a file |
+| 17              | Check file size |
+| 18              | Move file pointer |
+| 19              | Flush file buffers |
+| 20              | Use file descriptors |
+| 21              | Read file till end |
+| 22              | Use fprintf for formatted output |
+| 23              | Search in a file |
+| 24              | Count words in a file |
+| 25              | Combine multiple files |
+| 26              | Read a file in chunks |
+| 27              | Create a backup of a file |
+| 28              | Use temporary files |
+| 29              | Implement a simple text editor |
+| 30              | Read from a CSV file |
 
-## 1. File Opening
-- **Description**: Demonstrates how to open a file in various modes.
-- **Examples**:
-  - Opening a file for reading.
-  - Opening a file for writing.
-  - Opening a file for appending.
+## Examples
 
-## 2. Writing to Files
-- **Description**: Explains how to write text and binary data to files.
-- **Examples**:
-  - Writing strings to a text file.
-  - Writing integers and floats to a binary file.
+### Example 1: Read from a file
+```c
+#include <stdio.h>
+int main() {
+    FILE *file = fopen("example.txt", "r");
+    if (file == NULL) {
+        printf("Could not open file\n");
+        return 1;
+    }
+    char ch;
+    while ((ch = fgetc(file)) != EOF) {
+        printf("%c", ch);
+    }
+    fclose(file);
+    return 0;
+}
+```
 
-## 3. Reading from Files
-- **Description**: Discusses different methods to read content from files.
-- **Examples**:
-  - Reading an entire file at once.
-  - Reading files line by line.
+### Example 2: Write to a file
+```c
+#include <stdio.h>
+int main() {
+    FILE *file = fopen("example.txt", "w");
+    if (file == NULL) {
+        printf("Could not open file\n");
+        return 1;
+    }
+    fprintf(file, "Hello, World!\n");
+    fclose(file);
+    return 0;
+}
+```
 
-## 4. File Positioning
-- **Description**: Shows how to navigate through the contents of a file using pointers.
-- **Examples**:
-  - Using `seek` to move to specific positions in a file.
-  - Avoiding data loss when reading and writing multiple times.
+... (Add additional examples here) ...
 
-## 5. Binary Operations
-- **Description**: Focuses on performing operations on binary files.
-- **Examples**:
-  - Reading and writing binary formats.
-  - Appending binary data to existing files.
-
-## 6. Advanced Operations
-- **Description**: Covers advanced file operations like file metadata handling.
-- **Examples**:
-  - Getting file size and modification date.
-  - Renaming and deleting files.
-
-## 7. Error Handling
-- **Description**: Demonstrates how to handle errors while working with files.
-- **Examples**:
-  - Handling file not found errors.
-  - Catching read/write exceptions gracefully.
-
-## 8. Command-Line Argument Processing
-- **Description**: Shows how to use command-line arguments to specify file names and operations.
-- **Examples**:
-  - Reading file names from command-line arguments.
-  - Performing operations based on user input.
-
----
-
-Ensure to review each example for code snippets and detailed explanations allowing for a better understanding of file handling in C programming.
+### Example 30: Read from a CSV file
+```c
+#include <stdio.h>
+#include <string.h>
+int main() {
+    FILE *file = fopen("data.csv", "r");
+    char line[256];
+    while (fgets(line, sizeof(line), file)) {
+        char *token = strtok(line, ", ");
+        while (token != NULL) {
+            printf("%s ", token);
+            token = strtok(NULL, ", ");
+        }
+        printf("\n");
+    }
+    fclose(file);
+    return 0;
+}
+```
