@@ -1,0 +1,6 @@
+# Ignore C compilation artifacts
+*.o
+*.a
+*.exe
+*.out
+test_*
