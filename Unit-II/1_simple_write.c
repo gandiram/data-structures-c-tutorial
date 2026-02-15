@@ -1,0 +1,1 @@
+#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    FILE *file;\n    file = fopen("output.txt", "w");\n    if (file == NULL) {\n        printf("Error opening file!\n");\n        return 1;\n    }\n    fprintf(file, "Hello, World!\n");\n    fclose(file);\n    return 0;\n}
