@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DS Unit III — Complete Animated Guide | Geethanjali CSE(AIML)</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080c14;--panel:#0e1420;--card:#131d2e;--elevated:#192338;
+  --border:#1e2d45;--border2:#243450;
+  --cyan:#00e5ff;--cyan-dim:rgba(0,229,255,0.12);
+  --green:#00ff88;--green-dim:rgba(0,255,136,0.12);
+  --yellow:#ffd60a;--yellow-dim:rgba(255,214,10,0.12);
+  --red:#ff4757;--red-dim:rgba(255,71,87,0.12);
+  --purple:#be63f9;--purple-dim:rgba(190,99,249,0.12);
+  --orange:#ff9f43;--text:#dde4f0;--muted:#4a5e7a;--muted2:#6b7e99;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden;}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(8,12,20,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;padding:0 16px;gap:6px;overflow-x:auto;}
+.topbar::-webkit-scrollbar{height:0;}
+.topbar-logo{font-weight:900;font-size:0.95rem;color:var(--cyan);margin-right:10px;white-space:nowrap;}
+.nav-btn{background:transparent;border:1px solid var(--border);color:var(--muted2);padding:4px 10px;border-radius:5px;cursor:pointer;font-size:0.68rem;font-family:'Outfit',sans-serif;font-weight:600;transition:all 0.2s;white-space:nowrap;}
+.nav-btn:hover,.nav-btn.active{background:var(--cyan);color:#000;border-color:var(--cyan);}
+.page{display:none;padding-top:64px;min-height:100vh;}
+.page.active{display:block;}
+.hero{padding:36px 24px 24px;text-align:center;position:relative;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--cyan-dim);border:1px solid rgba(0,229,255,0.3);color:var(--cyan);padding:3px 12px;border-radius:20px;font-size:0.68rem;font-family:'JetBrains Mono',monospace;margin-bottom:12px;}
+.hero h1{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:900;letter-spacing:-1px;line-height:1.1;margin-bottom:6px;}
+.hero h1 em{font-style:normal;color:var(--cyan);}
+.hero p{color:var(--muted2);font-size:0.83rem;max-width:520px;margin:0 auto;}
+.main{max-width:1080px;margin:0 auto;padding:20px 16px;}
+.slabel{font-size:0.65rem;font-family:'JetBrains Mono',monospace;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.slabel::after{content:'';flex:1;height:1px;background:var(--border);}
+/* SYNC PANEL */
+.sync-panel{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;}
+@media(max-width:680px){.sync-panel{grid-template-columns:1fr;}}
+.code-pane{background:#080b12;border-right:1px solid var(--border);}
+.code-pane-hdr{background:var(--panel);padding:8px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--muted2);}
+.dot{width:9px;height:9px;border-radius:50%;}
+.code-body{overflow:auto;max-height:400px;}
+.cl{display:flex;align-items:stretch;min-height:24px;transition:background 0.2s;}
+.cl.hl{background:#0f2d0f!important;}
+.cl.hl2{background:#2a1f00!important;}
+.cl.hl3{background:#1a0f2a!important;}
+.cl.hl4{background:#2a0f0f!important;}
+.ln{width:34px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:0.68rem;padding:2px 6px 2px 10px;text-align:right;border-right:1px solid var(--border);flex-shrink:0;user-select:none;}
+.cl.hl .ln{color:var(--green);font-weight:700;}
+.la{width:18px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;flex-shrink:0;}
+.cl.hl .la::before{content:'▶';color:var(--green);}
+.lc{padding:2px 10px 2px 3px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;line-height:1.65;white-space:pre;color:var(--text);}
+.kw{color:#ff79c6;}.fn{color:#8be9fd;}.tp{color:#f1fa8c;}.st{color:#f1fa8c;}.cm{color:#5c6878;font-style:italic;}.nu{color:#bd93f9;}
+.anim-pane{background:var(--panel);}
+.anim-pane-hdr{background:var(--elevated);padding:8px 14px;border-bottom:1px solid var(--border);font-size:0.7rem;color:var(--muted2);font-family:'JetBrains Mono',monospace;}
+.anim-body{padding:16px;min-height:180px;}
+.amsg{background:var(--elevated);border:1px solid var(--border);border-radius:7px;padding:9px 12px;font-size:0.76rem;color:var(--cyan);font-family:'JetBrains Mono',monospace;margin-bottom:12px;min-height:40px;line-height:1.5;}
+.amsg.g{color:var(--green);background:var(--green-dim);border-color:rgba(0,255,136,0.2);}
+.amsg.y{color:var(--yellow);background:var(--yellow-dim);border-color:rgba(255,214,10,0.2);}
+.amsg.r{color:var(--red);background:var(--red-dim);border-color:rgba(255,71,87,0.2);}
+/* NODE COMPONENTS */
+.viz{display:flex;align-items:center;flex-wrap:wrap;gap:3px;padding:6px 0;}
+.nw{display:flex;flex-direction:column;align-items:center;}
+.nd{display:inline-flex;border-radius:7px;overflow:hidden;border:2px solid var(--border2);transition:all 0.3s;}
+.nd.cc{border-color:var(--cyan);box-shadow:0 0 10px rgba(0,229,255,0.2);}
+.nd.cg{border-color:var(--green);box-shadow:0 0 10px rgba(0,255,136,0.2);}
+.nd.cy{border-color:var(--yellow);box-shadow:0 0 10px rgba(255,214,10,0.2);}
+.nd.cr{border-color:var(--red);box-shadow:0 0 10px rgba(255,71,87,0.2);opacity:0.7;}
+.nd.cp{border-color:var(--purple);box-shadow:0 0 10px rgba(190,99,249,0.2);}
+.nd-d{padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:0.82rem;font-weight:700;background:#0d1424;}
+.nd-p{padding:6px 6px;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--muted2);background:#0a0e18;border-left:1px solid var(--border);}
+.ar{color:var(--cyan);font-size:0.95rem;padding:0 2px;align-self:center;}
+.ar.g{color:var(--green);}
+.ar.r{color:var(--red);}
+.nl{background:#0d1424;border:1px dashed var(--border2);border-radius:5px;padding:5px 8px;font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--muted);}
+.pl{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--muted2);text-align:center;margin-top:2px;}
+/* DOUBLY */
+.dnd{display:inline-flex;border-radius:7px;overflow:hidden;border:2px solid var(--purple);background:#0d0a18;}
+.dp{padding:6px 5px;font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--purple);background:#100d1f;width:34px;text-align:center;}
+.dd{padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:0.82rem;font-weight:700;border-left:1px solid #2a1a4a;border-right:1px solid #2a1a4a;}
+.da{color:var(--purple);font-size:0.95rem;padding:0 3px;align-self:center;}
+/* CTRL ROW */
+.ctrl-row{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--elevated);border-top:1px solid var(--border);flex-wrap:wrap;}
+.pb{flex:1;height:3px;background:var(--border);border-radius:2px;min-width:60px;}
+.pf{height:100%;background:var(--cyan);border-radius:2px;transition:width 0.3s;}
+.sc{font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--muted2);white-space:nowrap;}
+.cb{padding:5px 12px;border-radius:5px;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:0.74rem;font-weight:700;transition:all 0.2s;}
+.cb.prv{background:var(--elevated);color:var(--muted2);border:1px solid var(--border);}
+.cb.prv:hover{color:var(--text);}
+.cb.nxt{background:var(--cyan);color:#000;}
+.cb.nxt:hover{background:#00c0d4;}
+.cb.rst{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,71,87,0.3);}
+.cb.aut{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,255,136,0.3);}
+.cb.aut.run{background:var(--yellow-dim);color:var(--yellow);border-color:rgba(255,214,10,0.3);}
+/* TABS */
+.stabs{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap;}
+.stab{padding:5px 12px;border-radius:5px;cursor:pointer;font-size:0.7rem;font-weight:700;color:var(--muted2);background:var(--elevated);border:1px solid var(--border);transition:all 0.2s;}
+.stab:hover{color:var(--text);}
+.stab.active{background:var(--cyan);color:#000;border-color:var(--cyan);}
+.stab-content{display:none;}
+.stab-content.active{display:block;}
+/* INFO */
+.icard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px;}
+.icard h4{font-weight:700;font-size:0.85rem;margin-bottom:6px;color:var(--cyan);}
+.icard p{font-size:0.8rem;color:var(--muted2);line-height:1.6;}
+table{width:100%;border-collapse:collapse;font-size:0.76rem;}
+th{background:rgba(0,229,255,0.1);color:var(--cyan);padding:8px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--border);}
+td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted2);}
+td:first-child{color:var(--text);font-weight:600;}
+/* QUIZ */
+.qcard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:12px;}
+.gtag{display:inline-block;background:linear-gradient(135deg,var(--purple),#5b21b6);color:#fff;padding:2px 8px;border-radius:3px;font-size:0.6rem;font-family:'JetBrains Mono',monospace;margin-bottom:5px;}
+.ptag{display:inline-block;background:linear-gradient(135deg,#0891b2,#0e7490);color:#fff;padding:2px 8px;border-radius:3px;font-size:0.6rem;font-family:'JetBrains Mono',monospace;margin-bottom:5px;}
+.qnum{font-size:0.62rem;color:var(--muted2);font-family:'JetBrains Mono',monospace;margin-bottom:4px;}
+.qtext{font-size:0.82rem;line-height:1.5;margin-bottom:12px;}
+.qtext code{background:rgba(0,229,255,0.1);color:var(--cyan);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.75rem;}
+.opts{display:flex;flex-direction:column;gap:6px;}
+.opt{background:var(--elevated);border:1px solid var(--border);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:0.78rem;transition:all 0.2s;display:flex;gap:9px;}
+.opt:hover:not(.lk){border-color:var(--cyan);color:var(--cyan);}
+.opt.ok{background:var(--green-dim)!important;border-color:var(--green)!important;color:var(--green)!important;}
+.opt.no{background:var(--red-dim)!important;border-color:var(--red)!important;color:var(--red)!important;}
+.opt.lk{cursor:default;}
+.ol{font-family:'JetBrains Mono',monospace;font-size:0.66rem;opacity:0.5;flex-shrink:0;}
+.exp{display:none;background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:6px;padding:10px;margin-top:8px;font-size:0.76rem;color:var(--green);line-height:1.5;}
+.exp.show{display:block;}
+.exp code{background:rgba(0,255,136,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;}
+/* EXERCISE */
+.excard{background:var(--card);border-left:3px solid var(--yellow);border-radius:0 9px 9px 0;padding:16px;margin-bottom:10px;}
+.ex-ttl{color:var(--yellow);font-weight:700;font-size:0.85rem;margin-bottom:5px;}
+.excard p{font-size:0.79rem;line-height:1.5;color:var(--muted2);}
+.excard pre{background:#050810;border:1px solid var(--border);border-radius:6px;padding:10px;font-family:'JetBrains Mono',monospace;font-size:0.68rem;line-height:1.6;margin-top:6px;overflow-x:auto;}
+.ans-btn{background:transparent;border:1px solid var(--yellow);color:var(--yellow);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:0.72rem;margin-top:7px;font-family:'Outfit',sans-serif;font-weight:600;}
+.ans-box{display:none;background:var(--yellow-dim);border:1px solid rgba(255,214,10,0.2);border-radius:6px;padding:10px;margin-top:8px;font-size:0.77rem;line-height:1.6;color:var(--text);}
+.ans-box.show{display:block;}
+.ans-box code{background:rgba(255,214,10,0.1);color:var(--yellow);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;}
+.ans-box pre{background:#0a0805;border:1px solid rgba(255,214,10,0.2);border-radius:5px;padding:9px;font-family:'JetBrains Mono',monospace;font-size:0.68rem;line-height:1.6;margin-top:6px;overflow-x:auto;color:var(--text);}
+/* OUTPUT BOX */
+.out-box{background:var(--elevated);border-radius:7px;padding:9px 12px;margin-top:10px;}
+.out-lbl{font-size:0.65rem;color:var(--muted2);font-family:'JetBrains Mono',monospace;margin-bottom:3px;}
+.out-txt{font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--green);min-height:20px;}
+/* SECTION DIVIDER */
+.sdiv{margin:28px 0 16px;display:flex;align-items:center;gap:10px;}
+.sdiv-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:1rem;white-space:nowrap;}
+.sdiv::after{content:'';flex:1;height:1px;background:var(--border);}
+/* ANIM */
+@keyframes popIn{from{opacity:0;transform:scale(0.4);}to{opacity:1;transform:scale(1);}}
+@keyframes glow{0%,100%{box-shadow:0 0 4px rgba(0,229,255,0.3);}50%{box-shadow:0 0 16px rgba(0,229,255,0.7);}}
+.pop{animation:popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);}
+.glow{animation:glow 1.5s ease-in-out infinite;}
+/* GRID */
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">DS III</div>
+  <button class="nav-btn active" onclick="P('intro')">ADT</button>
+  <button class="nav-btn" onclick="P('sll')">Singly LL</button>
+  <button class="nav-btn" onclick="P('cll')">Circular LL</button>
+  <button class="nav-btn" onclick="P('dll')">Doubly LL</button>
+  <button class="nav-btn" onclick="P('compare')">Compare</button>
+  <button class="nav-btn" onclick="P('exercises')">Exercises</button>
+  <button class="nav-btn" onclick="P('gate')">GATE MCQ</button>
+  <button class="nav-btn" onclick="P('placement')">Placement MCQ</button>
+</div>
+
+<!-- ═══════════ PAGE: INTRO ═══════════ -->
+<div id="intro" class="page active">
+<div class="hero">
+  <div class="hero-badge">25CS12001 · UNIT III · B.Tech CSE(AIML)</div>
+  <h1>Data Structures <em>Unit III</em></h1>
+  <p>ADT · Singly · Circular · Doubly Linked Lists — Every operation with synchronized C code + animation</p>
+</div>
+<div class="main">
+  <div class="slabel">Abstract Data Type</div>
+  <div class="icard"><h4>What is an ADT?</h4><p>An ADT defines <strong style="color:var(--cyan)">WHAT</strong> operations can be done, not <strong style="color:var(--red)">HOW</strong>. Like a TV remote — you press Volume+ and it works; you don't know the circuit inside. The List ADT says: insert, delete, search — implementation (array or LL) is hidden.</p></div>
+  <div class="slabel" style="margin-top:20px;">Why Linked Lists?</div>
+  <div class="icard" style="padding:0;overflow:hidden;"><table>
+    <tr><th>Feature</th><th>Array</th><th>Linked List</th></tr>
+    <tr><td>Size</td><td>Fixed</td><td>Dynamic</td></tr>
+    <tr><td>Insert/Delete (middle)</td><td>O(n) — shift</td><td>O(1) — relink</td></tr>
+    <tr><td>Random Access</td><td>O(1)</td><td>O(n)</td></tr>
+    <tr><td>Memory</td><td>May waste</td><td>Exact as needed</td></tr>
+  </table></div>
+  <div class="g2" style="margin-top:16px;">
+    <div class="icard" style="cursor:pointer;border-color:var(--cyan)" onclick="P('sll')"><h4>🔗 Singly Linked List</h4><p>One direction. Create, Insert (begin/end/middle), Delete (begin/end/middle), Traverse.</p></div>
+    <div class="icard" style="cursor:pointer;border-color:var(--green)" onclick="P('cll')"><h4>🔄 Circular Linked List</h4><p>Last node → head. No NULL. Insert, Delete (begin/end/middle), Traverse with do-while.</p></div>
+    <div class="icard" style="cursor:pointer;border-color:var(--purple)" onclick="P('dll')"><h4>↔️ Doubly Linked List</h4><p>prev + data + next. Bidirectional. Insert, Delete (begin/end/middle), Forward + Backward Traverse.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════ PAGE: SINGLY LL ═══════════ -->
+<div id="sll" class="page">
+<div class="hero">
+  <div class="hero-badge">🔗 Singly Linked List</div>
+  <h1>Singly <em>Linked List</em></h1>
+  <p>Complete operations — Insert & Delete at Begin, End, Middle — each with animated C code stepping</p>
+</div>
+<div class="main">
+<div class="stabs">
+  <div class="stab active" onclick="ST('sll','create')">Create</div>
+  <div class="stab" onclick="ST('sll','ins-beg')">Insert Begin</div>
+  <div class="stab" onclick="ST('sll','ins-end')">Insert End</div>
+  <div class="stab" onclick="ST('sll','ins-mid')">Insert Middle</div>
+  <div class="stab" onclick="ST('sll','del-beg')">Delete Begin</div>
+  <div class="stab" onclick="ST('sll','del-end')">Delete End</div>
+  <div class="stab" onclick="ST('sll','del-mid')">Delete Middle</div>
+  <div class="stab" onclick="ST('sll','trav')">Traverse</div>
+</div>
+
+<!-- SLL CREATE -->
+<div id="sll-create" class="stab-content active">
+<div class="slabel">Build a Singly Linked List</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">sll_create.c</span></div>
+    <div class="code-body" id="sc-code">
+      <div class="cl" id="sc1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span> *head = <span class="tp">NULL</span>;</div></div>
+      <div class="cl" id="sc2"><div class="ln">2</div><div class="la"></div><div class="lc"><span class="cm">// createNode allocates memory</span></div></div>
+      <div class="cl" id="sc3"><div class="ln">3</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span>* <span class="fn">createNode</span>(<span class="tp">int</span> v){</div></div>
+      <div class="cl" id="sc4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n=(<span class="kw">struct</span> <span class="tp">Node</span>*)</div></div>
+      <div class="cl" id="sc5"><div class="ln">5</div><div class="la"></div><div class="lc">    <span class="fn">malloc</span>(<span class="kw">sizeof</span>(<span class="kw">struct</span> <span class="tp">Node</span>));</div></div>
+      <div class="cl" id="sc6"><div class="ln">6</div><div class="la"></div><div class="lc">  n->data=v; n->next=<span class="tp">NULL</span>;</div></div>
+      <div class="cl" id="sc7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="kw">return</span> n;</div></div>
+      <div class="cl" id="sc8"><div class="ln">8</div><div class="la"></div><div class="lc">}</div></div>
+      <div class="cl" id="sc9"><div class="ln">9</div><div class="la"></div><div class="lc"><span class="cm">// link nodes manually</span></div></div>
+      <div class="cl" id="sc10"><div class="ln">10</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span> *n1=<span class="fn">createNode</span>(<span class="nu">10</span>);</div></div>
+      <div class="cl" id="sc11"><div class="ln">11</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span> *n2=<span class="fn">createNode</span>(<span class="nu">20</span>);</div></div>
+      <div class="cl" id="sc12"><div class="ln">12</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span> *n3=<span class="fn">createNode</span>(<span class="nu">30</span>);</div></div>
+      <div class="cl" id="sc13"><div class="ln">13</div><div class="la"></div><div class="lc">head=n1; n1->next=n2; n2->next=n3;</div></div>
+      <div class="cl" id="sc14"><div class="ln">14</div><div class="la"></div><div class="lc"><span class="cm">// 10→20→30→NULL</span></div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ List Construction</div>
+    <div class="anim-body"><div class="amsg" id="sc-m">Press Next ▶ to build the list step by step</div><div class="viz" id="sc-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('sc')">↺</button>
+      <button class="cb prv" onclick="S('sc',-1)">◀</button>
+      <div class="pb"><div class="pf" id="sc-p" style="width:0%"></div></div>
+      <div class="sc" id="sc-c">0/8</div>
+      <button class="cb nxt" onclick="S('sc',1)">▶</button>
+      <button class="cb aut" id="sc-a" onclick="A('sc')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SLL INSERT BEGIN -->
+<div id="sll-ins-beg" class="stab-content">
+<div class="slabel">Insert at Beginning — O(1)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">insertBegin.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="ib1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertBegin</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head,<span class="tp">int</span> data){</div></div>
+      <div class="cl" id="ib2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="cm">// Step1: allocate new node</span></div></div>
+      <div class="cl" id="ib3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n=<span class="fn">createNode</span>(data);</div></div>
+      <div class="cl" id="ib4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="cm">// Step2: new→next = old head</span></div></div>
+      <div class="cl" id="ib5"><div class="ln">5</div><div class="la"></div><div class="lc">  n->next = *head;</div></div>
+      <div class="cl" id="ib6"><div class="ln">6</div><div class="la"></div><div class="lc">  <span class="cm">// Step3: head = new node</span></div></div>
+      <div class="cl" id="ib7"><div class="ln">7</div><div class="la"></div><div class="lc">  *head = n;</div></div>
+      <div class="cl" id="ib8"><div class="ln">8</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(1) — no traversal!</span></div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Insert 5 at beginning of 10→20→30</div>
+    <div class="anim-body"><div class="amsg" id="ib-m">List: 10→20→30. Insert 5 at beginning.</div><div class="viz" id="ib-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('ib')">↺</button><button class="cb prv" onclick="S('ib',-1)">◀</button>
+      <div class="pb"><div class="pf" id="ib-p" style="width:0%"></div></div><div class="sc" id="ib-c">0/4</div>
+      <button class="cb nxt" onclick="S('ib',1)">▶</button><button class="cb aut" id="ib-a" onclick="A('ib')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SLL INSERT END -->
+<div id="sll-ins-end" class="stab-content">
+<div class="slabel">Insert at End — O(n)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">insertEnd.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="ie1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertEnd</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head,<span class="tp">int</span> data){</div></div>
+      <div class="cl" id="ie2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n=<span class="fn">createNode</span>(data);</div></div>
+      <div class="cl" id="ie3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(*head==<span class="tp">NULL</span>){*head=n;<span class="kw">return</span>;}</div></div>
+      <div class="cl" id="ie4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr=*head;</div></div>
+      <div class="cl" id="ie5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(curr->next!=<span class="tp">NULL</span>)</div></div>
+      <div class="cl" id="ie6"><div class="ln">6</div><div class="la"></div><div class="lc">    curr=curr->next; <span class="cm">// find last</span></div></div>
+      <div class="cl" id="ie7"><div class="ln">7</div><div class="la"></div><div class="lc">  curr->next=n; <span class="cm">// link last→new</span></div></div>
+      <div class="cl" id="ie8"><div class="ln">8</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n)</span></div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Insert 40 at end of 10→20→30</div>
+    <div class="anim-body"><div class="amsg" id="ie-m">List: 10→20→30. Insert 40 at end.</div><div class="viz" id="ie-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('ie')">↺</button><button class="cb prv" onclick="S('ie',-1)">◀</button>
+      <div class="pb"><div class="pf" id="ie-p" style="width:0%"></div></div><div class="sc" id="ie-c">0/6</div>
+      <button class="cb nxt" onclick="S('ie',1)">▶</button><button class="cb aut" id="ie-a" onclick="A('ie')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SLL INSERT MIDDLE -->
+<div id="sll-ins-mid" class="stab-content">
+<div class="slabel">Insert at Middle (after position) — O(n)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">insertMiddle.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="im1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertAt</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head,<span class="tp">int</span> data,<span class="tp">int</span> pos){</div></div>
+      <div class="cl" id="im2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n=<span class="fn">createNode</span>(data);</div></div>
+      <div class="cl" id="im3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr=*head;</div></div>
+      <div class="cl" id="im4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">for</span>(<span class="tp">int</span> i=<span class="nu">1</span>;i&lt;pos-<span class="nu">1</span>;i++) curr=curr->next;</div></div>
+      <div class="cl" id="im5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="cm">// ⚠️ Order matters! A before B</span></div></div>
+      <div class="cl" id="im6"><div class="ln">6</div><div class="la"></div><div class="lc">  n->next=curr->next; <span class="cm">// Step A</span></div></div>
+      <div class="cl" id="im7"><div class="ln">7</div><div class="la"></div><div class="lc">  curr->next=n;       <span class="cm">// Step B</span></div></div>
+      <div class="cl" id="im8"><div class="ln">8</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n)</span></div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Insert 25 after position 2 in 10→20→30</div>
+    <div class="anim-body"><div class="amsg" id="im-m">List: 10→20→30. Insert 25 after pos 2 (after node 20).</div><div class="viz" id="im-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('im')">↺</button><button class="cb prv" onclick="S('im',-1)">◀</button>
+      <div class="pb"><div class="pf" id="im-p" style="width:0%"></div></div><div class="sc" id="im-c">0/5</div>
+      <button class="cb nxt" onclick="S('im',1)">▶</button><button class="cb aut" id="im-a" onclick="A('im')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SLL DELETE BEGIN -->
+<div id="sll-del-beg" class="stab-content">
+<div class="slabel">Delete at Beginning — O(1)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">deleteBegin.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="db1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">deleteBegin</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head){</div></div>
+      <div class="cl" id="db2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(*head==<span class="tp">NULL</span>){</div></div>
+      <div class="cl" id="db3"><div class="ln">3</div><div class="la"></div><div class="lc">    <span class="fn">printf</span>(<span class="st">"Empty list\n"</span>);<span class="kw">return</span>;</div></div>
+      <div class="cl" id="db4"><div class="ln">4</div><div class="la"></div><div class="lc">  }</div></div>
+      <div class="cl" id="db5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="cm">// Step1: save head in temp</span></div></div>
+      <div class="cl" id="db6"><div class="ln">6</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *temp=*head;</div></div>
+      <div class="cl" id="db7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="cm">// Step2: move head to next</span></div></div>
+      <div class="cl" id="db8"><div class="ln">8</div><div class="la"></div><div class="lc">  *head=(*head)->next;</div></div>
+      <div class="cl" id="db9"><div class="ln">9</div><div class="la"></div><div class="lc">  <span class="cm">// Step3: free old head</span></div></div>
+      <div class="cl" id="db10"><div class="ln">10</div><div class="la"></div><div class="lc">  <span class="fn">free</span>(temp);</div></div>
+      <div class="cl" id="db11"><div class="ln">11</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(1)!</span></div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Delete head node from 10→20→30</div>
+    <div class="anim-body"><div class="amsg" id="db-m">List: 10→20→30. Delete the first node (head = 10).</div><div class="viz" id="db-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('db')">↺</button><button class="cb prv" onclick="S('db',-1)">◀</button>
+      <div class="pb"><div class="pf" id="db-p" style="width:0%"></div></div><div class="sc" id="db-c">0/4</div>
+      <button class="cb nxt" onclick="S('db',1)">▶</button><button class="cb aut" id="db-a" onclick="A('db')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SLL DELETE END -->
+<div id="sll-del-end" class="stab-content">
+<div class="slabel">Delete at End — O(n)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">deleteEnd.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="de1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">deleteEnd</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head){</div></div>
+      <div class="cl" id="de2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(*head==<span class="tp">NULL</span>) <span class="kw">return</span>;</div></div>
+      <div class="cl" id="de3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="cm">// only one node?</span></div></div>
+      <div class="cl" id="de4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">if</span>((*head)->next==<span class="tp">NULL</span>){</div></div>
+      <div class="cl" id="de5"><div class="ln">5</div><div class="la"></div><div class="lc">    <span class="fn">free</span>(*head); *head=<span class="tp">NULL</span>; <span class="kw">return</span>;</div></div>
+      <div class="cl" id="de6"><div class="ln">6</div><div class="la"></div><div class="lc">  }</div></div>
+      <div class="cl" id="de7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="cm">// need TWO pointers!</span></div></div>
+      <div class="cl" id="de8"><div class="ln">8</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *prev=<span class="tp">NULL</span>,*curr=*head;</div></div>
+      <div class="cl" id="de9"><div class="ln">9</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(curr->next!=<span class="tp">NULL</span>){</div></div>
+      <div class="cl" id="de10"><div class="ln">10</div><div class="la"></div><div class="lc">    prev=curr; curr=curr->next;</div></div>
+      <div class="cl" id="de11"><div class="ln">11</div><div class="la"></div><div class="lc">  } <span class="cm">// curr=last, prev=second-last</span></div></div>
+      <div class="cl" id="de12"><div class="ln">12</div><div class="la"></div><div class="lc">  prev->next=<span class="tp">NULL</span>; <span class="cm">// unlink last</span></div></div>
+      <div class="cl" id="de13"><div class="ln">13</div><div class="la"></div><div class="lc">  <span class="fn">free</span>(curr);     <span class="cm">// free last</span></div></div>
+      <div class="cl" id="de14"><div class="ln">14</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n)</span></div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Delete last node from 10→20→30</div>
+    <div class="anim-body"><div class="amsg" id="de-m">List: 10→20→30. Delete the last node (30).</div><div class="viz" id="de-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('de')">↺</button><button class="cb prv" onclick="S('de',-1)">◀</button>
+      <div class="pb"><div class="pf" id="de-p" style="width:0%"></div></div><div class="sc" id="de-c">0/6</div>
+      <button class="cb nxt" onclick="S('de',1)">▶</button><button class="cb aut" id="de-a" onclick="A('de')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SLL DELETE MIDDLE -->
+<div id="sll-del-mid" class="stab-content">
+<div class="slabel">Delete at Middle (by value) — O(n)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">deleteMiddle.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="dm1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">deleteVal</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head,<span class="tp">int</span> key){</div></div>
+      <div class="cl" id="dm2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr=*head,*prev=<span class="tp">NULL</span>;</div></div>
+      <div class="cl" id="dm3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="cm">// traverse: track prev and curr</span></div></div>
+      <div class="cl" id="dm4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(curr!=<span class="tp">NULL</span>&&curr->data!=key){</div></div>
+      <div class="cl" id="dm5"><div class="ln">5</div><div class="la"></div><div class="lc">    prev=curr; curr=curr->next;</div></div>
+      <div class="cl" id="dm6"><div class="ln">6</div><div class="la"></div><div class="lc">  }</div></div>
+      <div class="cl" id="dm7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(curr==<span class="tp">NULL</span>){<span class="fn">printf</span>(<span class="st">"Not found"</span>);<span class="kw">return</span>;}</div></div>
+      <div class="cl" id="dm8"><div class="ln">8</div><div class="la"></div><div class="lc">  <span class="cm">// bypass: prev→next = curr→next</span></div></div>
+      <div class="cl" id="dm9"><div class="ln">9</div><div class="la"></div><div class="lc">  prev->next=curr->next;</div></div>
+      <div class="cl" id="dm10"><div class="ln">10</div><div class="la"></div><div class="lc">  <span class="fn">free</span>(curr); <span class="cm">// release memory</span></div></div>
+      <div class="cl" id="dm11"><div class="ln">11</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n)</span></div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Delete node 20 from 10→20→30</div>
+    <div class="anim-body"><div class="amsg" id="dm-m">List: 10→20→30. Delete node with key=20.</div><div class="viz" id="dm-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('dm')">↺</button><button class="cb prv" onclick="S('dm',-1)">◀</button>
+      <div class="pb"><div class="pf" id="dm-p" style="width:0%"></div></div><div class="sc" id="dm-c">0/6</div>
+      <button class="cb nxt" onclick="S('dm',1)">▶</button><button class="cb aut" id="dm-a" onclick="A('dm')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SLL TRAVERSE -->
+<div id="sll-trav" class="stab-content">
+<div class="slabel">Traversal — O(n)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">traverse.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="tr1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">traverse</span>(<span class="kw">struct</span> <span class="tp">Node</span> *head){</div></div>
+      <div class="cl" id="tr2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr=head;</div></div>
+      <div class="cl" id="tr3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(curr!=<span class="tp">NULL</span>){</div></div>
+      <div class="cl" id="tr4"><div class="ln">4</div><div class="la"></div><div class="lc">    <span class="fn">printf</span>(<span class="st">"%d→"</span>,curr->data);</div></div>
+      <div class="cl" id="tr5"><div class="ln">5</div><div class="la"></div><div class="lc">    curr=curr->next;</div></div>
+      <div class="cl" id="tr6"><div class="ln">6</div><div class="la"></div><div class="lc">  }</div></div>
+      <div class="cl" id="tr7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="fn">printf</span>(<span class="st">"NULL\n"</span>);</div></div>
+      <div class="cl" id="tr8"><div class="ln">8</div><div class="la"></div><div class="lc">}</div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ curr pointer walking through nodes</div>
+    <div class="anim-body"><div class="amsg" id="tr-m">List: 10→20→30. Watch curr walk forward.</div><div class="viz" id="tr-v"></div><div class="out-box"><div class="out-lbl">Output:</div><div class="out-txt" id="tr-o"></div></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('tr')">↺</button><button class="cb prv" onclick="S('tr',-1)">◀</button>
+      <div class="pb"><div class="pf" id="tr-p" style="width:0%"></div></div><div class="sc" id="tr-c">0/8</div>
+      <button class="cb nxt" onclick="S('tr',1)">▶</button><button class="cb aut" id="tr-a" onclick="A('tr')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+</div><!-- end sll main -->
+</div><!-- end sll page -->
+
+<!-- ═══════════ PAGE: CIRCULAR LL ═══════════ -->
+<div id="cll" class="page">
+<div class="hero">
+  <div class="hero-badge">🔄 Circular Linked List</div>
+  <h1>Circular <em>Linked List</em></h1>
+  <p>Last node → HEAD. Insert & Delete (Begin/End/Middle) + Traverse — all with code sync</p>
+</div>
+<div class="main">
+<div class="stabs">
+  <div class="stab active" onclick="ST('cll','concept')">Concept</div>
+  <div class="stab" onclick="ST('cll','ins-beg')">Insert Begin</div>
+  <div class="stab" onclick="ST('cll','ins-end')">Insert End</div>
+  <div class="stab" onclick="ST('cll','del-beg')">Delete Begin</div>
+  <div class="stab" onclick="ST('cll','del-end')">Delete End</div>
+  <div class="stab" onclick="ST('cll','del-mid')">Delete Middle</div>
+  <div class="stab" onclick="ST('cll','trav')">Traverse</div>
+</div>
+
+<!-- CLL CONCEPT -->
+<div id="cll-concept" class="stab-content active">
+<div class="slabel">CLL vs SLL — The Key Difference</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_concept.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="cc1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="cm">// SLL: last→next = NULL (dead end)</span></div></div>
+      <div class="cl" id="cc2"><div class="ln">2</div><div class="la"></div><div class="lc">last->next = <span class="tp">NULL</span>;</div></div>
+      <div class="cl" id="cc3"><div class="ln">3</div><div class="la"></div><div class="lc"><span class="cm">// CLL: last→next = head (CIRCLE!)</span></div></div>
+      <div class="cl" id="cc4"><div class="ln">4</div><div class="la"></div><div class="lc">last->next = head;</div></div>
+      <div class="cl" id="cc5"><div class="ln">5</div><div class="la"></div><div class="lc"><span class="cm">// single node: points to itself</span></div></div>
+      <div class="cl" id="cc6"><div class="ln">6</div><div class="la"></div><div class="lc">n->next = n; head = n;</div></div>
+      <div class="cl" id="cc7"><div class="ln">7</div><div class="la"></div><div class="lc"><span class="cm">// ⚠️ NEVER use curr==NULL to stop!</span></div></div>
+      <div class="cl" id="cc8"><div class="ln">8</div><div class="la"></div><div class="lc"><span class="cm">// USE: do-while(curr != head)</span></div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ SLL vs CLL structure</div>
+    <div class="anim-body"><div class="amsg" id="cc-m">Press Next ▶ to see how CLL differs</div><div class="viz" id="cc-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('cc')">↺</button><button class="cb prv" onclick="S('cc',-1)">◀</button>
+      <div class="pb"><div class="pf" id="cc-p" style="width:0%"></div></div><div class="sc" id="cc-c">0/4</div>
+      <button class="cb nxt" onclick="S('cc',1)">▶</button><button class="cb aut" id="cc-a" onclick="A('cc')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- CLL INSERT BEGIN -->
+<div id="cll-ins-beg" class="stab-content">
+<div class="slabel">CLL Insert at Beginning — O(n) (must find last node)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_insertBegin.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="cib1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span>* <span class="fn">cllInsertBegin</span>(<span class="kw">struct</span> <span class="tp">Node</span> *head,<span class="tp">int</span> d){</div></div>
+      <div class="cl" id="cib2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n=<span class="fn">createNode</span>(d);</div></div>
+      <div class="cl" id="cib3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(head==<span class="tp">NULL</span>){n->next=n;<span class="kw">return</span> n;}</div></div>
+      <div class="cl" id="cib4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="cm">// find last node (next==head)</span></div></div>
+      <div class="cl" id="cib5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *last=head;</div></div>
+      <div class="cl" id="cib6"><div class="ln">6</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(last->next!=head) last=last->next;</div></div>
+      <div class="cl" id="cib7"><div class="ln">7</div><div class="la"></div><div class="lc">  n->next=head;   <span class="cm">// new→old head</span></div></div>
+      <div class="cl" id="cib8"><div class="ln">8</div><div class="la"></div><div class="lc">  last->next=n;   <span class="cm">// last→new</span></div></div>
+      <div class="cl" id="cib9"><div class="ln">9</div><div class="la"></div><div class="lc">  <span class="kw">return</span> n;       <span class="cm">// new is head</span></div></div>
+      <div class="cl" id="cib10"><div class="ln">10</div><div class="la"></div><div class="lc">}</div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Insert 5 at beginning of CLL: 10→20→30</div>
+    <div class="anim-body"><div class="amsg" id="cib-m">CLL: 10→20→30→(head). Insert 5 at beginning.</div><div class="viz" id="cib-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('cib')">↺</button><button class="cb prv" onclick="S('cib',-1)">◀</button>
+      <div class="pb"><div class="pf" id="cib-p" style="width:0%"></div></div><div class="sc" id="cib-c">0/5</div>
+      <button class="cb nxt" onclick="S('cib',1)">▶</button><button class="cb aut" id="cib-a" onclick="A('cib')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- CLL INSERT END -->
+<div id="cll-ins-end" class="stab-content">
+<div class="slabel">CLL Insert at End — O(n)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_insertEnd.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="cie1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span>* <span class="fn">cllInsertEnd</span>(<span class="kw">struct</span> <span class="tp">Node</span> *head,<span class="tp">int</span> d){</div></div>
+      <div class="cl" id="cie2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n=<span class="fn">createNode</span>(d);</div></div>
+      <div class="cl" id="cie3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(head==<span class="tp">NULL</span>){n->next=n;<span class="kw">return</span> n;}</div></div>
+      <div class="cl" id="cie4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *last=head;</div></div>
+      <div class="cl" id="cie5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(last->next!=head) last=last->next;</div></div>
+      <div class="cl" id="cie6"><div class="ln">6</div><div class="la"></div><div class="lc">  last->next=n;   <span class="cm">// old last→new</span></div></div>
+      <div class="cl" id="cie7"><div class="ln">7</div><div class="la"></div><div class="lc">  n->next=head;   <span class="cm">// new→head ✓</span></div></div>
+      <div class="cl" id="cie8"><div class="ln">8</div><div class="la"></div><div class="lc">  <span class="kw">return</span> head;   <span class="cm">// head unchanged</span></div></div>
+      <div class="cl" id="cie9"><div class="ln">9</div><div class="la"></div><div class="lc">}</div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Insert 40 at end of CLL: 10→20→30</div>
+    <div class="anim-body"><div class="amsg" id="cie-m">CLL: 10→20→30→(head). Insert 40 at end.</div><div class="viz" id="cie-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('cie')">↺</button><button class="cb prv" onclick="S('cie',-1)">◀</button>
+      <div class="pb"><div class="pf" id="cie-p" style="width:0%"></div></div><div class="sc" id="cie-c">0/5</div>
+      <button class="cb nxt" onclick="S('cie',1)">▶</button><button class="cb aut" id="cie-a" onclick="A('cie')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- CLL DELETE BEGIN -->
+<div id="cll-del-beg" class="stab-content">
+<div class="slabel">CLL Delete at Beginning — O(n) (need to update last→next)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_deleteBegin.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="cdb1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span>* <span class="fn">cllDeleteBegin</span>(<span class="kw">struct</span> <span class="tp">Node</span> *head){</div></div>
+      <div class="cl" id="cdb2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(head==<span class="tp">NULL</span>) <span class="kw">return</span> <span class="tp">NULL</span>;</div></div>
+      <div class="cl" id="cdb3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="cm">// only one node</span></div></div>
+      <div class="cl" id="cdb4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(head->next==head){<span class="fn">free</span>(head);<span class="kw">return</span> <span class="tp">NULL</span>;}</div></div>
+      <div class="cl" id="cdb5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="cm">// find last node</span></div></div>
+      <div class="cl" id="cdb6"><div class="ln">6</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *last=head;</div></div>
+      <div class="cl" id="cdb7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(last->next!=head) last=last->next;</div></div>
+      <div class="cl" id="cdb8"><div class="ln">8</div><div class="la"></div><div class="lc">  <span class="cm">// last must point to new head</span></div></div>
+      <div class="cl" id="cdb9"><div class="ln">9</div><div class="la"></div><div class="lc">  last->next=head->next; <span class="cm">// relink circle</span></div></div>
+      <div class="cl" id="cdb10"><div class="ln">10</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *temp=head;</div></div>
+      <div class="cl" id="cdb11"><div class="ln">11</div><div class="la"></div><div class="lc">  head=head->next; <span class="cm">// advance head</span></div></div>
+      <div class="cl" id="cdb12"><div class="ln">12</div><div class="la"></div><div class="lc">  <span class="fn">free</span>(temp); <span class="kw">return</span> head;</div></div>
+      <div class="cl" id="cdb13"><div class="ln">13</div><div class="la"></div><div class="lc">}</div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Delete head(10) from CLL: 10→20→30</div>
+    <div class="anim-body"><div class="amsg" id="cdb-m">CLL: 10→20→30→(head). Delete head node (10).</div><div class="viz" id="cdb-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('cdb')">↺</button><button class="cb prv" onclick="S('cdb',-1)">◀</button>
+      <div class="pb"><div class="pf" id="cdb-p" style="width:0%"></div></div><div class="sc" id="cdb-c">0/5</div>
+      <button class="cb nxt" onclick="S('cdb',1)">▶</button><button class="cb aut" id="cdb-a" onclick="A('cdb')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- CLL DELETE END -->
+<div id="cll-del-end" class="stab-content">
+<div class="slabel">CLL Delete at End — O(n)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_deleteEnd.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="cde1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span>* <span class="fn">cllDeleteEnd</span>(<span class="kw">struct</span> <span class="tp">Node</span> *head){</div></div>
+      <div class="cl" id="cde2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(head==<span class="tp">NULL</span>) <span class="kw">return</span> <span class="tp">NULL</span>;</div></div>
+      <div class="cl" id="cde3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(head->next==head){<span class="fn">free</span>(head);<span class="kw">return</span> <span class="tp">NULL</span>;}</div></div>
+      <div class="cl" id="cde4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="cm">// need prev and curr (two pointers)</span></div></div>
+      <div class="cl" id="cde5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *prev=<span class="tp">NULL</span>,*curr=head;</div></div>
+      <div class="cl" id="cde6"><div class="ln">6</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(curr->next!=head){</div></div>
+      <div class="cl" id="cde7"><div class="ln">7</div><div class="la"></div><div class="lc">    prev=curr; curr=curr->next;</div></div>
+      <div class="cl" id="cde8"><div class="ln">8</div><div class="la"></div><div class="lc">  } <span class="cm">// curr=last,prev=second-last</span></div></div>
+      <div class="cl" id="cde9"><div class="ln">9</div><div class="la"></div><div class="lc">  prev->next=head; <span class="cm">// relink circle</span></div></div>
+      <div class="cl" id="cde10"><div class="ln">10</div><div class="la"></div><div class="lc">  <span class="fn">free</span>(curr); <span class="kw">return</span> head;</div></div>
+      <div class="cl" id="cde11"><div class="ln">11</div><div class="la"></div><div class="lc">}</div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Delete last node(30) from CLL: 10→20→30</div>
+    <div class="anim-body"><div class="amsg" id="cde-m">CLL: 10→20→30→(head). Delete last node (30).</div><div class="viz" id="cde-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('cde')">↺</button><button class="cb prv" onclick="S('cde',-1)">◀</button>
+      <div class="pb"><div class="pf" id="cde-p" style="width:0%"></div></div><div class="sc" id="cde-c">0/5</div>
+      <button class="cb nxt" onclick="S('cde',1)">▶</button><button class="cb aut" id="cde-a" onclick="A('cde')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- CLL DELETE MIDDLE -->
+<div id="cll-del-mid" class="stab-content">
+<div class="slabel">CLL Delete Middle (by value) — O(n)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_deleteMiddle.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="cdm1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span>* <span class="fn">cllDeleteVal</span>(<span class="kw">struct</span> <span class="tp">Node</span> *head,<span class="tp">int</span> key){</div></div>
+      <div class="cl" id="cdm2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr=head,*prev=<span class="tp">NULL</span>;</div></div>
+      <div class="cl" id="cdm3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">do</span>{</div></div>
+      <div class="cl" id="cdm4"><div class="ln">4</div><div class="la"></div><div class="lc">    <span class="kw">if</span>(curr->data==key) <span class="kw">break</span>;</div></div>
+      <div class="cl" id="cdm5"><div class="ln">5</div><div class="la"></div><div class="lc">    prev=curr; curr=curr->next;</div></div>
+      <div class="cl" id="cdm6"><div class="ln">6</div><div class="la"></div><div class="lc">  }<span class="kw">while</span>(curr!=head);</div></div>
+      <div class="cl" id="cdm7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(curr==head&&curr->data!=key)<span class="kw">return</span> head;<span class="cm">// not found</span></div></div>
+      <div class="cl" id="cdm8"><div class="ln">8</div><div class="la"></div><div class="lc">  prev->next=curr->next; <span class="cm">// bypass</span></div></div>
+      <div class="cl" id="cdm9"><div class="ln">9</div><div class="la"></div><div class="lc">  <span class="fn">free</span>(curr); <span class="kw">return</span> head;</div></div>
+      <div class="cl" id="cdm10"><div class="ln">10</div><div class="la"></div><div class="lc">}</div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Delete node 20 from CLL: 10→20→30</div>
+    <div class="anim-body"><div class="amsg" id="cdm-m">CLL: 10→20→30→(head). Delete node with key=20.</div><div class="viz" id="cdm-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('cdm')">↺</button><button class="cb prv" onclick="S('cdm',-1)">◀</button>
+      <div class="pb"><div class="pf" id="cdm-p" style="width:0%"></div></div><div class="sc" id="cdm-c">0/5</div>
+      <button class="cb nxt" onclick="S('cdm',1)">▶</button><button class="cb aut" id="cdm-a" onclick="A('cdm')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- CLL TRAVERSE -->
+<div id="cll-trav" class="stab-content">
+<div class="slabel">CLL Traversal — do-while loop (NEVER while alone!)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_traverse.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="ct1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">cllTraverse</span>(<span class="kw">struct</span> <span class="tp">Node</span> *head){</div></div>
+      <div class="cl" id="ct2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(head==<span class="tp">NULL</span>) <span class="kw">return</span>;</div></div>
+      <div class="cl" id="ct3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr=head;</div></div>
+      <div class="cl" id="ct4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">do</span>{</div></div>
+      <div class="cl" id="ct5"><div class="ln">5</div><div class="la"></div><div class="lc">    <span class="fn">printf</span>(<span class="st">"%d→"</span>,curr->data);</div></div>
+      <div class="cl" id="ct6"><div class="ln">6</div><div class="la"></div><div class="lc">    curr=curr->next;</div></div>
+      <div class="cl" id="ct7"><div class="ln">7</div><div class="la"></div><div class="lc">  }<span class="kw">while</span>(curr!=head); <span class="cm">// stop at head!</span></div></div>
+      <div class="cl" id="ct8"><div class="ln">8</div><div class="la"></div><div class="lc">  <span class="fn">printf</span>(<span class="st">"(HEAD)\n"</span>);</div></div>
+      <div class="cl" id="ct9"><div class="ln">9</div><div class="la"></div><div class="lc">}</div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ curr wraps around circle</div>
+    <div class="anim-body"><div class="amsg" id="ct-m">CLL: 10→20→30→(head). do-while traversal.</div><div class="viz" id="ct-v"></div><div class="out-box"><div class="out-lbl">Output:</div><div class="out-txt" id="ct-o"></div></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('ct')">↺</button><button class="cb prv" onclick="S('ct',-1)">◀</button>
+      <div class="pb"><div class="pf" id="ct-p" style="width:0%"></div></div><div class="sc" id="ct-c">0/7</div>
+      <button class="cb nxt" onclick="S('ct',1)">▶</button><button class="cb aut" id="ct-a" onclick="A('ct')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+</div><!-- end cll main -->
+</div><!-- end cll page -->
+
+<!-- ═══════════ PAGE: DOUBLY LL ═══════════ -->
+<div id="dll" class="page">
+<div class="hero">
+  <div class="hero-badge">↔️ Doubly Linked List</div>
+  <h1>Doubly <em>Linked List</em></h1>
+  <p>prev + data + next. Insert & Delete (Begin/End/Middle) + Bidirectional Traverse — all animated</p>
+</div>
+<div class="main">
+<div class="stabs">
+  <div class="stab active" onclick="ST('dll','struct')">Structure</div>
+  <div class="stab" onclick="ST('dll','ins-beg')">Insert Begin</div>
+  <div class="stab" onclick="ST('dll','ins-end')">Insert End</div>
+  <div class="stab" onclick="ST('dll','del-beg')">Delete Begin</div>
+  <div class="stab" onclick="ST('dll','del-end')">Delete End</div>
+  <div class="stab" onclick="ST('dll','del-mid')">Delete Middle</div>
+  <div class="stab" onclick="ST('dll','trav')">Traverse Both</div>
+</div>
+
+<!-- DLL STRUCT -->
+<div id="dll-struct" class="stab-content active">
+<div class="slabel">DLL Node — 3 fields: prev + data + next</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">dll_struct.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="ds1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span>{</div></div>
+      <div class="cl" id="ds2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *prev; <span class="cm">// ← backward</span></div></div>
+      <div class="cl" id="ds3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="tp">int</span> data;          <span class="cm">// value</span></div></div>
+      <div class="cl" id="ds4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *next; <span class="cm">// → forward</span></div></div>
+      <div class="cl" id="ds5"><div class="ln">5</div><div class="la"></div><div class="lc">};</div></div>
+      <div class="cl" id="ds6"><div class="ln">6</div><div class="la"></div><div class="lc"><span class="cm">// head: prev=NULL, tail: next=NULL</span></div></div>
+      <div class="cl" id="ds7"><div class="ln">7</div><div class="la"></div><div class="lc">head->prev=<span class="tp">NULL</span>; tail->next=<span class="tp">NULL</span>;</div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ DLL node anatomy</div>
+    <div class="anim-body"><div class="amsg" id="ds-m">Press Next ▶ to explore DLL structure</div><div class="viz" id="ds-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('ds')">↺</button><button class="cb prv" onclick="S('ds',-1)">◀</button>
+      <div class="pb"><div class="pf" id="ds-p" style="width:0%"></div></div><div class="sc" id="ds-c">0/4</div>
+      <button class="cb nxt" onclick="S('ds',1)">▶</button><button class="cb aut" id="ds-a" onclick="A('ds')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- DLL INSERT BEGIN -->
+<div id="dll-ins-beg" class="stab-content">
+<div class="slabel">DLL Insert at Beginning — O(1)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">dll_insertBegin.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="dib1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">dllInsertBegin</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head,<span class="tp">int</span> d){</div></div>
+      <div class="cl" id="dib2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n=<span class="fn">createDNode</span>(d);</div></div>
+      <div class="cl" id="dib3"><div class="ln">3</div><div class="la"></div><div class="lc">  n->prev=<span class="tp">NULL</span>; <span class="cm">// no prev for new head</span></div></div>
+      <div class="cl" id="dib4"><div class="ln">4</div><div class="la"></div><div class="lc">  n->next=*head; <span class="cm">// new→old head</span></div></div>
+      <div class="cl" id="dib5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(*head!=<span class="tp">NULL</span>)</div></div>
+      <div class="cl" id="dib6"><div class="ln">6</div><div class="la"></div><div class="lc">    (*head)->prev=n; <span class="cm">// old head←new</span></div></div>
+      <div class="cl" id="dib7"><div class="ln">7</div><div class="la"></div><div class="lc">  *head=n; <span class="cm">// update head</span></div></div>
+      <div class="cl" id="dib8"><div class="ln">8</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(1)!</span></div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Insert 5 at beginning of DLL: 10⇄20⇄30</div>
+    <div class="anim-body"><div class="amsg" id="dib-m">DLL: NULL←[10]⇄[20]⇄[30]→NULL. Insert 5.</div><div class="viz" id="dib-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('dib')">↺</button><button class="cb prv" onclick="S('dib',-1)">◀</button>
+      <div class="pb"><div class="pf" id="dib-p" style="width:0%"></div></div><div class="sc" id="dib-c">0/4</div>
+      <button class="cb nxt" onclick="S('dib',1)">▶</button><button class="cb aut" id="dib-a" onclick="A('dib')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- DLL INSERT END -->
+<div id="dll-ins-end" class="stab-content">
+<div class="slabel">DLL Insert at End — O(n)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">dll_insertEnd.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="die1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">dllInsertEnd</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head,<span class="tp">int</span> d){</div></div>
+      <div class="cl" id="die2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n=<span class="fn">createDNode</span>(d);</div></div>
+      <div class="cl" id="die3"><div class="ln">3</div><div class="la"></div><div class="lc">  n->next=<span class="tp">NULL</span>; <span class="cm">// tail has no next</span></div></div>
+      <div class="cl" id="die4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(*head==<span class="tp">NULL</span>){n->prev=<span class="tp">NULL</span>;*head=n;<span class="kw">return</span>;}</div></div>
+      <div class="cl" id="die5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr=*head;</div></div>
+      <div class="cl" id="die6"><div class="ln">6</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(curr->next!=<span class="tp">NULL</span>) curr=curr->next;</div></div>
+      <div class="cl" id="die7"><div class="ln">7</div><div class="la"></div><div class="lc">  curr->next=n; <span class="cm">// last→new</span></div></div>
+      <div class="cl" id="die8"><div class="ln">8</div><div class="la"></div><div class="lc">  n->prev=curr; <span class="cm">// new←last</span></div></div>
+      <div class="cl" id="die9"><div class="ln">9</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n)</span></div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Insert 40 at end of DLL: 10⇄20⇄30</div>
+    <div class="anim-body"><div class="amsg" id="die-m">DLL: [10]⇄[20]⇄[30]→NULL. Insert 40 at end.</div><div class="viz" id="die-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('die')">↺</button><button class="cb prv" onclick="S('die',-1)">◀</button>
+      <div class="pb"><div class="pf" id="die-p" style="width:0%"></div></div><div class="sc" id="die-c">0/5</div>
+      <button class="cb nxt" onclick="S('die',1)">▶</button><button class="cb aut" id="die-a" onclick="A('die')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- DLL DELETE BEGIN -->
+<div id="dll-del-beg" class="stab-content">
+<div class="slabel">DLL Delete at Beginning — O(1)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">dll_deleteBegin.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="ddb1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">dllDeleteBegin</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head){</div></div>
+      <div class="cl" id="ddb2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(*head==<span class="tp">NULL</span>) <span class="kw">return</span>;</div></div>
+      <div class="cl" id="ddb3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *temp=*head;</div></div>
+      <div class="cl" id="ddb4"><div class="ln">4</div><div class="la"></div><div class="lc">  *head=(*head)->next; <span class="cm">// advance head</span></div></div>
+      <div class="cl" id="ddb5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(*head!=<span class="tp">NULL</span>)</div></div>
+      <div class="cl" id="ddb6"><div class="ln">6</div><div class="la"></div><div class="lc">    (*head)->prev=<span class="tp">NULL</span>; <span class="cm">// new head←NULL</span></div></div>
+      <div class="cl" id="ddb7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="fn">free</span>(temp);</div></div>
+      <div class="cl" id="ddb8"><div class="ln">8</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(1)!</span></div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Delete head(10) from DLL: 10⇄20⇄30</div>
+    <div class="anim-body"><div class="amsg" id="ddb-m">DLL: NULL←[10]⇄[20]⇄[30]→NULL. Delete head (10).</div><div class="viz" id="ddb-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('ddb')">↺</button><button class="cb prv" onclick="S('ddb',-1)">◀</button>
+      <div class="pb"><div class="pf" id="ddb-p" style="width:0%"></div></div><div class="sc" id="ddb-c">0/4</div>
+      <button class="cb nxt" onclick="S('ddb',1)">▶</button><button class="cb aut" id="ddb-a" onclick="A('ddb')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- DLL DELETE END -->
+<div id="dll-del-end" class="stab-content">
+<div class="slabel">DLL Delete at End — O(n)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">dll_deleteEnd.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="dde1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">dllDeleteEnd</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head){</div></div>
+      <div class="cl" id="dde2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(*head==<span class="tp">NULL</span>) <span class="kw">return</span>;</div></div>
+      <div class="cl" id="dde3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">if</span>((*head)->next==<span class="tp">NULL</span>){<span class="fn">free</span>(*head);*head=<span class="tp">NULL</span>;<span class="kw">return</span>;}</div></div>
+      <div class="cl" id="dde4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="cm">// traverse to last node</span></div></div>
+      <div class="cl" id="dde5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr=*head;</div></div>
+      <div class="cl" id="dde6"><div class="ln">6</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(curr->next!=<span class="tp">NULL</span>) curr=curr->next;</div></div>
+      <div class="cl" id="dde7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="cm">// use prev pointer — DLL advantage!</span></div></div>
+      <div class="cl" id="dde8"><div class="ln">8</div><div class="la"></div><div class="lc">  curr->prev->next=<span class="tp">NULL</span>; <span class="cm">// unlink</span></div></div>
+      <div class="cl" id="dde9"><div class="ln">9</div><div class="la"></div><div class="lc">  <span class="fn">free</span>(curr);</div></div>
+      <div class="cl" id="dde10"><div class="ln">10</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n)</span></div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Delete last node(30) from DLL: 10⇄20⇄30</div>
+    <div class="anim-body"><div class="amsg" id="dde-m">DLL: [10]⇄[20]⇄[30]→NULL. Delete last node (30).</div><div class="viz" id="dde-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('dde')">↺</button><button class="cb prv" onclick="S('dde',-1)">◀</button>
+      <div class="pb"><div class="pf" id="dde-p" style="width:0%"></div></div><div class="sc" id="dde-c">0/5</div>
+      <button class="cb nxt" onclick="S('dde',1)">▶</button><button class="cb aut" id="dde-a" onclick="A('dde')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- DLL DELETE MIDDLE -->
+<div id="dll-del-mid" class="stab-content">
+<div class="slabel">DLL Delete Middle — O(1) if node ptr given! (No prev variable needed)</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">dll_deleteMiddle.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="ddm1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="cm">// del = pointer to node to delete</span></div></div>
+      <div class="cl" id="ddm2"><div class="ln">2</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">dllDelete</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head,<span class="kw">struct</span> <span class="tp">Node</span> *del){</div></div>
+      <div class="cl" id="ddm3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(*head==del) *head=del->next;</div></div>
+      <div class="cl" id="ddm4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="cm">// update next node's prev</span></div></div>
+      <div class="cl" id="ddm5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(del->next!=<span class="tp">NULL</span>)</div></div>
+      <div class="cl" id="ddm6"><div class="ln">6</div><div class="la"></div><div class="lc">    del->next->prev=del->prev;</div></div>
+      <div class="cl" id="ddm7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="cm">// update prev node's next</span></div></div>
+      <div class="cl" id="ddm8"><div class="ln">8</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(del->prev!=<span class="tp">NULL</span>)</div></div>
+      <div class="cl" id="ddm9"><div class="ln">9</div><div class="la"></div><div class="lc">    del->prev->next=del->next;</div></div>
+      <div class="cl" id="ddm10"><div class="ln">10</div><div class="la"></div><div class="lc">  <span class="fn">free</span>(del); <span class="cm">// O(1) — no traversal!</span></div></div>
+      <div class="cl" id="ddm11"><div class="ln">11</div><div class="la"></div><div class="lc">}</div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Delete middle node(20) from DLL: 10⇄20⇄30</div>
+    <div class="anim-body"><div class="amsg" id="ddm-m">DLL: [10]⇄[20]⇄[30]. Delete node 20 (pointer given).</div><div class="viz" id="ddm-v"></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('ddm')">↺</button><button class="cb prv" onclick="S('ddm',-1)">◀</button>
+      <div class="pb"><div class="pf" id="ddm-p" style="width:0%"></div></div><div class="sc" id="ddm-c">0/5</div>
+      <button class="cb nxt" onclick="S('ddm',1)">▶</button><button class="cb aut" id="ddm-a" onclick="A('ddm')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- DLL TRAVERSE -->
+<div id="dll-trav" class="stab-content">
+<div class="slabel">DLL Traverse Forward + Backward</div>
+<div class="sync-panel">
+  <div class="code-pane">
+    <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">dll_traverse.c</span></div>
+    <div class="code-body">
+      <div class="cl" id="dt1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="cm">// FORWARD: use next</span></div></div>
+      <div class="cl" id="dt2"><div class="ln">2</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span> *curr=head;</div></div>
+      <div class="cl" id="dt3"><div class="ln">3</div><div class="la"></div><div class="lc"><span class="kw">while</span>(curr!=<span class="tp">NULL</span>){<span class="fn">printf</span>(<span class="st">"%d→"</span>,curr->data);curr=curr->next;}</div></div>
+      <div class="cl" id="dt4"><div class="ln">4</div><div class="la"></div><div class="lc"></div></div>
+      <div class="cl" id="dt5"><div class="ln">5</div><div class="la"></div><div class="lc"><span class="cm">// BACKWARD: go to tail first</span></div></div>
+      <div class="cl" id="dt6"><div class="ln">6</div><div class="la"></div><div class="lc"><span class="kw">while</span>(curr->next) curr=curr->next; <span class="cm">// find tail</span></div></div>
+      <div class="cl" id="dt7"><div class="ln">7</div><div class="la"></div><div class="lc"><span class="kw">while</span>(curr!=<span class="tp">NULL</span>){<span class="fn">printf</span>(<span class="st">"%d→"</span>,curr->data);curr=curr->prev;}</div></div>
+    </div>
+  </div>
+  <div class="anim-pane">
+    <div class="anim-pane-hdr">▶ Forward then Backward traversal</div>
+    <div class="anim-body"><div class="amsg" id="dt-m">DLL: 10⇄20⇄30. Forward then Backward.</div><div class="viz" id="dt-v"></div><div class="out-box"><div class="out-lbl">Output:</div><div class="out-txt" id="dt-o" style="white-space:pre-line"></div></div></div>
+    <div class="ctrl-row">
+      <button class="cb rst" onclick="R('dt')">↺</button><button class="cb prv" onclick="S('dt',-1)">◀</button>
+      <div class="pb"><div class="pf" id="dt-p" style="width:0%"></div></div><div class="sc" id="dt-c">0/9</div>
+      <button class="cb nxt" onclick="S('dt',1)">▶</button><button class="cb aut" id="dt-a" onclick="A('dt')">⚡</button>
+    </div>
+  </div>
+</div>
+</div>
+</div><!-- end dll main -->
+</div><!-- end dll page -->
+
+<!-- ═══════════ PAGE: COMPARE ═══════════ -->
+<div id="compare" class="page">
+<div class="hero"><div class="hero-badge">📊 Comparison</div><h1>All Three <em>Compared</em></h1></div>
+<div class="main">
+  <div class="slabel">Operations Complexity</div>
+  <div class="icard" style="padding:0;overflow:hidden;"><table>
+    <tr><th>Operation</th><th>Singly LL</th><th>Circular LL</th><th>Doubly LL</th></tr>
+    <tr><td>Insert at Begin</td><td style="color:var(--green)">O(1)</td><td style="color:var(--yellow)">O(n)*</td><td style="color:var(--green)">O(1)</td></tr>
+    <tr><td>Insert at End</td><td>O(n)</td><td>O(n)</td><td>O(n)</td></tr>
+    <tr><td>Delete at Begin</td><td style="color:var(--green)">O(1)</td><td>O(n)*</td><td style="color:var(--green)">O(1)</td></tr>
+    <tr><td>Delete at End</td><td>O(n)</td><td>O(n)</td><td>O(n)</td></tr>
+    <tr><td>Delete (node ptr)</td><td>O(n)—need prev</td><td>O(n)</td><td style="color:var(--green)">O(1)—has prev!</td></tr>
+    <tr><td>Delete Middle (value)</td><td>O(n)</td><td>O(n)</td><td>O(n)</td></tr>
+    <tr><td>Traversal</td><td>O(n)</td><td>O(n)</td><td>O(n)</td></tr>
+    <tr><td>Reverse Traversal</td><td style="color:var(--red)">❌ O(n²)</td><td style="color:var(--red)">❌ Hard</td><td style="color:var(--green)">✅ O(n)</td></tr>
+  </table></div>
+  <p style="font-size:0.72rem;color:var(--muted2);margin-top:5px;">* CLL insert/delete begin = O(n) because you must traverse to the last node to update its next pointer</p>
+  <div class="slabel" style="margin-top:20px;">Key Differences</div>
+  <div class="g2">
+    <div class="icard" style="border-left:3px solid var(--cyan)"><h4>🔗 Singly LL</h4><p>One pointer per node. Simple. Delete needs prev variable (traverse from head). Best for stacks, simple queues.</p></div>
+    <div class="icard" style="border-left:3px solid var(--green)"><h4>🔄 Circular LL</h4><p>No NULL end—last→head. Use do-while for traversal. Best for round-robin scheduling, playlists.</p></div>
+    <div class="icard" style="border-left:3px solid var(--purple)"><h4>↔️ Doubly LL</h4><p>Two pointers per node. O(1) delete when node pointer given (has prev!). Best for browser back/forward, LRU cache.</p></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════ PAGE: EXERCISES ═══════════ -->
+<div id="exercises" class="page">
+<div class="hero"><div class="hero-badge">📝 Practice</div><h1>10 Practice <em>Exercises</em></h1><p>Tracing · Programming · Conceptual — with detailed answers</p></div>
+<div class="main">
+
+<div class="excard">
+  <div class="ex-ttl">Ex 1: Trace Output</div>
+  <p>Trace: head=NULL; insertEnd(5); insertEnd(10); insertBegin(3); deleteBegin(); insertEnd(7); — Show final list.</p>
+  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+  <div class="ans-box">insertEnd(5): 5→NULL | insertEnd(10): 5→10→NULL | insertBegin(3): 3→5→10→NULL | deleteBegin(): removes 3 → 5→10→NULL | insertEnd(7): <strong>5→10→7→NULL</strong></div>
+</div>
+
+<div class="excard">
+  <div class="ex-ttl">Ex 2: Reverse a Singly Linked List</div>
+  <p>Write a C function to reverse 10→20→30→NULL to 30→20→10→NULL using 3 pointers (prev, curr, nxt). State time and space complexity.</p>
+  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+  <div class="ans-box"><pre>Node* reverse(Node* head){
+  Node *prev=NULL, *curr=head, *nxt;
+  while(curr){
+    nxt = curr->next;   // save next
+    curr->next = prev;  // flip pointer
+    prev = curr;        // advance prev
+    curr = nxt;         // advance curr
+  }
+  return prev; // new head = 30
+}
+// Time: O(n) — visits each node once
+// Space: O(1) — only 3 pointer variables</pre></div>
+</div>
+
+<div class="excard">
+  <div class="ex-ttl">Ex 3: Find Middle Node (Floyd's Algorithm)</div>
+  <p>Find the middle of 1→2→3→4→5 in a single pass. Use slow (1 step) and fast (2 steps) pointers.</p>
+  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+  <div class="ans-box"><pre>Node* findMiddle(Node* head){
+  Node *slow=head, *fast=head;
+  while(fast && fast->next){
+    slow = slow->next;       // 1 step
+    fast = fast->next->next; // 2 steps
+  }
+  return slow; // returns node with value 3
+}
+// When fast reaches end (5), slow is at middle (3)
+// For even length (1→2→3→4): returns node 2</pre></div>
+</div>
+
+<div class="excard">
+  <div class="ex-ttl">Ex 4: Count Nodes in CLL</div>
+  <p>Write a function to count nodes in a Circular Linked List. Why can't you use <code>while(curr != NULL)</code>?</p>
+  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+  <div class="ans-box">In CLL there is NO NULL pointer — last node points back to head. Using <code>while(curr!=NULL)</code> causes an <strong>infinite loop</strong>! 
+<pre>int countCLL(Node* head){
+  if(head==NULL) return 0;
+  int count=1;
+  Node* curr=head->next;
+  while(curr != head){ // stop when back at head
+    count++;
+    curr=curr->next;
+  }
+  return count;
+}</pre></div>
+</div>
+
+<div class="excard">
+  <div class="ex-ttl">Ex 5: Delete All Occurrences</div>
+  <p>Write a C function to delete ALL nodes with a given value from a SLL. Example: 1→2→2→3→2→NULL, delete 2 → 1→3→NULL.</p>
+  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+  <div class="ans-box"><pre>Node* deleteAll(Node* head, int key){
+  // handle leading matches
+  while(head && head->data==key){
+    Node* tmp=head; head=head->next; free(tmp);
+  }
+  Node *curr=head, *prev=NULL;
+  while(curr){
+    if(curr->data==key){
+      prev->next=curr->next;
+      free(curr); curr=prev->next;
+    } else { prev=curr; curr=curr->next; }
+  }
+  return head;
+}</pre></div>
+</div>
+
+<div class="excard">
+  <div class="ex-ttl">Ex 6: DLL vs SLL Delete Advantage</div>
+  <p>Given a pointer <code>del</code> to a middle node in both SLL and DLL. Compare deletion time complexity and explain why DLL is faster.</p>
+  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+  <div class="ans-box"><strong>SLL:</strong> O(n) — Even with node pointer, you need the <em>previous</em> node to update its next. Since SLL has no prev pointer, you must traverse from head to find prev.<br><br><strong>DLL:</strong> O(1) — Each node has <code>prev</code> pointer. Directly: <code>del→prev→next = del→next</code> and <code>del→next→prev = del→prev</code>. No traversal needed!<br><br>This is DLL's biggest advantage for deletion.</div>
+</div>
+
+<div class="excard">
+  <div class="ex-ttl">Ex 7: Memory Calculation</div>
+  <p>Given: sizeof(int)=4 bytes, sizeof(pointer)=8 bytes. Calculate memory for: (a) SLL node (b) CLL node (c) DLL node. If n=1000 nodes, find total memory for each.</p>
+  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+  <div class="ans-box">(a) SLL node: <code>int data(4) + Node* next(8) = 12 bytes</code>. 1000 nodes = 12,000 bytes<br>(b) CLL node: Same structure as SLL = <code>12 bytes</code>. 1000 nodes = 12,000 bytes<br>(c) DLL node: <code>Node* prev(8) + int data(4) + Node* next(8) = 20 bytes</code>. 1000 nodes = 20,000 bytes<br><br>DLL uses <strong>67% more memory</strong> per node than SLL/CLL (20 vs 12 bytes).</div>
+</div>
+
+<div class="excard">
+  <div class="ex-ttl">Ex 8: Detect Loop (Floyd's Cycle Detection)</div>
+  <p>Write a function to detect if a linked list has a cycle. This also detects if a list is circular.</p>
+  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+  <div class="ans-box"><pre>int hasCycle(Node* head){
+  Node *slow=head, *fast=head;
+  while(fast && fast->next){
+    slow = slow->next;
+    fast = fast->next->next;
+    if(slow == fast) return 1; // cycle!
+  }
+  return 0; // no cycle
+}
+// If slow and fast ever meet → cycle exists
+// Time: O(n), Space: O(1)</pre></div>
+</div>
+
+<div class="excard">
+  <div class="ex-ttl">Ex 9: Merge Two Sorted SLLs</div>
+  <p>Merge 1→3→5→NULL and 2→4→6→NULL into a sorted list 1→2→3→4→5→6→NULL without extra space.</p>
+  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+  <div class="ans-box"><pre>Node* merge(Node* a, Node* b){
+  if(!a) return b;
+  if(!b) return a;
+  if(a->data <= b->data){
+    a->next = merge(a->next, b);
+    return a;
+  } else {
+    b->next = merge(a, b->next);
+    return b;
+  }
+}
+// Recursively picks smaller head each time
+// Time: O(n+m), Space: O(n+m) stack</pre>
+Iterative version avoids recursion overhead and uses O(1) extra space.</div>
+</div>
+
+<div class="excard">
+  <div class="ex-ttl">Ex 10: Convert SLL to CLL</div>
+  <p>Given a singly linked list 10→20→30→NULL, write code to convert it to a circular linked list.</p>
+  <button class="ans-btn" onclick="toggleAns(this)">Show Answer</button>
+  <div class="ans-box"><pre>Node* toCLL(Node* head){
+  if(head==NULL) return NULL;
+  // find last node
+  Node* last=head;
+  while(last->next != NULL)
+    last = last->next;
+  // make it circular
+  last->next = head; // last → head
+  return head;
+}
+// Before: 10→20→30→NULL
+// After:  10→20→30→(back to 10)
+// Only change: last node's next = head</pre></div>
+</div>
+
+</div>
+</div>
+
+<!-- ═══════════ PAGE: GATE MCQ ═══════════ -->
+<div id="gate" class="page">
+<div class="hero"><div class="hero-badge">🎓 GATE Questions</div><h1>10 GATE <em>MCQ</em></h1><p>Previous year & GATE-style questions with detailed explanations</p></div>
+<div class="main">
+
+<div id="gqs"></div>
+
+</div>
+</div>
+
+<!-- ═══════════ PAGE: PLACEMENT MCQ ═══════════ -->
+<div id="placement" class="page">
+<div class="hero"><div class="hero-badge">💼 Placement MCQ</div><h1>20 Technical Placement <em>MCQ</em></h1><p>TCS · Infosys · Wipro · Cognizant · Accenture · Amazon · Flipkart</p></div>
+<div class="main">
+<div id="pqs"></div>
+</div>
+</div>
+
+<script>
+// ─── HELPERS ─────────────────────────────────
+function P(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach((b,i)=>{
+    const pages=['intro','sll','cll','dll','compare','exercises','gate','placement'];
+    b.classList.toggle('active',pages[i]===id);
+  });
+  window.scrollTo(0,0);
+}
+function ST(page,tab){
+  const pg=document.getElementById(page);
+  pg.querySelectorAll('.stab-content').forEach(c=>c.classList.remove('active'));
+  pg.querySelectorAll('.stab').forEach(s=>s.classList.remove('active'));
+  const tc=document.getElementById(`${page}-${tab}`);
+  if(tc) tc.classList.add('active');
+  event.target.classList.add('active');
+}
+function HL(ids,cls='hl'){
+  document.querySelectorAll('[class^="cl hl"],[class="cl hl"],[class="cl hl2"],[class="cl hl3"],[class="cl hl4"]')
+    .forEach(el=>{el.classList.remove('hl','hl2','hl3','hl4');});
+  if(!ids) return;
+  (Array.isArray(ids)?ids:[ids]).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.classList.add(cls);
+  });
+}
+function V(id,html){const el=document.getElementById(id);if(el)el.innerHTML=html;}
+function M(id,txt,cls=''){const el=document.getElementById(id);if(!el)return;el.textContent=txt;el.className='amsg'+(cls?' '+cls:'');}
+function PRG(pre,cur,tot){
+  const pf=document.getElementById(pre+'-p');const sc=document.getElementById(pre+'-c');
+  if(pf)pf.style.width=`${(cur/tot)*100}%`;if(sc)sc.textContent=`${cur}/${tot}`;
+}
+// Node builders
+function N(v,c='cc',lbl=''){return `<div class="nw"><div class="nd ${c}"><div class="nd-d">${v}</div><div class="nd-p">→</div></div>${lbl?`<div class="pl">${lbl}</div>`:''}</div>`;}
+function DN(v,lbl='',c='cp'){return `<div class="nw"><div class="dnd" style="${c==='cg'?'border-color:var(--green)':c==='cy'?'border-color:var(--yellow)':c==='cr'?'border-color:var(--red)':''};"><div class="dp">←</div><div class="dd">${v}</div><div class="dp">→</div></div>${lbl?`<div class="pl" style="color:var(--purple)">${lbl}</div>`:''}</div>`;}
+function AR(c=''){return `<div class="ar ${c}">→</div>`;}
+function DAR(){return `<div class="da">⇄</div>`;}
+function NL(){return `<div class="nl">NULL</div>`;}
+function CLR(v,lbl=''){return `<div class="nw"><div class="nd cc"><div class="nd-d">${v}</div><div class="nd-p">↩</div></div>${lbl?`<div class="pl">${lbl}</div>`:''}</div>`;}
+
+// ─── STEPPER ENGINE ──────────────────────────
+const steppers={};
+function mkStepper(id,steps){
+  let cur=0;let tmr=null;
+  function run(){if(steps[cur])steps[cur]();}
+  const ctrl={
+    step:function(d){clearInterval(tmr);tmr=null;const ab=document.getElementById(id+'-a');if(ab){ab.textContent='⚡';ab.classList.remove('run');}cur=Math.max(0,Math.min(steps.length-1,cur+d));run();},
+    reset:function(){clearInterval(tmr);tmr=null;const ab=document.getElementById(id+'-a');if(ab){ab.textContent='⚡';ab.classList.remove('run');}cur=0;run();},
+    auto:function(){const ab=document.getElementById(id+'-a');if(tmr){clearInterval(tmr);tmr=null;if(ab){ab.textContent='⚡';ab.classList.remove('run');}return;}if(ab){ab.textContent='⏸';ab.classList.add('run');}tmr=setInterval(()=>{if(cur>=steps.length-1){clearInterval(tmr);tmr=null;if(ab){ab.textContent='⚡';ab.classList.remove('run');}return;}cur++;run();},1100);}
+  };
+  steppers[id]=ctrl;run();return ctrl;
+}
+function S(id,d){if(steppers[id])steppers[id].step(d);}
+function R(id){if(steppers[id])steppers[id].reset();}
+function A(id){if(steppers[id])steppers[id].auto();}
+
+// ═════════════════════════════════════════════
+// ALL STEPPERS
+// ═════════════════════════════════════════════
+
+// SC — SLL Create
+mkStepper('sc',[
+  ()=>{HL(null);V('sc-v','');M('sc-m','Press Next ▶ to build the list');PRG('sc',0,8);},
+  ()=>{HL('sc1');V('sc-v',NL());M('sc-m','Line 1: head=NULL. List is empty. head points to nothing.');PRG('sc',1,8);},
+  ()=>{HL(['sc3','sc4','sc5','sc6']);V('sc-v',N(10,'cy','n1 (allocated)'));M('sc-m','createNode(10): malloc() allocates memory. data=10, next=NULL.','y');PRG('sc',2,8);},
+  ()=>{HL('sc10');V('sc-v',N(10,'cy','n1 (allocated)'));M('sc-m','n1 = createNode(10) done. Node ready at some heap address.');PRG('sc',3,8);},
+  ()=>{HL('sc11');V('sc-v',`${N(10,'cc','n1')}${AR()}${NL()}<span style="margin-left:12px;font-family:JetBrains Mono;font-size:0.7rem;color:var(--yellow)">+ n2=createNode(20)</span>`);M('sc-m','n2=createNode(20). Another node created with data=20, next=NULL.','y');PRG('sc',4,8);},
+  ()=>{HL('sc12');V('sc-v',`${N(10,'cc','n1')}${AR()}${NL()}<div class="ar"></div>${N(20,'cc','n2')}${AR()}${NL()}`);M('sc-m','n3=createNode(30). Three separate nodes created — not yet linked!');PRG('sc',5,8);},
+  ()=>{HL('sc13');V('sc-v',`${N(10,'cg','head=n1')}${AR('g')}${N(20,'cc')}${AR('g')}${N(30,'cc')}${AR()}${NL()}`);M('sc-m','head=n1; n1→next=n2; n2→next=n3. All linked! head→10→20→30→NULL','g');PRG('sc',6,8);},
+  ()=>{HL(null);V('sc-v',`${N(10,'cg','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('sc-m','✅ List created! 10→20→30→NULL. 3 nodes linked via next pointers.','g');PRG('sc',7,8);},
+]);
+
+// IB — SLL Insert Begin
+mkStepper('ib',[
+  ()=>{HL(null);V('ib-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('ib-m','List: 10→20→30. Insert 5 at beginning. O(1)!');PRG('ib',0,4);},
+  ()=>{HL(['ib2','ib3']);V('ib-v',`${N(5,'cy','newNode')}${AR()}<span style="font-size:0.7rem;color:var(--muted2);margin:0 8px">?</span>${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('ib-m','createNode(5): newNode allocated. next = ? (not set yet).','y');PRG('ib',1,4);},
+  ()=>{HL(['ib4','ib5']);V('ib-v',`${N(5,'cy','newNode')}${AR('g')}${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('ib-m','n→next = *head (10) ✓  newNode now points to old head.','y');PRG('ib',2,4);},
+  ()=>{HL(['ib6','ib7']);V('ib-v',`${N(5,'cg','head(new!)')}${AR()}${N(10,'cc')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('ib-m','✅ *head = n. head updated to node 5! 5→10→20→30→NULL. O(1) done!','g');PRG('ib',3,4);},
+]);
+
+// IE — SLL Insert End
+mkStepper('ie',[
+  ()=>{HL(null);V('ie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('ie-m','List: 10→20→30. Insert 40 at end.');PRG('ie',0,6);},
+  ()=>{HL('ie2');V('ie-v',`${N(40,'cy','newNode')}${AR()}${NL()}<span style="font-size:0.7rem;color:var(--muted2);margin-left:12px">not linked yet</span>`);M('ie-m','createNode(40): newNode ready. next=NULL.','y');PRG('ie',1,6);},
+  ()=>{HL('ie4');V('ie-v',`${N(10,'cg','head,curr')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('ie-m','curr = head (10). Check curr→next(20) ≠ NULL → keep going.');PRG('ie',2,6);},
+  ()=>{HL(['ie5','ie6']);V('ie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','curr—LAST')}${AR()}${NL()}`);M('ie-m','curr traverses: 10→20→30. At 30: next==NULL → EXIT loop! curr is last.','y');PRG('ie',3,6);},
+  ()=>{HL('ie7');V('ie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','curr')}${AR('g')}${N(40,'cg','newNode')}${AR()}${NL()}`);M('ie-m','curr→next = newNode ✓  Last node (30) now points to 40!','g');PRG('ie',4,6);},
+  ()=>{HL(null);V('ie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${N(40,'cg','new tail')}${AR()}${NL()}`);M('ie-m','✅ 10→20→30→40→NULL. Traversed n nodes → O(n).','g');PRG('ie',5,6);},
+]);
+
+// IM — SLL Insert Middle
+mkStepper('im',[
+  ()=>{HL(null);V('im-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('im-m','List: 10→20→30. Insert 25 after position 2 (after node 20).');PRG('im',0,5);},
+  ()=>{HL(['im2','im3']);V('im-v',`${N(25,'cy','newNode')}${AR()}${NL()}<div style="margin-left:10px;font-size:0.7rem;color:var(--muted2)">not linked</div>`);M('im-m','createNode(25): newNode ready. curr = head (10).','y');PRG('im',1,5);},
+  ()=>{HL('im4');V('im-v',`${N(10,'cc','head')}${AR()}${N(20,'cg','curr (pos 2)')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('im-m','Loop: traverse to pos-1=1 step. curr lands on node 20 (position 2).');PRG('im',2,5);},
+  ()=>{HL(['im5','im6']);V('im-v',`${N(10,'cc','head')}${AR()}${N(20,'cy','curr')}${AR('g')}${N(25,'cy','newNode→30')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('im-m','Step A: newNode→next = curr→next (30). ⚠️ MUST do this FIRST — saves connection to rest!','y');PRG('im',3,5);},
+  ()=>{HL('im7');V('im-v',`${N(10,'cc','head')}${AR()}${N(20,'cg','curr')}${AR('g')}${N(25,'cg','inserted!')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('im-m','✅ Step B: curr→next = newNode. 10→20→25→30→NULL. Order A before B is critical!','g');PRG('im',4,5);},
+]);
+
+// DB — SLL Delete Begin
+mkStepper('db',[
+  ()=>{HL(null);V('db-v',`${N(10,'cr','head(DELETE)')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('db-m','List: 10→20→30. Delete head node (10). O(1)!');PRG('db',0,4);},
+  ()=>{HL(['db5','db6']);V('db-v',`${N(10,'cy','temp=head')}${AR()}${N(20,'cc','new head')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('db-m','temp = *head (node 10). Save old head before losing reference.','y');PRG('db',1,4);},
+  ()=>{HL(['db7','db8']);V('db-v',`${N(10,'cr','temp (to be freed)')}${AR()}${N(20,'cg','head (updated!)')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('db-m','*head = (*head)→next. head now points to 20!','g');PRG('db',2,4);},
+  ()=>{HL(['db9','db10']);V('db-v',`${N(20,'cg','head')}${AR()}${N(30,'cc')}${AR()}${NL()}<span style="margin-left:12px;font-size:0.7rem;color:var(--red)">[10 freed!]</span>`);M('db-m','✅ free(temp). Node 10 memory released. List: 20→30→NULL. O(1)!','g');PRG('db',3,4);},
+]);
+
+// DE — SLL Delete End
+mkStepper('de',[
+  ()=>{HL(null);V('de-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cr','DELETE')}${AR()}${NL()}`);M('de-m','List: 10→20→30. Delete last node (30).O(n) — need prev pointer!');PRG('de',0,6);},
+  ()=>{HL(['de7','de8']);V('de-v',`${N(10,'cc','head')}${AR()}${N(20,'cc','prev=NULL')}${AR()}${N(30,'cr','curr')}${AR()}${NL()}`);M('de-m','prev=NULL, curr=head(10). Traverse: need TWO pointers!');PRG('de',1,6);},
+  ()=>{HL(['de9','de10']);V('de-v',`${N(10,'cc','head')}${AR()}${N(20,'cy','prev')}${AR()}${N(30,'cr','curr—LAST')}${AR()}${NL()}`);M('de-m','Traversal: prev=10→20, curr=20→30. At 30: curr→next==NULL → EXIT. curr=last, prev=second-last.','y');PRG('de',2,6);},
+  ()=>{HL(['de11','de12']);V('de-v',`${N(10,'cc','head')}${AR()}${N(20,'cg','prev→NULL')}${AR()}${NL()}<span style="margin-left:10px;font-size:0.7rem;color:var(--red)">[30 bypassed]</span>`);M('de-m','prev→next = NULL ✓  Second-last node (20) now points to NULL. 30 is isolated!','g');PRG('de',3,6);},
+  ()=>{HL('de13');V('de-v',`${N(10,'cc','head')}${AR()}${N(20,'cg','new tail')}${AR()}${NL()}<span style="margin-left:10px;font-size:0.7rem;color:var(--red)">[30 freed!]</span>`);M('de-m','✅ free(curr). 10→20→NULL. Last node removed!','g');PRG('de',4,6);},
+]);
+
+// DM — SLL Delete Middle
+mkStepper('dm',[
+  ()=>{HL(null);V('dm-v',`${N(10,'cc','head')}${AR()}${N(20,'cr','key=20')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('dm-m','List: 10→20→30. Delete node with key=20.');PRG('dm',0,6);},
+  ()=>{HL(['dm2','dm3']);V('dm-v',`${N(10,'cc','head,curr')}${AR()}${N(20,'cr')}${AR()}${N(30,'cc')}${AR()}${NL()}<div style="font-size:0.7rem;color:var(--muted2);margin-left:8px">prev=NULL</div>`);M('dm-m','curr=head(10), prev=NULL. Start traversal. Is 10==20? No → enter loop.');PRG('dm',1,6);},
+  ()=>{HL(['dm4','dm5']);V('dm-v',`${N(10,'cc','head')}${AR()}${N(20,'cr','curr—FOUND!')}${AR()}${N(30,'cc')}${AR()}${NL()}<div style="font-size:0.7rem;color:var(--green);margin-left:8px">prev=node(10)</div>`);M('dm-m','prev=node(10), curr=node(20). curr→data==20==key → EXIT loop!','y');PRG('dm',2,6);},
+  ()=>{HL(['dm8','dm9']);V('dm-v',`${N(10,'cg','head,prev')}${AR('g')}${N(20,'cr','bypassed!')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('dm-m','prev→next = curr→next (30) ✓  Node 10 skips 20 and points to 30!','g');PRG('dm',3,6);},
+  ()=>{HL('dm10');V('dm-v',`${N(10,'cg','head')}${AR()}${N(30,'cg')}${AR()}${NL()}<span style="margin-left:10px;font-size:0.7rem;color:var(--red)">[20 freed!]</span>`);M('dm-m','✅ free(curr). Memory released. 10→30→NULL. Middle node deleted!','g');PRG('dm',4,6);},
+]);
+
+// TR — SLL Traverse
+let trO='';
+mkStepper('tr',[
+  ()=>{HL(null);V('tr-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);trO='';V('tr-o','');M('tr-m','List: 10→20→30. curr starts at head. Watch output build.');PRG('tr',0,8);},
+  ()=>{HL('tr2');V('tr-v',`${N(10,'cg','curr,head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('tr-m','curr = head (10). Enter while: curr(10)≠NULL ✓');PRG('tr',1,8);},
+  ()=>{HL('tr4');V('tr-v',`${N(10,'cg','curr')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);trO='10→';V('tr-o',trO);M('tr-m','printf(10). Output: 10→');PRG('tr',2,8);},
+  ()=>{HL('tr5');V('tr-v',`${N(10,'cc','head')}${AR()}${N(20,'cg','curr')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('tr-m','curr = curr→next (20). Check: 20≠NULL ✓');PRG('tr',3,8);},
+  ()=>{HL('tr4');V('tr-v',`${N(10,'cc','head')}${AR()}${N(20,'cg','curr')}${AR()}${N(30,'cc')}${AR()}${NL()}`);trO='10→20→';V('tr-o',trO);M('tr-m','printf(20). Output: 10→20→');PRG('tr',4,8);},
+  ()=>{HL('tr5');V('tr-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cg','curr')}${AR()}${NL()}`);M('tr-m','curr = curr→next (30). Check: 30≠NULL ✓');PRG('tr',5,8);},
+  ()=>{HL('tr4');trO='10→20→30→';V('tr-o',trO);M('tr-m','printf(30). Output: 10→20→30→');PRG('tr',6,8);},
+  ()=>{HL('tr5');V('tr-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}<div class="nl" style="border-color:var(--green);color:var(--green)">curr=NULL</div>`);M('tr-m','curr = curr→next = NULL. Loop condition false → EXIT!','y');PRG('tr',7,8);},
+  ()=>{HL('tr7');trO='10→20→30→NULL';V('tr-o',trO);M('tr-m','✅ printf("NULL"). Traversal complete! Time: O(n).','g');PRG('tr',8,8);},
+]);
+
+// CC — CLL Concept
+mkStepper('cc',[
+  ()=>{HL(null);V('cc-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('cc-m','Singly LL: 10→20→30→NULL. Last node points to NULL — dead end!');PRG('cc',0,4);},
+  ()=>{HL(['cc1','cc2']);V('cc-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}<div class="nl" style="border-color:var(--red);color:var(--red)">NULL — dead end!</div>`);M('cc-m','SLL: last→next = NULL. After visiting 30, you CANNOT return to head!','r');PRG('cc',1,4);},
+  ()=>{HL(['cc3','cc4']);V('cc-v',`${N(10,'cg','head')}${AR()}${N(20,'cc')}${AR()}${CLR(30,'→back to head')}${AR('g')}<div style="font-size:0.75rem;color:var(--green);font-family:JetBrains Mono">↩ HEAD</div>`);M('cc-m','CLL: last→next = head! Last node (30) wraps BACK to head (10). Circle formed!','g');PRG('cc',2,4);},
+  ()=>{HL(['cc5','cc6']);V('cc-v',`<div class="nw"><div class="nd cc glow"><div class="nd-d">42</div><div class="nd-p">↩</div></div><div class="pl">single node: n→next=n</div></div>`);M('cc-m','Special: single node in CLL points to ITSELF! n→next=n (not NULL). ⚠️ Use do-while to traverse!','y');PRG('cc',3,4);},
+]);
+
+// CIB — CLL Insert Begin
+mkStepper('cib',[
+  ()=>{HL(null);V('cib-v',`${N(10,'cg','head')}${AR()}${N(20,'cc')}${AR()}${CLR(30,'→head')}${AR()}<span style="font-size:0.7rem;color:var(--green)">↩</span>`);M('cib-m','CLL: 10→20→30→(head). Insert 5 at beginning.');PRG('cib',0,5);},
+  ()=>{HL('cib2');V('cib-v',`${N(5,'cy','newNode')}${AR()}${NL()}<span style="font-size:0.7rem;color:var(--muted2);margin:0 10px">not linked</span>${N(10,'cg','head')}${AR()}${N(20,'cc')}${AR()}${CLR(30,'→head')}`);M('cib-m','createNode(5): newNode ready.','y');PRG('cib',1,5);},
+  ()=>{HL(['cib5','cib6']);V('cib-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','last')}`);M('cib-m','Traverse to find last node: last = node(30) where last→next==head.','y');PRG('cib',2,5);},
+  ()=>{HL('cib7');V('cib-v',`${N(5,'cy','newNode')}${AR('g')}${N(10,'cg','old head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','last')}`);M('cib-m','n→next = head (old head 10) ✓  newNode points to old head.','y');PRG('cib',3,5);},
+  ()=>{HL(['cib8','cib9']);V('cib-v',`${N(5,'cg','head(new!)')}${AR()}${N(10,'cc')}${AR()}${N(20,'cc')}${AR()}${CLR(30,'→5(new head)')}<span style="font-size:0.7rem;color:var(--green);margin-left:4px">↩</span>`);M('cib-m','✅ last→next=n, return n as new head. CLL: 5→10→20→30→(5). Circle maintained!','g');PRG('cib',4,5);},
+]);
+
+// CIE — CLL Insert End
+mkStepper('cie',[
+  ()=>{HL(null);V('cie-v',`${N(10,'cg','head')}${AR()}${N(20,'cc')}${AR()}${CLR(30,'→head')}<span style="font-size:0.7rem;color:var(--green);margin-left:4px">↩</span>`);M('cie-m','CLL: 10→20→30→(head). Insert 40 at end.');PRG('cie',0,5);},
+  ()=>{HL('cie2');V('cie-v',`${N(40,'cy','newNode')}${AR()}${NL()}`);M('cie-m','createNode(40): newNode ready, next=NULL.','y');PRG('cie',1,5);},
+  ()=>{HL(['cie4','cie5']);V('cie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','last (found!)')}`);M('cie-m','Traverse: last = node(30) where last→next==head. Found the last node!','y');PRG('cie',2,5);},
+  ()=>{HL('cie6');V('cie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','last')}${AR('g')}${N(40,'cy','newNode')}`);M('cie-m','last→next = n ✓  Old last (30) now points to new node (40).','g');PRG('cie',3,5);},
+  ()=>{HL('cie7');V('cie-v',`${N(10,'cg','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${CLR(40,'→head(10)')}<span style="font-size:0.7rem;color:var(--green);margin-left:4px">↩</span>`);M('cie-m','✅ n→next = head ✓  New node (40) points back to head. CLL: 10→20→30→40→(10)!','g');PRG('cie',4,5);},
+]);
+
+// CDB — CLL Delete Begin
+mkStepper('cdb',[
+  ()=>{HL(null);V('cdb-v',`${N(10,'cr','head—DELETE')}${AR()}${N(20,'cc')}${AR()}${CLR(30,'→head')}<span style="font-size:0.7rem;color:var(--green);margin-left:4px">↩</span>`);M('cdb-m','CLL: 10→20→30→(head). Delete head (10). Must update last→next!');PRG('cdb',0,5);},
+  ()=>{HL(['cdb6','cdb7']);V('cdb-v',`${N(10,'cr','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','last (found!)')}`);M('cdb-m','Traverse to find last: last=node(30) where last→next==head.','y');PRG('cdb',1,5);},
+  ()=>{HL('cdb9');V('cdb-v',`${N(10,'cr','head (old)')}${AR()}${N(20,'cg','new head!')}${AR()}${N(30,'cy','last→20')}`);M('cdb-m','last→next = head→next (node 20) ✓  last node now points to NEW head!','g');PRG('cdb',2,5);},
+  ()=>{HL(['cdb10','cdb11']);V('cdb-v',`${N(10,'cr','temp (old head)')}${AR()}${N(20,'cg','head (new!)')}${AR()}${CLR(30,'→20(new head)')}<span style="font-size:0.7rem;color:var(--green);margin-left:4px">↩</span>`);M('cdb-m','temp=old head, head=head→next (20). Head advanced to node 20!');PRG('cdb',3,5);},
+  ()=>{HL('cdb12');V('cdb-v',`${N(20,'cg','head')}${AR()}${CLR(30,'→20')}<span style="font-size:0.7rem;color:var(--green);margin-left:4px">↩</span><span style="font-size:0.7rem;color:var(--red);margin-left:8px">[10 freed!]</span>`);M('cdb-m','✅ free(temp). CLL: 20→30→(20). Circle intact! Head deletion done.','g');PRG('cdb',4,5);},
+]);
+
+// CDE — CLL Delete End
+mkStepper('cde',[
+  ()=>{HL(null);V('cde-v',`${N(10,'cg','head')}${AR()}${N(20,'cc')}${AR()}${CLR(30,'→head,DELETE')}`);M('cde-m','CLL: 10→20→30→(head). Delete last node (30).');PRG('cde',0,5);},
+  ()=>{HL(['cde5','cde6','cde7']);V('cde-v',`${N(10,'cc','head')}${AR()}${N(20,'cy','prev')}${AR()}${N(30,'cr','curr—LAST')}`);M('cde-m','Traverse: prev=node(20), curr=node(30). curr→next==head → EXIT. Two-pointer approach!','y');PRG('cde',1,5);},
+  ()=>{HL('cde9');V('cde-v',`${N(10,'cg','head')}${AR()}${N(20,'cg','prev→head')}<span style="font-size:0.7rem;color:var(--green);margin-left:4px">↩</span><span style="margin-left:8px;font-size:0.7rem;color:var(--red)">[30 bypassed]</span>`);M('cde-m','prev→next = head ✓  Node 20 now points back to head. Circle re-closed!','g');PRG('cde',2,5);},
+  ()=>{HL('cde10');V('cde-v',`${N(10,'cg','head')}${AR()}${N(20,'cg','→head')}<span style="font-size:0.7rem;color:var(--green);margin-left:4px">↩</span><span style="margin-left:10px;font-size:0.7rem;color:var(--red)">[30 freed!]</span>`);M('cde-m','✅ free(curr). CLL: 10→20→(10). Last node deleted, circle maintained!','g');PRG('cde',3,5);},
+]);
+
+// CDM — CLL Delete Middle
+mkStepper('cdm',[
+  ()=>{HL(null);V('cdm-v',`${N(10,'cg','head')}${AR()}${N(20,'cr','key=20')}${AR()}${CLR(30,'→head')}`);M('cdm-m','CLL: 10→20→30→(head). Delete node key=20.');PRG('cdm',0,5);},
+  ()=>{HL(['cdm2','cdm3']); V('cdm-v',`${N(10,'cg','head,curr')}${AR()}${N(20,'cr')}${AR()}${N(30,'cc')}`);M('cdm-m','curr=head(10), prev=NULL. do-while begins: is 10==20? No.');PRG('cdm',1,5);},
+  ()=>{HL(['cdm4','cdm5']);V('cdm-v',`${N(10,'cc','head')}${AR()}${N(20,'cr','curr—FOUND!')}${AR()}${N(30,'cc')}`);M('cdm-m','prev=node(10), curr=node(20). curr→data==20==key → break!','y');PRG('cdm',2,5);},
+  ()=>{HL('cdm8');V('cdm-v',`${N(10,'cg','prev')}${AR('g')}${N(20,'cr','bypassed')}${AR()}${N(30,'cc')}`);M('cdm-m','prev→next = curr→next (30) ✓  Node 10 skips 20, points to 30!','g');PRG('cdm',3,5);},
+  ()=>{HL('cdm9');V('cdm-v',`${N(10,'cg','head')}${AR()}${CLR(30,'→head')}<span style="font-size:0.7rem;color:var(--green);margin-left:4px">↩</span><span style="font-size:0.7rem;color:var(--red);margin-left:10px">[20 freed!]</span>`);M('cdm-m','✅ free(curr). CLL: 10→30→(10). Middle deletion done, circle intact!','g');PRG('cdm',4,5);},
+]);
+
+// CT — CLL Traverse
+let ctO='';
+mkStepper('ct',[
+  ()=>{HL(null);V('ct-v',`${N(10,'cg','head')}${AR()}${N(20,'cc')}${AR()}${CLR(30,'→head')}`);ctO='';V('ct-o','');M('ct-m','CLL: 10→20→30→(head). do-while traversal.');PRG('ct',0,7);},
+  ()=>{HL('ct3');V('ct-v',`${N(10,'cg','curr,head')}${AR()}${N(20,'cc')}${AR()}${CLR(30)}`);M('ct-m','curr = head. do-while: execute body FIRST then check condition.');PRG('ct',1,7);},
+  ()=>{HL('ct5');ctO='10→';V('ct-o',ctO);M('ct-m','printf(10). Output: 10→');PRG('ct',2,7);},
+  ()=>{HL(['ct6','ct7']);V('ct-v',`${N(10,'cc','head')}${AR()}${N(20,'cg','curr')}${AR()}${CLR(30)}`);M('ct-m','curr=curr→next(20). Check: curr(20) ≠ head(10) → loop again!');PRG('ct',3,7);},
+  ()=>{HL('ct5');ctO='10→20→';V('ct-o',ctO);V('ct-v',`${N(10,'cc','head')}${AR()}${N(20,'cg','curr')}${AR()}${CLR(30)}`);M('ct-m','printf(20). Output: 10→20→');PRG('ct',4,7);},
+  ()=>{HL(['ct6','ct7']);V('ct-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','curr→next=head!')}`);ctO='10→20→30→';V('ct-o',ctO);M('ct-m','curr=30, printf. curr→next = head → check: curr==head? YES → EXIT!','y');PRG('ct',5,7);},
+  ()=>{HL('ct8');ctO='10→20→30→(HEAD)';V('ct-o',ctO);M('ct-m','✅ printf("(HEAD)"). Traversal done! do-while prevents infinite loop!','g');PRG('ct',6,7);},
+]);
+
+// DS — DLL Struct
+mkStepper('ds',[
+  ()=>{HL(null);V('ds-v','');M('ds-m','Press Next ▶ to explore DLL node structure');PRG('ds',0,4);},
+  ()=>{HL(['ds1','ds2','ds3','ds4','ds5']);V('ds-v',`<div class="nw"><div class="dnd"><div class="dp">←prev</div><div class="dd">?</div><div class="dp">next→</div></div></div>`);M('ds-m','struct Node has 3 fields: prev (backward), data (value), next (forward).');PRG('ds',1,4);},
+  ()=>{HL(['ds2','ds6','ds7']);V('ds-v',`${NL()}<div class="da">⇄</div>${DN(10,'head','cg')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'tail','cy')}<div class="da">⇄</div>${NL()}`);M('ds-m','head→prev = NULL (nothing before head). tail→next = NULL (nothing after tail).','g');PRG('ds',2,4);},
+  ()=>{HL(null);V('ds-v',`${NL()}<div class="da">⇄</div>${DN(10,'head')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'tail')}<div class="da">⇄</div>${NL()}`);M('ds-m','✅ Full DLL: NULL←[10]⇄[20]⇄[30]→NULL. Bidirectional linking!','g');PRG('ds',3,4);},
+]);
+
+// DIB — DLL Insert Begin
+mkStepper('dib',[
+  ()=>{HL(null);V('dib-v',`${NL()}<div class="da">⇄</div>${DN(10,'head')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'')}<div class="da">⇄</div>${NL()}`);M('dib-m','DLL: NULL←[10]⇄[20]⇄[30]→NULL. Insert 5 at beginning.');PRG('dib',0,4);},
+  ()=>{HL(['dib2','dib3','dib4']);V('dib-v',`<div class="nw"><div class="dnd" style="border-color:var(--yellow)"><div class="dp" style="color:var(--yellow)">←NULL</div><div class="dd" style="color:var(--yellow)">5</div><div class="dp" style="color:var(--yellow)">→10</div></div><div class="pl" style="color:var(--yellow)">newNode</div></div>`);M('dib-m','createDNode(5): n→prev=NULL, n→next=*head(10). Both pointers set!','y');PRG('dib',1,4);},
+  ()=>{HL(['dib5','dib6']);V('dib-v',`<div class="nw"><div class="dnd" style="border-color:var(--yellow)"><div class="dp" style="color:var(--yellow)">←NULL</div><div class="dd" style="color:var(--yellow)">5</div><div class="dp">→10</div></div></div><div class="da" style="color:var(--green)">⇄</div>${DN(10,'old head→prev=5','cg')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'')}`);M('dib-m','(*head)→prev = n ✓  Old head (10) now points BACKWARD to new node (5)!','g');PRG('dib',2,4);},
+  ()=>{HL('dib7');V('dib-v',`${NL()}<div class="da">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--green)"><div class="dp" style="color:var(--red)">←NULL</div><div class="dd" style="color:var(--green)">5</div><div class="dp">→</div></div><div class="pl" style="color:var(--green)">head(new!)</div></div><div class="da">⇄</div>${DN(10,'')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'')}<div class="da">⇄</div>${NL()}`);M('dib-m','✅ *head = n. NULL←[5]⇄[10]⇄[20]⇄[30]→NULL. O(1)!','g');PRG('dib',3,4);},
+]);
+
+// DIE — DLL Insert End
+mkStepper('die',[
+  ()=>{HL(null);V('die-v',`${DN(10,'head')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'tail')}<div class="da">⇄</div>${NL()}`);M('die-m','DLL: [10]⇄[20]⇄[30]→NULL. Insert 40 at end.');PRG('die',0,5);},
+  ()=>{HL(['die2','die3']);V('die-v',`<div class="nw"><div class="dnd" style="border-color:var(--yellow)"><div class="dp">←?</div><div class="dd" style="color:var(--yellow)">40</div><div class="dp" style="color:var(--red)">→NULL</div></div></div>`);M('die-m','createDNode(40): n→next=NULL. n→prev = ? (will be set after traversal).','y');PRG('die',1,5);},
+  ()=>{HL(['die5','die6']);V('die-v',`${DN(10,'head')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--yellow)"><div class="dp">←</div><div class="dd">30</div><div class="dp" style="color:var(--red)">→NULL</div></div><div class="pl" style="color:var(--yellow)">curr—LAST</div></div>`);M('die-m','Traverse to last node. curr=30 where curr→next==NULL.','y');PRG('die',2,5);},
+  ()=>{HL('die7');V('die-v',`${DN(10,'head')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'curr')}<div class="da" style="color:var(--green)">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--yellow)"><div class="dp">←?</div><div class="dd" style="color:var(--yellow)">40</div><div class="dp" style="color:var(--red)">→NULL</div></div></div>`);M('die-m','curr→next = n ✓  Last (30) now points forward to 40.','g');PRG('die',3,5);},
+  ()=>{HL('die8');V('die-v',`${DN(10,'head')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'')}<div class="da" style="color:var(--green)">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--green)"><div class="dp" style="color:var(--green)">←30</div><div class="dd" style="color:var(--green)">40</div><div class="dp" style="color:var(--red)">→NULL</div></div><div class="pl" style="color:var(--green)">new tail</div></div>`);M('die-m','✅ n→prev = curr (30) ✓  [10]⇄[20]⇄[30]⇄[40]→NULL. Bidirectional!','g');PRG('die',4,5);},
+]);
+
+// DDB — DLL Delete Begin
+mkStepper('ddb',[
+  ()=>{HL(null);V('ddb-v',`${NL()}<div class="da">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--red)"><div class="dp" style="color:var(--red)">←NULL</div><div class="dd" style="color:var(--red)">10</div><div class="dp">→</div></div><div class="pl" style="color:var(--red)">head—DELETE</div></div><div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'')}<div class="da">⇄</div>${NL()}`);M('ddb-m','DLL: NULL←[10]⇄[20]⇄[30]→NULL. Delete head (10). O(1)!');PRG('ddb',0,4);},
+  ()=>{HL(['ddb3','ddb4']);V('ddb-v',`<div class="nw"><div class="dnd" style="border-color:var(--yellow)"><div class="dp">←</div><div class="dd" style="color:var(--yellow)">10</div><div class="dp">→</div></div><div class="pl" style="color:var(--yellow)">temp</div></div><div class="da">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--green)"><div class="dp">←</div><div class="dd">20</div><div class="dp">→</div></div><div class="pl" style="color:var(--green)">head(new!)</div></div><div class="da">⇄</div>${DN(30,'')}`);M('ddb-m','temp=*head(10). *head = (*head)→next (20). Head advanced!','y');PRG('ddb',1,4);},
+  ()=>{HL(['ddb5','ddb6']);V('ddb-v',`<div class="nw"><div class="dnd" style="border-color:var(--yellow)"><div class="dp">←</div><div class="dd" style="color:var(--yellow)">10</div><div class="dp">→</div></div><div class="pl" style="color:var(--yellow)">temp(freed)</div></div><div class="da">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--green)"><div class="dp" style="color:var(--red)">←NULL</div><div class="dd">20</div><div class="dp">→</div></div><div class="pl" style="color:var(--green)">head</div></div><div class="da">⇄</div>${DN(30,'')}`);M('ddb-m','(*head)→prev = NULL ✓  New head (20) no longer points backward!','g');PRG('ddb',2,4);},
+  ()=>{HL('ddb7');V('ddb-v',`${NL()}<div class="da">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--green)"><div class="dp" style="color:var(--red)">←NULL</div><div class="dd">20</div><div class="dp">→</div></div><div class="pl" style="color:var(--green)">head</div></div><div class="da">⇄</div>${DN(30,'')}<div class="da">⇄</div>${NL()}<span style="font-size:0.7rem;color:var(--red);margin-left:8px">[10 freed!]</span>`);M('ddb-m','✅ free(temp). DLL: NULL←[20]⇄[30]→NULL. O(1) deletion!','g');PRG('ddb',3,4);},
+]);
+
+// DDE — DLL Delete End
+mkStepper('dde',[
+  ()=>{HL(null);V('dde-v',`${DN(10,'head')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--red)"><div class="dp">←</div><div class="dd" style="color:var(--red)">30</div><div class="dp" style="color:var(--red)">→NULL</div></div><div class="pl" style="color:var(--red)">tail—DELETE</div></div><div class="da">⇄</div>${NL()}`);M('dde-m','DLL: [10]⇄[20]⇄[30]→NULL. Delete last node (30).');PRG('dde',0,5);},
+  ()=>{HL(['dde5','dde6']);V('dde-v',`${DN(10,'head')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--yellow)"><div class="dp">←</div><div class="dd">30</div><div class="dp" style="color:var(--red)">→NULL</div></div><div class="pl" style="color:var(--yellow)">curr—LAST</div></div>`);M('dde-m','Traverse: curr moves to last node (30) where curr→next==NULL.','y');PRG('dde',1,5);},
+  ()=>{HL(['dde7','dde8']);V('dde-v',`${DN(10,'head')}<div class="da">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--green)"><div class="dp">←NULL</div><div class="dd">20</div><div class="dp" style="color:var(--green)">→NULL</div></div><div class="pl" style="color:var(--green)">new tail</div></div><div class="da">⇄</div>${NL()}<span style="font-size:0.7rem;color:var(--green)">DLL advantage: curr→prev→next=NULL directly!</span>`);M('dde-m','curr→prev→next = NULL ✓  DLL advantage! No need to traverse again — prev pointer saves us!','g');PRG('dde',2,5);},
+  ()=>{HL('dde9');V('dde-v',`${DN(10,'head')}<div class="da">⇄</div>${DN(20,'new tail')}<div class="da">⇄</div>${NL()}<span style="font-size:0.7rem;color:var(--red);margin-left:8px">[30 freed!]</span>`);M('dde-m','✅ free(curr). DLL: [10]⇄[20]→NULL. End node deleted!','g');PRG('dde',3,5);},
+]);
+
+// DDM — DLL Delete Middle
+mkStepper('ddm',[
+  ()=>{HL(null);V('ddm-v',`${DN(10,'head')}<div class="da">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--red)"><div class="dp">←</div><div class="dd" style="color:var(--red)">20</div><div class="dp">→</div></div><div class="pl" style="color:var(--red)">del—DELETE</div></div><div class="da">⇄</div>${DN(30,'')}<div class="da">⇄</div>${NL()}`);M('ddm-m','DLL: [10]⇄[20]⇄[30]. Delete node 20 (pointer given → O(1)!).');PRG('ddm',0,5);},
+  ()=>{HL(['ddm4','ddm5','ddm6']);V('ddm-v',`${DN(10,'head')}<div class="da">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--red)"><div class="dp">←</div><div class="dd" style="color:var(--red)">20</div><div class="dp">→</div></div><div class="pl" style="color:var(--red)">del</div></div><div class="da">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--green)"><div class="dp" style="color:var(--green)">←10</div><div class="dd">30</div><div class="dp">→</div></div></div>`);M('ddm-m','del→next(30)→prev = del→prev(10) ✓  Node 30 now points BACKWARD to node 10!','g');PRG('ddm',1,5);},
+  ()=>{HL(['ddm7','ddm8','ddm9']);V('ddm-v',`<div class="nw"><div class="dnd" style="border-color:var(--green)"><div class="dp">←</div><div class="dd">10</div><div class="dp" style="color:var(--green)">→30</div></div></div><div class="da" style="color:var(--green)">⇄</div><div class="nw"><div class="dnd" style="border-color:var(--red);opacity:0.4"><div class="dp">←</div><div class="dd" style="color:var(--red)">20</div><div class="dp">→</div></div><div class="pl" style="color:var(--red)">bypassed</div></div><div class="da">⇄</div>${DN(30,'')}`);M('ddm-m','del→prev(10)→next = del→next(30) ✓  Node 10 now points FORWARD to node 30. 20 is isolated!','g');PRG('ddm',2,5);},
+  ()=>{HL('ddm10');V('ddm-v',`${DN(10,'head')}<div class="da" style="color:var(--green)">⇄</div>${DN(30,'')}<div class="da">⇄</div>${NL()}<span style="font-size:0.7rem;color:var(--red);margin-left:8px">[20 freed!]</span>`);M('ddm-m','✅ free(del). DLL: [10]⇄[30]→NULL. O(1) deletion — no traversal needed!','g');PRG('ddm',3,5);},
+]);
+
+// DT — DLL Traverse
+let dtO='';
+mkStepper('dt',[
+  ()=>{HL(null);V('dt-v',`${DN(10,'head')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'tail')}`);dtO='';V('dt-o','');M('dt-m','DLL: 10⇄20⇄30. Forward traversal first.');PRG('dt',0,9);},
+  ()=>{HL('dt2');V('dt-v',`${DN(10,'curr,head','cg')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'')}`);M('dt-m','FORWARD: curr = head (10). while(curr≠NULL) → enter loop.');PRG('dt',1,9);},
+  ()=>{HL('dt3');dtO='FWD: 10→20→30→NULL';V('dt-o',dtO);V('dt-v',`${DN(10,'')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'','cg')}`);M('dt-m','✅ Forward complete: 10→20→30→NULL (curr visits each via →next)','g');PRG('dt',2,9);},
+  ()=>{HL(['dt5','dt6']);V('dt-v',`${DN(10,'')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'tail,curr','cy')}`);M('dt-m','BACKWARD: find tail first. Traverse via next until curr→next==NULL. curr = tail (30).','y');PRG('dt',3,9);},
+  ()=>{HL('dt7');dtO='FWD: 10→20→30→NULL';V('dt-o',dtO);V('dt-v',`${DN(10,'')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'curr','cp')}`);M('dt-m','BWD: curr=tail(30). printf(30). curr = curr→prev (20). ← BACKWARD!');PRG('dt',4,9);},
+  ()=>{HL('dt7');dtO='FWD: 10→20→30→NULL';V('dt-o',dtO);V('dt-v',`${DN(10,'')}<div class="da">⇄</div>${DN(20,'curr','cp')}<div class="da">⇄</div>${DN(30,'')}`);M('dt-m','printf(20). curr = curr→prev (10). Continuing backward!');PRG('dt',5,9);},
+  ()=>{HL('dt7');dtO='FWD: 10→20→30→NULL';V('dt-o',dtO);V('dt-v',`${DN(10,'curr','cp')}<div class="da">⇄</div>${DN(20,'')}<div class="da">⇄</div>${DN(30,'')}`);M('dt-m','printf(10). curr = curr→prev = NULL. Exit loop.');PRG('dt',6,9);},
+  ()=>{HL(null);dtO='FWD: 10→20→30→NULL\nBWD: 30→20→10→NULL';V('dt-o',dtO);M('dt-m','✅ FWD: 10→20→30→NULL | BWD: 30→20→10→NULL. Only DLL can do this easily!','g');PRG('dt',8,9);},
+]);
+
+// ─── TOGGLE ANSWER ───────────────────────────
+function toggleAns(btn){
+  const b=btn.nextElementSibling;
+  b.classList.toggle('show');
+  btn.textContent=b.classList.contains('show')?'Hide Answer':'Show Answer';
+}
+
+// ─── MCQ ENGINE ──────────────────────────────
+const answered={};
+function gAns(el,gid,correct){
+  if(answered[gid]) return;
+  answered[gid]=true;
+  const opts=document.querySelectorAll(`#${gid} .opt`);
+  opts.forEach(o=>{o.classList.add('lk');});
+  const lbl=el.querySelector('.ol').textContent.replace(/[()]/g,'');
+  if(lbl===correct){el.classList.add('ok');}
+  else{el.classList.add('no');opts.forEach(o=>{if(o.querySelector('.ol').textContent.replace(/[()]/g,'')=== correct)o.classList.add('ok');});}
+  const exp=document.getElementById(`${gid}-e`);if(exp)exp.classList.add('show');
+}
+
+// ─── GATE QUESTIONS DATA ──────────────────────
+const gateQs=[
+  {tag:'GATE CS 2014',q:'What is the time complexity of inserting a node at the beginning of a singly linked list?',opts:['O(n)','O(1)','O(log n)','O(n²)'],ans:'B',exp:'<strong>B: O(1)</strong> — Create node, n→next=head, head=n. Only 3 operations regardless of list size. No traversal needed.'},
+  {tag:'GATE CS Style',q:'In a doubly linked list, if a pointer to a node is given, deletion takes:',opts:['O(n)','O(log n)','O(1)','O(n log n)'],ans:'C',exp:'<strong>C: O(1)</strong> — Given pointer del: del→prev→next=del→next and del→next→prev=del→prev. Both constant time. No traversal!'},
+  {tag:'GATE CS 2015',q:'Which loop correctly traverses a circular linked list without infinite loops?',opts:['while(curr != NULL)','while(curr->next != NULL)','for(int i=0; i<n; i++)','do { ... } while(curr != head)'],ans:'D',exp:'<strong>D: do-while(curr != head)</strong> — CLL has NO NULL. Using curr==NULL loops forever. do-while visits head first, then checks if back at head.'},
+  {tag:'GATE CS 2018',q:'Reversing a singly linked list has time complexity:',opts:['O(1)','O(log n)','Θ(n)','Θ(n²)'],ans:'C',exp:'<strong>C: Θ(n)</strong> — Every node must be visited exactly once to reverse its pointer. Exactly n operations, best=worst=Θ(n).'},
+  {tag:'GATE CS Style',q:'After p→q→r→s, executing s→next = p makes it:',opts:['p→q→r→s→NULL','reversed s→r→q→p','circular p→q→r→s→p','error'],ans:'C',exp:'<strong>C: Circular</strong> — p→next=q, q→next=r, r→next=s, now s→next=p. Last node points back to first → circular list formed!'},
+  {tag:'GATE CS 2016',q:'Which is NOT an advantage of linked list over array?',opts:['Dynamic size','Efficient insert/delete at middle','O(1) random access','No pre-allocation needed'],ans:'C',exp:'<strong>C: O(1) random access</strong> — Arrays have O(1) random access (arr[i]). Linked lists require O(n) traversal to find index i. This is LL\'s disadvantage!'},
+  {tag:'GATE CS Style',q:'In SLL, deleting the last node requires:',opts:['O(1) — just free last','O(n) — need second-last pointer','O(log n)','O(n²)'],ans:'B',exp:'<strong>B: O(n)</strong> — SLL has no prev pointer. Must traverse from head to find second-last node (prev), then set prev→next=NULL. Full traversal required.'},
+  {tag:'GATE CS 2019',q:'A self-referential structure in C is one that:',opts:['Uses recursion','Contains a pointer to its own type','Contains another struct inside','Uses dynamic memory'],ans:'B',exp:'<strong>B</strong> — struct Node { int data; struct Node *next; }. The *next pointer points to another struct Node (same type as itself) = self-referential.'},
+  {tag:'GATE CS Style',q:'Which linked list supports O(1) deletion when given a node pointer?',opts:['Only SLL','Only CLL','Only DLL','All three'],ans:'C',exp:'<strong>C: Only DLL</strong> — DLL has prev pointer, so del→prev→next=del→next is immediate. SLL needs O(n) traversal to find prev. CLL also needs O(n).'},
+  {tag:'GATE CS 2020',q:'For a circular linked list with n nodes, what is space complexity?',opts:['O(1)','O(log n)','O(n)','O(n²)'],ans:'C',exp:'<strong>C: O(n)</strong> — n nodes each requiring memory for data + pointer = O(n) total space. Same as SLL. No extra space for circular linking.'},
+];
+
+// ─── PLACEMENT QUESTIONS DATA ─────────────────
+const placementQs=[
+  {tag:'TCS · Basic',q:'After insertEnd(10); insertEnd(20); insertEnd(30); what is head→next→data?',opts:['10','20','30','NULL'],ans:'B',exp:'<strong>B: 20</strong> — List: 10→20→30. head=node(10). head→next=node(20). head→next→data=20.'},
+  {tag:'Infosys · Application',q:'Browser Back/Forward navigation is best implemented using:',opts:['Singly LL','Circular LL','Doubly LL','Array'],ans:'C',exp:'<strong>C: DLL</strong> — Back = follow prev pointer. Forward = follow next pointer. Current page = current node. DLL supports both directions naturally.'},
+  {tag:'TCS · Output',q:'After insertBegin(1), insertBegin(2), insertBegin(3), traversal gives:',opts:['1→2→3→NULL','3→2→1→NULL','1→3→2→NULL','2→1→3→NULL'],ans:'B',exp:'<strong>B: 3→2→1→NULL</strong> — Each insertBegin puts new node at front: (1): 1→NULL. (2): 2→1. (3): 3→2→1→NULL.'},
+  {tag:'Amazon · Memory',q:'sizeof(int)=4, sizeof(pointer)=8. Memory for one DLL node?',opts:['12 bytes','16 bytes','20 bytes','24 bytes'],ans:'C',exp:'<strong>C: 20 bytes</strong> — DLL node = Node* prev(8) + int data(4) + Node* next(8) = 20 bytes. SLL node = 4+8 = 12 bytes.'},
+  {tag:'Wipro · Memory',q:'Which function releases memory of a heap-allocated node in C?',opts:['delete()','remove()','free()','dealloc()'],ans:'C',exp:'<strong>C: free()</strong> — malloc() allocates, free() deallocates. Not freeing = memory leak. In C++ use new/delete instead.'},
+  {tag:'Cognizant · Logic',q:'In insert-at-middle, why must newNode→next = curr→next be done BEFORE curr→next = newNode?',opts:['If reversed, you lose connection to rest of list','Compiler requires this order','Both orders work','Only for empty lists'],ans:'A',exp:'<strong>A</strong> — If you do curr→next=newNode first, you lose the reference to the rest of the list. You can\'t set newNode→next correctly afterward. Always save the link first!'},
+  {tag:'TCS · Concept',q:'ADT (Abstract Data Type) is best described as:',opts:['Complex data with pointers','Defines operations without implementation details','An abstract class in C','Data type with no variables'],ans:'B',exp:'<strong>B</strong> — ADT specifies WHAT operations (insert, delete, search) and their behavior, not HOW implemented. Same List ADT works with array or LL.'},
+  {tag:'Flipkart · Tricky',q:'In 1→2→3→4→5, after head = head→next→next, traversal from new head gives:',opts:['1→2→3→4→5','2→3→4→5','3→4→5','4→5'],ans:'C',exp:'<strong>C: 3→4→5</strong> — head→next=node(2), head→next→next=node(3). head reassigned to node(3). Nodes 1,2 become memory leaks!'},
+  {tag:'Accenture · Application',q:'Round-robin CPU scheduling is best implemented using:',opts:['SLL','CLL','DLL','Array'],ans:'B',exp:'<strong>B: CLL</strong> — Processes cycle: P1→P2→P3→P1→... No end, no reset needed. CLL\'s circular nature naturally models round-robin.'},
+  {tag:'Infosys · Code',q:'What does: while(head){ printf("%d ",head->data); head=head->next; } do?',opts:['Traverses and prints all nodes','Deletes all nodes','Counts nodes','Inserts nodes'],ans:'A',exp:'<strong>A: Traverses and prints</strong> — head starts at first node. Prints data. Moves to next. Stops when head==NULL. This is standard SLL traversal.'},
+  {tag:'Wipro · Complex',q:'For a DLL, which operation is O(1) when a pointer to the node is given?',opts:['Insert at position','Delete the given node','Search for value','Count from head to node'],ans:'B',exp:'<strong>B: Delete the given node</strong> — DLL: del→prev→next=del→next and del→next→prev=del→prev. Constant time. No traversal needed due to prev pointer!'},
+  {tag:'TCS · Output',q:'CLL with nodes 5→10→15→(head). After one deleteBegin(), the head node is:',opts:['5','10','15','NULL'],ans:'B',exp:'<strong>B: 10</strong> — deleteBegin removes head(5). New head = 5→next = node(10). 15→next must be updated to point to new head (10). Result: 10→15→(10).'},
+  {tag:'Amazon · Logic',q:'To find if a linked list is circular, you use:',opts:['Check if last node → NULL','Floyd\'s cycle detection','Count nodes','Check head address'],ans:'B',exp:'<strong>B: Floyd\'s cycle detection</strong> — slow (1 step) and fast (2 steps) pointers. If they meet, there\'s a cycle. Time O(n), Space O(1).'},
+  {tag:'Cognizant · Reverse',q:'The time complexity of reversing a DLL is:',opts:['O(1)','O(log n)','O(n)','O(n²)'],ans:'C',exp:'<strong>C: O(n)</strong> — Must visit every node to swap its prev and next pointers. n swaps needed. But easier than SLL since each node already has both pointers.'},
+  {tag:'HCL · Concept',q:'What is the advantage of CLL over SLL?',opts:['Less memory per node','From any node, all other nodes reachable','Supports backward traversal','O(1) random access'],ans:'B',exp:'<strong>B</strong> — In SLL from node X, only nodes after X are reachable. In CLL, from any node you can reach ALL nodes by following next around the circle.'},
+  {tag:'Capgemini · Output',q:'After: insertEnd(1); insertEnd(2); deleteEnd(); insertBegin(0); what is the list?',opts:['0→1→NULL','0→2→NULL','1→2→NULL','0→1→2→NULL'],ans:'A',exp:'<strong>A: 0→1→NULL</strong> — insertEnd(1): 1. insertEnd(2): 1→2. deleteEnd(): removes 2 → 1. insertBegin(0): 0→1→NULL.'},
+  {tag:'TCS · Pointer',q:'In a SLL, head pointer stores:',opts:['Data of first node','Address of first node','Address of last node','Count of nodes'],ans:'B',exp:'<strong>B: Address of first node</strong> — In C, pointers store memory addresses. head stores the memory address (0x1A4F etc.) where the first node is located in heap.'},
+  {tag:'Infosys · Complex',q:'Which linked list type uses the MOST memory per node?',opts:['Singly LL','Circular LL','Doubly LL','All use same'],ans:'C',exp:'<strong>C: DLL</strong> — SLL: data+1 pointer. CLL: data+1 pointer (same as SLL). DLL: data+2 pointers. DLL uses ~67% more memory per node than SLL/CLL.'},
+  {tag:'Wipro · Application',q:'A music player\'s continuous loop (last song → first song) uses:',opts:['SLL with head pointer','CLL','DLL for bidirectional','Stack'],ans:'B',exp:'<strong>B: CLL</strong> — Last song→next = first song = natural circular behavior. DLL would also work for prev/next song but CLL perfectly models the "loop" behavior.'},
+  {tag:'Amazon · Tricky',q:'In deleteEnd for SLL, why do we need TWO pointers (prev and curr)?',opts:['To handle empty list','SLL has no prev pointer — need to track previous node manually','To detect cycles','For efficiency'],ans:'B',exp:'<strong>B</strong> — SLL nodes don\'t have prev pointer. To delete last node, we must set second-last→next=NULL. We maintain prev separately: while traversing, prev=curr, curr=curr→next. When curr→next==NULL, prev is second-last.'},
+];
+
+// ─── RENDER GATE MCQs ────────────────────────
+function renderQs(data, containerId, tagClass, prefix){
+  const c=document.getElementById(containerId);
+  data.forEach((q,i)=>{
+    const id=`${prefix}${i}`;
+    c.innerHTML+=`<div class="qcard">
+      <div class="${tagClass}">${q.tag}</div>
+      <div class="qnum">Q${i+1}</div>
+      <div class="qtext">${q.q}</div>
+      <div class="opts" id="${id}">
+        ${q.opts.map((o,j)=>`<div class="opt" onclick="gAns(this,'${id}','${q.ans}')"><span class="ol">(${String.fromCharCode(65+j)})</span>${o}</div>`).join('')}
+      </div>
+      <div class="exp" id="${id}-e"><strong>Answer: ${q.ans})</strong> — ${q.exp}</div>
+    </div>`;
+  });
+}
+renderQs(gateQs,'gqs','gtag','gq');
+renderQs(placementQs,'pqs','ptag','pq');
+</script>
+</body>
+</html>
