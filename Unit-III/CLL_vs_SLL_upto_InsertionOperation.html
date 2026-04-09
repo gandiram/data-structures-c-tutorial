@@ -124,13 +124,14 @@ td:first-child{color:var(--text);font-weight:600;}
 <!-- ═══════════ TOP NAVIGATION BAR ═══════════ -->
 <div class="topbar">
   <div class="topbar-logo">CLL vs SLL</div>
-  <button class="nav-btn active" onclick="P('overview')">Overview</button>
-  <button class="nav-btn" onclick="P('sll-beg')">SLL Insert Begin</button>
-  <button class="nav-btn" onclick="P('sll-end')">SLL Insert End</button>
-  <button class="nav-btn" onclick="P('sll-mid')">SLL Insert Middle</button>
-  <button class="nav-btn" onclick="P('cll-beg')">CLL Insert Begin</button>
-  <button class="nav-btn" onclick="P('cll-end')">CLL Insert End</button>
-  <button class="nav-btn" onclick="P('cll-mid')">CLL Insert Middle</button>
+  <button class="nav-btn active" onclick="P('overview')">§1 Overview</button>
+  <button class="nav-btn" onclick="P('keyprops')">§1 Key Props</button>
+  <button class="nav-btn" onclick="P('applications')">§2 Applications</button>
+  <button class="nav-btn" onclick="P('createnode')">§3 createNode</button>
+  <button class="nav-btn" onclick="P('traverse')">§4 Traverse</button>
+  <button class="nav-btn" onclick="P('cll-beg')">§5 Insert Begin</button>
+  <button class="nav-btn" onclick="P('cll-end')">§6 Insert End</button>
+  <button class="nav-btn" onclick="P('cll-mid')">§7 Insert At</button>
   <button class="nav-btn" onclick="P('compare')">Compare</button>
 </div>
 
@@ -199,13 +200,287 @@ td:first-child{color:var(--text);font-weight:600;}
     </table>
   </div>
 
+  <div class="slabel" style="margin-top:20px;">Document Contents</div>
+  <div class="icard" style="padding:0;overflow:hidden;">
+    <table>
+      <tr><th>Section</th><th>Topic</th></tr>
+      <tr><td>Section 1</td><td>CLL Description and Block Diagram + Key Properties</td></tr>
+      <tr><td>Section 2</td><td>Applications and Advantages over SLL</td></tr>
+      <tr><td>Section 3</td><td>createNode ( step-by-step + SLL comparison )</td></tr>
+      <tr><td>Section 4</td><td>traverse ( step-by-step + SLL comparison )</td></tr>
+      <tr><td>Section 5</td><td>insertBegin ( step-by-step + SLL comparison )</td></tr>
+      <tr><td>Section 6</td><td>insertEnd ( step-by-step + SLL comparison )</td></tr>
+      <tr><td>Section 7</td><td>insertAt ( step-by-step + SLL comparison )</td></tr>
+    </table>
+  </div>
+
   <div class="footer">
     <a href="DS_Unit3_Complete.html">← Back to DS Unit III Complete Guide</a>
   </div>
 </div>
 </div>
 
-<!-- ═══════════ PAGE 2: SLL INSERT BEGIN ═══════════ -->
+<!-- ═══════════ PAGE: KEY PROPERTIES ═══════════ -->
+<div id="keyprops" class="page">
+<div class="hero">
+  <div class="hero-badge">§1 · CLL — Key Properties</div>
+  <h1>Key <em>Properties</em> of CLL</h1>
+  <p>Section 1 — behaviours that make CLL different from SLL</p>
+</div>
+<div class="main">
+  <div class="slabel">Key Properties</div>
+  <div class="icard" style="padding:0;overflow:hidden;">
+    <table>
+      <tr><th>Property</th><th>Behaviour in CLL</th></tr>
+      <tr><td>Last node next</td><td>Points to HEAD (never NULL inside the chain)</td></tr>
+      <tr><td>Empty list</td><td>head == NULL</td></tr>
+      <tr><td>Single node</td><td>node-&gt;next = node (points to itself)</td></tr>
+      <tr><td>Traversal loop</td><td>do-while(curr != head) runs until back at HEAD</td></tr>
+      <tr><td>End detection</td><td>curr == head means one full circle completed</td></tr>
+      <tr><td>Circular access</td><td>Can start from any node and reach all others</td></tr>
+    </table>
+  </div>
+
+  <div class="slabel" style="margin-top:20px;">Block Diagram — CLL with 4 Nodes</div>
+  <div class="icard g">
+    <h4>HEAD → [10] → [20] → [30] → [40] → ↩ HEAD</h4>
+    <div class="viz" style="flex-wrap:wrap;margin-top:10px;">
+      <div style="font-size:0.65rem;font-family:JetBrains Mono,monospace;color:var(--green);margin-right:4px">HEAD→</div>
+      <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">10</div><div class="nd-p" style="color:var(--green)">↩</div></div></div>
+      <div class="ar g">→</div>
+      <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">20</div><div class="nd-p" style="color:var(--green)">↩</div></div></div>
+      <div class="ar g">→</div>
+      <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">30</div><div class="nd-p" style="color:var(--green)">↩</div></div></div>
+      <div class="ar g">→</div>
+      <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">40</div><div class="nd-p" style="color:var(--green)">↩</div></div><div class="pl">last</div></div>
+      <div class="clbl">↩ HEAD</div>
+    </div>
+    <p style="margin-top:10px;font-size:0.8rem;">Fig 1.1 — Last node [40] next points back to HEAD [10]</p>
+  </div>
+
+  <div class="g2">
+    <div class="icard r">
+      <h4>⚠️ NEVER use curr == NULL to stop CLL traversal</h4>
+      <p>In CLL no node ever points to NULL. The traversal loop must use <code style="color:var(--red);font-family:JetBrains Mono,monospace">do { ... } while(curr != head)</code>. Using <code style="color:var(--red);font-family:JetBrains Mono,monospace">while(curr != NULL)</code> causes an infinite loop.</p>
+    </div>
+    <div class="icard">
+      <h4>Single-node circle</h4>
+      <p>When only one node exists, <code style="color:var(--cyan);font-family:JetBrains Mono,monospace">node-&gt;next = node</code>. The node points to itself. The do-while condition immediately evaluates to false after the first iteration.</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="DS_Unit3_Complete.html">← Back to DS Unit III Complete Guide</a>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════ PAGE: APPLICATIONS ═══════════ -->
+<div id="applications" class="page">
+<div class="hero">
+  <div class="hero-badge">§2 · Applications &amp; Advantages</div>
+  <h1>CLL <em>Applications</em> &amp; Advantages</h1>
+  <p>Section 2 — Real-time uses and advantages of CLL over SLL</p>
+</div>
+<div class="main">
+  <div class="slabel">Common Real-Time Applications</div>
+  <div class="icard" style="padding:0;overflow:hidden;">
+    <table>
+      <tr><th>No.</th><th>Application</th><th>Why CLL is Suitable</th></tr>
+      <tr><td>1</td><td>CPU Round-Robin Scheduling</td><td>After the last process runs, the scheduler wraps back to the first process automatically.</td></tr>
+      <tr><td>2</td><td>Multiplayer Game Turns</td><td>After the last player, the turn returns to player 1 without any manual reset needed.</td></tr>
+      <tr><td>3</td><td>Music Playlist Repeat</td><td>After the last song, the next song is automatically the first. No extra code needed.</td></tr>
+      <tr><td>4</td><td>Circular Queue / Ring Buffer</td><td>New data overwrites the oldest. Head and tail wrap naturally inside the circular structure.</td></tr>
+      <tr><td>5</td><td>Token Ring Network</td><td>Each device is a node. Token travels around visiting every device in fixed order.</td></tr>
+      <tr><td>6</td><td>Traffic Signal Control</td><td>Signals cycle Red → Green → Yellow and back to Red continuously using CLL nodes.</td></tr>
+      <tr><td>7</td><td>Browser Tab Cycling</td><td>Ctrl+Tab moves through tabs. From the last tab it wraps back to the first tab automatically.</td></tr>
+    </table>
+  </div>
+
+  <div class="slabel" style="margin-top:20px;">Advantages of CLL over SLL</div>
+  <div class="icard" style="padding:0;overflow:hidden;">
+    <table>
+      <tr><th>Advantage</th><th>CLL</th><th>SLL (limitation)</th></tr>
+      <tr><td>Circular traversal</td><td>Wraps to HEAD automatically. No code needed to restart.</td><td>Must manually set curr = head to restart traversal.</td></tr>
+      <tr><td>Start from any node</td><td>Start traversal from any node and reach all others.</td><td>Must always start from head to visit all nodes.</td></tr>
+      <tr><td>Round-robin fit</td><td>Naturally suited for scheduling and turn-based logic.</td><td>Needs extra code to wrap from last node to first.</td></tr>
+      <tr><td>Last to first access</td><td>Last node directly links to HEAD via next pointer.</td><td>Last node points to NULL. No direct link to HEAD.</td></tr>
+      <tr><td>Circular queue</td><td>Natural fit. Head and tail wrap automatically.</td><td>Needs extra wrap-around logic to simulate circular.</td></tr>
+      <tr><td>Repeated full traversal</td><td>Traverse the full list repeatedly without resetting pointer.</td><td>Must reset pointer to head after every full traversal.</td></tr>
+    </table>
+  </div>
+
+  <div class="footer">
+    <a href="DS_Unit3_Complete.html">← Back to DS Unit III Complete Guide</a>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════ PAGE: createNode ═══════════ -->
+<div id="createnode" class="page">
+<div class="hero">
+  <div class="hero-badge">§3 · createNode</div>
+  <h1><em>createNode</em>(int v)</h1>
+  <p>Section 3 — CLL and SLL code is identical; the difference is what the caller does after</p>
+</div>
+<div class="main">
+  <div class="slabel">Code Comparison — CLL vs SLL</div>
+  <div class="sync-panel">
+    <div class="code-pane">
+      <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_new.c</span></div>
+      <div class="code-body">
+        <div class="cl" id="cn1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span>* <span class="fn">createNode</span>(<span class="tp">int</span> v) {</div></div>
+        <div class="cl" id="cn2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n =</div></div>
+        <div class="cl" id="cn3"><div class="ln">3</div><div class="la"></div><div class="lc">    (<span class="kw">struct</span> <span class="tp">Node</span>*)<span class="fn">malloc</span>(</div></div>
+        <div class="cl" id="cn4"><div class="ln">4</div><div class="la"></div><div class="lc">      <span class="kw">sizeof</span>(<span class="kw">struct</span> <span class="tp">Node</span>));</div></div>
+        <div class="cl" id="cn5"><div class="ln">5</div><div class="la"></div><div class="lc">  n->data = v;</div></div>
+        <div class="cl" id="cn6"><div class="ln">6</div><div class="la"></div><div class="lc">  n->next = <span class="tp">NULL</span>;</div></div>
+        <div class="cl" id="cn7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="kw">return</span> n;</div></div>
+        <div class="cl" id="cn8"><div class="ln">8</div><div class="la"></div><div class="lc">}</div></div>
+      </div>
+    </div>
+    <div class="anim-pane">
+      <div class="anim-pane-hdr">▶ createNode — step-by-step</div>
+      <div class="anim-body"><div class="amsg" id="cn-m">Press Next ▶ to walk through createNode step by step</div><div class="viz" id="cn-v"></div></div>
+      <div class="ctrl-row">
+        <button class="cb rst" onclick="R('cn')">↺</button>
+        <button class="cb prv" onclick="S('cn',-1)">◀ Prev</button>
+        <div class="pb"><div class="pf" id="cn-p" style="width:0%"></div></div>
+        <div class="sc" id="cn-c">0/4</div>
+        <button class="cb nxt" onclick="S('cn',1)">Next ▶</button>
+        <button class="cb aut" id="cn-a" onclick="A('cn')">⚡ Auto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="icard y">
+    <h4>Key Difference — what happens AFTER the call</h4>
+    <p>Code is <strong style="color:var(--yellow)">identical</strong> in both. In CLL the caller fixes next to close the circle: <code style="color:var(--green);font-family:JetBrains Mono,monospace">last-&gt;next = n; n-&gt;next = head</code>. In SLL, next = NULL is correct permanently for a tail node.</p>
+  </div>
+
+  <div class="slabel" style="margin-top:8px;">SLL Comparison</div>
+  <div class="g2">
+    <div class="icard">
+      <h4>SLL — BEFORE</h4>
+      <div class="viz" style="flex-wrap:wrap;margin-top:6px;">
+        <div style="font-size:0.65rem;font-family:JetBrains Mono,monospace;color:var(--cyan);margin-right:4px">HEAD→</div>
+        <div class="nw"><div class="nd cc"><div class="nd-d" style="color:var(--cyan)">NEW</div><div class="nd-p">→</div></div></div>
+        <div class="ar">→</div>
+        <div class="nl">NULL</div>
+      </div>
+      <p style="margin-top:8px;font-size:0.78rem;color:var(--muted2)">SLL: new node created, next = NULL</p>
+    </div>
+    <div class="icard g">
+      <h4>SLL — AFTER</h4>
+      <div class="viz" style="flex-wrap:wrap;margin-top:6px;">
+        <div style="font-size:0.65rem;font-family:JetBrains Mono,monospace;color:var(--green);margin-right:4px">HEAD→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">NEW</div><div class="nd-p">→</div></div></div>
+        <div class="ar g">→</div>
+        <div class="nl">NULL</div>
+      </div>
+      <p style="margin-top:8px;font-size:0.78rem;color:var(--muted2)">SLL: next = NULL remains permanently (marks the tail of the list)</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="DS_Unit3_Complete.html">← Back to DS Unit III Complete Guide</a>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════ PAGE: TRAVERSE ═══════════ -->
+<div id="traverse" class="page">
+<div class="hero">
+  <div class="hero-badge">§4 · traverse</div>
+  <h1><em>traverse</em>()</h1>
+  <p>Section 4 — CLL uses do-while(curr != head); SLL uses while(curr != NULL)</p>
+</div>
+<div class="main">
+  <div class="slabel">Code Comparison — CLL vs SLL</div>
+  <div class="sync-panel">
+    <div class="code-pane">
+      <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_new.c</span></div>
+      <div class="code-body">
+        <div class="cl" id="tr1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">traverse</span>() {</div></div>
+        <div class="cl" id="tr2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(head == <span class="tp">NULL</span>) <span class="kw">return</span>;</div></div>
+        <div class="cl" id="tr3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr = head;</div></div>
+        <div class="cl" id="tr4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">do</span> {</div></div>
+        <div class="cl" id="tr5"><div class="ln">5</div><div class="la"></div><div class="lc">    <span class="fn">printf</span>(<span class="st">"%d-&gt;"</span>, curr->data);</div></div>
+        <div class="cl" id="tr6"><div class="ln">6</div><div class="la"></div><div class="lc">    curr = curr->next;</div></div>
+        <div class="cl" id="tr7"><div class="ln">7</div><div class="la"></div><div class="lc">  } <span class="kw">while</span>(curr != head);</div></div>
+        <div class="cl" id="tr8"><div class="ln">8</div><div class="la"></div><div class="lc">  <span class="fn">printf</span>(<span class="st">"%d(HEAD)"</span>, head->data);</div></div>
+        <div class="cl" id="tr9"><div class="ln">9</div><div class="la"></div><div class="lc">}</div></div>
+        <div class="cl" id="tr10"><div class="ln">10</div><div class="la"></div><div class="lc"></div></div>
+        <div class="cl" id="tr11"><div class="ln">11</div><div class="la"></div><div class="lc"><span class="cm">// SLL - sll.c</span></div></div>
+        <div class="cl" id="tr12"><div class="ln">12</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">traverse</span>() {</div></div>
+        <div class="cl" id="tr13"><div class="ln">13</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr = head;</div></div>
+        <div class="cl" id="tr14"><div class="ln">14</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(curr != <span class="tp">NULL</span>) {</div></div>
+        <div class="cl" id="tr15"><div class="ln">15</div><div class="la"></div><div class="lc">    <span class="fn">printf</span>(<span class="st">"%d-&gt;"</span>, curr->data);</div></div>
+        <div class="cl" id="tr16"><div class="ln">16</div><div class="la"></div><div class="lc">    curr = curr->next;</div></div>
+        <div class="cl" id="tr17"><div class="ln">17</div><div class="la"></div><div class="lc">  }</div></div>
+        <div class="cl" id="tr18"><div class="ln">18</div><div class="la"></div><div class="lc">  <span class="fn">printf</span>(<span class="st">"NULL"</span>);</div></div>
+        <div class="cl" id="tr19"><div class="ln">19</div><div class="la"></div><div class="lc">}</div></div>
+      </div>
+    </div>
+    <div class="anim-pane">
+      <div class="anim-pane-hdr">▶ Traverse CLL: 10→20→30→↩HEAD</div>
+      <div class="anim-body"><div class="amsg" id="tr-m">CLL: 10→20→30→↩HEAD. Press Next ▶ to step through traverse().</div><div class="viz" id="tr-v"></div></div>
+      <div class="ctrl-row">
+        <button class="cb rst" onclick="R('tr')">↺</button>
+        <button class="cb prv" onclick="S('tr',-1)">◀ Prev</button>
+        <div class="pb"><div class="pf" id="tr-p" style="width:0%"></div></div>
+        <div class="sc" id="tr-c">0/6</div>
+        <button class="cb nxt" onclick="S('tr',1)">Next ▶</button>
+        <button class="cb aut" id="tr-a" onclick="A('tr')">⚡ Auto</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="icard y">
+    <h4>Key Difference — loop condition</h4>
+    <p>CLL uses <code style="color:var(--yellow);font-family:JetBrains Mono,monospace">do-while(curr != head)</code> which runs at least once and stops when curr wraps back to HEAD. SLL uses <code style="color:var(--yellow);font-family:JetBrains Mono,monospace">while(curr != NULL)</code> which stops at the NULL tail. CLL must print HEAD separately after the loop to show the wrap-around.</p>
+  </div>
+
+  <div class="slabel" style="margin-top:8px;">SLL Comparison</div>
+  <div class="g2">
+    <div class="icard">
+      <h4>SLL — BEFORE traversal</h4>
+      <div class="viz" style="flex-wrap:wrap;margin-top:6px;">
+        <div style="font-size:0.65rem;font-family:JetBrains Mono,monospace;color:var(--cyan);margin-right:4px">HEAD→</div>
+        <div class="nw"><div class="nd cc"><div class="nd-d" style="color:var(--cyan)">10</div><div class="nd-p">→</div></div><div class="pl">curr</div></div>
+        <div class="ar">→</div>
+        <div class="nw"><div class="nd cc"><div class="nd-d" style="color:var(--cyan)">20</div><div class="nd-p">→</div></div></div>
+        <div class="ar">→</div>
+        <div class="nw"><div class="nd cc"><div class="nd-d" style="color:var(--cyan)">30</div><div class="nd-p">→</div></div></div>
+        <div class="ar">→</div>
+        <div class="nl">NULL</div>
+      </div>
+      <p style="margin-top:8px;font-size:0.78rem;color:var(--muted2)">SLL BEFORE: curr starts at HEAD [10]</p>
+    </div>
+    <div class="icard g">
+      <h4>SLL — AFTER traversal</h4>
+      <div class="viz" style="flex-wrap:wrap;margin-top:6px;">
+        <div style="font-size:0.65rem;font-family:JetBrains Mono,monospace;color:var(--green);margin-right:4px">HEAD→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">10</div><div class="nd-p">→</div></div></div>
+        <div class="ar g">→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">20</div><div class="nd-p">→</div></div></div>
+        <div class="ar g">→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">30</div><div class="nd-p">→</div></div></div>
+        <div class="ar g">→</div>
+        <div class="nl">NULL</div>
+      </div>
+      <p style="margin-top:8px;font-size:0.78rem;color:var(--muted2)">SLL AFTER traversal: curr reaches NULL after [30]. Output: 10-&gt;20-&gt;30-&gt;NULL</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="DS_Unit3_Complete.html">← Back to DS Unit III Complete Guide</a>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════ PAGE: SLL INSERT BEGIN (kept for reference) ═══════════ -->
+
 <div id="sll-beg" class="page">
 <div class="hero">
   <div class="hero-badge">🔗 SLL Insert Begin</div>
@@ -218,14 +493,11 @@ td:first-child{color:var(--text);font-weight:600;}
     <div class="code-pane">
       <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">sll_insertBegin.c</span></div>
       <div class="code-body">
-        <div class="cl" id="sib1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertBegin</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head, <span class="tp">int</span> data) {</div></div>
-        <div class="cl" id="sib2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="cm">// Step 1: Allocate new node</span></div></div>
-        <div class="cl" id="sib3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n = <span class="fn">createNode</span>(data);</div></div>
-        <div class="cl" id="sib4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="cm">// Step 2: new→next = old head</span></div></div>
-        <div class="cl" id="sib5"><div class="ln">5</div><div class="la"></div><div class="lc">  n->next = *head;</div></div>
-        <div class="cl" id="sib6"><div class="ln">6</div><div class="la"></div><div class="lc">  <span class="cm">// Step 3: head = new node</span></div></div>
-        <div class="cl" id="sib7"><div class="ln">7</div><div class="la"></div><div class="lc">  *head = n;</div></div>
-        <div class="cl" id="sib8"><div class="ln">8</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(1) — no traversal needed!</span></div></div>
+        <div class="cl" id="sib1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertBegin</span>(<span class="tp">int</span> data) {</div></div>
+        <div class="cl" id="sib2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n = <span class="fn">createNode</span>(data);</div></div>
+        <div class="cl" id="sib3"><div class="ln">3</div><div class="la"></div><div class="lc">  n->next = head;</div></div>
+        <div class="cl" id="sib4"><div class="ln">4</div><div class="la"></div><div class="lc">  head = n; <span class="cm">// O(1) - no traversal needed</span></div></div>
+        <div class="cl" id="sib5"><div class="ln">5</div><div class="la"></div><div class="lc">}</div></div>
       </div>
     </div>
     <div class="anim-pane">
@@ -235,7 +507,7 @@ td:first-child{color:var(--text);font-weight:600;}
         <button class="cb rst" onclick="R('sib')">↺</button>
         <button class="cb prv" onclick="S('sib',-1)">◀ Prev</button>
         <div class="pb"><div class="pf" id="sib-p" style="width:0%"></div></div>
-        <div class="sc" id="sib-c">0/4</div>
+        <div class="sc" id="sib-c">0/3</div>
         <button class="cb nxt" onclick="S('sib',1)">Next ▶</button>
         <button class="cb aut" id="sib-a" onclick="A('sib')">⚡ Auto</button>
       </div>
@@ -264,15 +536,14 @@ td:first-child{color:var(--text);font-weight:600;}
     <div class="code-pane">
       <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">sll_insertEnd.c</span></div>
       <div class="code-body">
-        <div class="cl" id="sie1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertEnd</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head, <span class="tp">int</span> data) {</div></div>
+        <div class="cl" id="sie1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertEnd</span>(<span class="tp">int</span> data) {</div></div>
         <div class="cl" id="sie2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n = <span class="fn">createNode</span>(data);</div></div>
-        <div class="cl" id="sie3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(*head == <span class="tp">NULL</span>){ *head = n; <span class="kw">return</span>; }</div></div>
-        <div class="cl" id="sie4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="cm">// traverse to find last node</span></div></div>
-        <div class="cl" id="sie5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr = *head;</div></div>
-        <div class="cl" id="sie6"><div class="ln">6</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(curr->next != <span class="tp">NULL</span>)</div></div>
-        <div class="cl" id="sie7"><div class="ln">7</div><div class="la"></div><div class="lc">    curr = curr->next;  <span class="cm">// find last</span></div></div>
-        <div class="cl" id="sie8"><div class="ln">8</div><div class="la"></div><div class="lc">  curr->next = n;  <span class="cm">// link last → new</span></div></div>
-        <div class="cl" id="sie9"><div class="ln">9</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n) — must find last node</span></div></div>
+        <div class="cl" id="sie3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(head == <span class="tp">NULL</span>) { head = n; <span class="kw">return</span>; }</div></div>
+        <div class="cl" id="sie4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr = head;</div></div>
+        <div class="cl" id="sie5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(curr->next != <span class="tp">NULL</span>)</div></div>
+        <div class="cl" id="sie6"><div class="ln">6</div><div class="la"></div><div class="lc">    curr = curr->next;</div></div>
+        <div class="cl" id="sie7"><div class="ln">7</div><div class="la"></div><div class="lc">  curr->next = n;  <span class="cm">// n-&gt;next stays NULL</span></div></div>
+        <div class="cl" id="sie8"><div class="ln">8</div><div class="la"></div><div class="lc">}</div></div>
       </div>
     </div>
     <div class="anim-pane">
@@ -301,36 +572,35 @@ td:first-child{color:var(--text);font-weight:600;}
 <!-- ═══════════ PAGE 4: SLL INSERT MIDDLE ═══════════ -->
 <div id="sll-mid" class="page">
 <div class="hero">
-  <div class="hero-badge">🔗 SLL Insert Middle</div>
-  <h1>SLL Insert at <em>Middle</em></h1>
+  <div class="hero-badge">🔗 SLL Insert At</div>
+  <h1>SLL <em>insertAt</em>(data, pos)</h1>
   <p>O(n) — Traverse to position, then do A before B!</p>
 </div>
 <div class="main">
-  <div class="slabel">Insert at Middle (after given position) — O(n)</div>
+  <div class="slabel">insertAt — O(n)</div>
   <div class="sync-panel">
     <div class="code-pane">
-      <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">sll_insertMiddle.c</span></div>
+      <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">sll.c</span></div>
       <div class="code-body">
-        <div class="cl" id="sim1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertAt</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head, <span class="tp">int</span> data, <span class="tp">int</span> pos) {</div></div>
-        <div class="cl" id="sim2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n = <span class="fn">createNode</span>(data);</div></div>
-        <div class="cl" id="sim3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr = *head;</div></div>
-        <div class="cl" id="sim4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="cm">// pos >= 2: traverse to node at (pos-1)</span></div></div>
-        <div class="cl" id="sim5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">for</span>(<span class="tp">int</span> i=<span class="nu">1</span>; i &lt; pos-<span class="nu">1</span>; i++)</div></div>
-        <div class="cl" id="sim6"><div class="ln">6</div><div class="la"></div><div class="lc">    curr = curr->next;  <span class="cm">// reach predecessor</span></div></div>
-        <div class="cl" id="sim7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="cm">// ⚠️ ORDER MATTERS! A before B</span></div></div>
-        <div class="cl" id="sim8"><div class="ln">8</div><div class="la"></div><div class="lc">  n->next = curr->next;  <span class="cm">// Step A</span></div></div>
-        <div class="cl" id="sim9"><div class="ln">9</div><div class="la"></div><div class="lc">  curr->next = n;         <span class="cm">// Step B</span></div></div>
-        <div class="cl" id="sim10"><div class="ln">10</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n)</span></div></div>
+        <div class="cl" id="sim1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertAt</span>(<span class="tp">int</span> data, <span class="tp">int</span> pos) {</div></div>
+        <div class="cl" id="sim2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="tp">int</span> i;</div></div>
+        <div class="cl" id="sim3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n = <span class="fn">createNode</span>(data);</div></div>
+        <div class="cl" id="sim4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr = head;</div></div>
+        <div class="cl" id="sim5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">for</span>(i=<span class="nu">1</span>; i &lt; pos; i++)</div></div>
+        <div class="cl" id="sim6"><div class="ln">6</div><div class="la"></div><div class="lc">    curr = curr->next;</div></div>
+        <div class="cl" id="sim7"><div class="ln">7</div><div class="la"></div><div class="lc">  n->next = curr->next;  <span class="cm">// Step A</span></div></div>
+        <div class="cl" id="sim8"><div class="ln">8</div><div class="la"></div><div class="lc">  curr->next = n;        <span class="cm">// Step B</span></div></div>
+        <div class="cl" id="sim9"><div class="ln">9</div><div class="la"></div><div class="lc">}</div></div>
       </div>
     </div>
     <div class="anim-pane">
-      <div class="anim-pane-hdr">▶ Insert 25 after pos 2 in 10→20→30→NULL</div>
-      <div class="anim-body"><div class="amsg" id="sim-m">Starting list: 10→20→30→NULL. Insert 25 after position 2 (after node 20).</div><div class="viz" id="sim-v"></div></div>
+      <div class="anim-pane-hdr">▶ insertAt(15, 1) in 10→20→30→NULL</div>
+      <div class="anim-body"><div class="amsg" id="sim-m">Starting list: 10→20→30→NULL. Insert 15 at pos=1 (after node 10).</div><div class="viz" id="sim-v"></div></div>
       <div class="ctrl-row">
         <button class="cb rst" onclick="R('sim')">↺</button>
         <button class="cb prv" onclick="S('sim',-1)">◀ Prev</button>
         <div class="pb"><div class="pf" id="sim-p" style="width:0%"></div></div>
-        <div class="sc" id="sim-c">0/6</div>
+        <div class="sc" id="sim-c">0/4</div>
         <button class="cb nxt" onclick="S('sim',1)">Next ▶</button>
         <button class="cb aut" id="sim-a" onclick="A('sim')">⚡ Auto</button>
       </div>
@@ -349,41 +619,46 @@ td:first-child{color:var(--text);font-weight:600;}
 <!-- ═══════════ PAGE 5: CLL INSERT BEGIN ═══════════ -->
 <div id="cll-beg" class="page">
 <div class="hero">
-  <div class="hero-badge">🔄 CLL Insert Begin</div>
-  <h1>CLL Insert at <em>Beginning</em></h1>
+  <div class="hero-badge">§5 · CLL Insert Begin</div>
+  <h1>CLL <em>insertBegin</em>(data)</h1>
   <p>O(n) — Must find the last node to maintain the circular link</p>
 </div>
 <div class="main">
-  <div class="slabel">CLL Insert at Beginning — O(n)</div>
+  <div class="slabel">Section 5 — Code Comparison CLL vs SLL</div>
   <div class="sync-panel">
     <div class="code-pane">
-      <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_insertBegin.c</span></div>
+      <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_new.c</span></div>
       <div class="code-body">
-        <div class="cl" id="cib1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">cllInsertBegin</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head, <span class="tp">int</span> data) {</div></div>
+        <div class="cl" id="cib1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertBegin</span>(<span class="tp">int</span> data) {</div></div>
         <div class="cl" id="cib2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n = <span class="fn">createNode</span>(data);</div></div>
-        <div class="cl" id="cib3"><div class="ln">3</div><div class="la"></div><div class="lc">  n->next = n; <span class="cm">// points to itself initially</span></div></div>
-        <div class="cl" id="cib4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(*head == <span class="tp">NULL</span>){ *head = n; <span class="kw">return</span>; }</div></div>
-        <div class="cl" id="cib5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="cm">// Find the LAST node (it points to head)</span></div></div>
-        <div class="cl" id="cib6"><div class="ln">6</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *last = *head;</div></div>
-        <div class="cl" id="cib7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(last->next != *head)</div></div>
-        <div class="cl" id="cib8"><div class="ln">8</div><div class="la"></div><div class="lc">    last = last->next;</div></div>
-        <div class="cl" id="cib9"><div class="ln">9</div><div class="la"></div><div class="lc">  <span class="cm">// Insert: new→next = old head</span></div></div>
-        <div class="cl" id="cib10"><div class="ln">10</div><div class="la"></div><div class="lc">  n->next = *head;</div></div>
-        <div class="cl" id="cib11"><div class="ln">11</div><div class="la"></div><div class="lc">  <span class="cm">// last→next = new (maintains circle)</span></div></div>
-        <div class="cl" id="cib12"><div class="ln">12</div><div class="la"></div><div class="lc">  last->next = n;</div></div>
-        <div class="cl" id="cib13"><div class="ln">13</div><div class="la"></div><div class="lc">  <span class="cm">// Update head</span></div></div>
-        <div class="cl" id="cib14"><div class="ln">14</div><div class="la"></div><div class="lc">  *head = n;</div></div>
-        <div class="cl" id="cib15"><div class="ln">15</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n) — must update last node!</span></div></div>
+        <div class="cl" id="cib3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(head == <span class="tp">NULL</span>) {</div></div>
+        <div class="cl" id="cib4"><div class="ln">4</div><div class="la"></div><div class="lc">    n->next = n;</div></div>
+        <div class="cl" id="cib5"><div class="ln">5</div><div class="la"></div><div class="lc">    head = n; <span class="kw">return</span>;</div></div>
+        <div class="cl" id="cib6"><div class="ln">6</div><div class="la"></div><div class="lc">  }</div></div>
+        <div class="cl" id="cib7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *last = head;</div></div>
+        <div class="cl" id="cib8"><div class="ln">8</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(last->next != head)</div></div>
+        <div class="cl" id="cib9"><div class="ln">9</div><div class="la"></div><div class="lc">    last = last->next;</div></div>
+        <div class="cl" id="cib10"><div class="ln">10</div><div class="la"></div><div class="lc">  n->next = head;</div></div>
+        <div class="cl" id="cib11"><div class="ln">11</div><div class="la"></div><div class="lc">  last->next = n;</div></div>
+        <div class="cl" id="cib12"><div class="ln">12</div><div class="la"></div><div class="lc">  head = n;</div></div>
+        <div class="cl" id="cib13"><div class="ln">13</div><div class="la"></div><div class="lc">}</div></div>
+        <div class="cl" id="cib14"><div class="ln">14</div><div class="la"></div><div class="lc"></div></div>
+        <div class="cl" id="cib15"><div class="ln">15</div><div class="la"></div><div class="lc"><span class="cm">// SLL - sll.c (O(1)!)</span></div></div>
+        <div class="cl" id="cib16"><div class="ln">16</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertBegin</span>(<span class="tp">int</span> data) {</div></div>
+        <div class="cl" id="cib17"><div class="ln">17</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n = <span class="fn">createNode</span>(data);</div></div>
+        <div class="cl" id="cib18"><div class="ln">18</div><div class="la"></div><div class="lc">  n->next = head;</div></div>
+        <div class="cl" id="cib19"><div class="ln">19</div><div class="la"></div><div class="lc">  head = n; <span class="cm">// O(1) - no traversal needed</span></div></div>
+        <div class="cl" id="cib20"><div class="ln">20</div><div class="la"></div><div class="lc">}</div></div>
       </div>
     </div>
     <div class="anim-pane">
-      <div class="anim-pane-hdr">▶ Insert 5 at beginning of CLL: 10→20→30→↩HEAD</div>
+      <div class="anim-pane-hdr">▶ insertBegin(5) in CLL: 10→20→30→↩HEAD</div>
       <div class="anim-body"><div class="amsg" id="cib-m">CLL: 10→20→30→↩HEAD. Insert 5 at beginning.</div><div class="viz" id="cib-v"></div></div>
       <div class="ctrl-row">
         <button class="cb rst" onclick="R('cib')">↺</button>
         <button class="cb prv" onclick="S('cib',-1)">◀ Prev</button>
         <div class="pb"><div class="pf" id="cib-p" style="width:0%"></div></div>
-        <div class="sc" id="cib-c">0/7</div>
+        <div class="sc" id="cib-c">0/6</div>
         <button class="cb nxt" onclick="S('cib',1)">Next ▶</button>
         <button class="cb aut" id="cib-a" onclick="A('cib')">⚡ Auto</button>
       </div>
@@ -393,6 +668,41 @@ td:first-child{color:var(--text);font-weight:600;}
     <h4>⚠️ CLL Insert Begin is O(n) — unlike SLL's O(1)!</h4>
     <p>In SLL, inserting at the beginning is O(1) because we just update the head. But in CLL, the last node must always point to the current head. When head changes, we must traverse to find the last node and update its <code style="color:var(--yellow);font-family:JetBrains Mono,monospace">next</code> pointer — that's O(n).</p>
   </div>
+
+  <div class="slabel" style="margin-top:8px;">SLL Comparison (Before / After)</div>
+  <div class="g2">
+    <div class="icard">
+      <h4>SLL — BEFORE insertBegin(5)</h4>
+      <div class="viz" style="flex-wrap:wrap;margin-top:6px;">
+        <div style="font-size:0.65rem;font-family:JetBrains Mono,monospace;color:var(--cyan);margin-right:4px">HEAD→</div>
+        <div class="nw"><div class="nd cc"><div class="nd-d" style="color:var(--cyan)">10</div><div class="nd-p">→</div></div></div>
+        <div class="ar">→</div>
+        <div class="nw"><div class="nd cc"><div class="nd-d" style="color:var(--cyan)">20</div><div class="nd-p">→</div></div></div>
+        <div class="ar">→</div>
+        <div class="nw"><div class="nd cc"><div class="nd-d" style="color:var(--cyan)">30</div><div class="nd-p">→</div></div></div>
+        <div class="ar">→</div>
+        <div class="nl">NULL</div>
+      </div>
+      <p style="margin-top:8px;font-size:0.78rem;color:var(--muted2)">SLL BEFORE: [10] is HEAD</p>
+    </div>
+    <div class="icard g">
+      <h4>SLL — AFTER insertBegin(5) · O(1)</h4>
+      <div class="viz" style="flex-wrap:wrap;margin-top:6px;">
+        <div style="font-size:0.65rem;font-family:JetBrains Mono,monospace;color:var(--green);margin-right:4px">HEAD→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">5</div><div class="nd-p">→</div></div><div class="pl">new HEAD</div></div>
+        <div class="ar g">→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">10</div><div class="nd-p">→</div></div></div>
+        <div class="ar g">→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">20</div><div class="nd-p">→</div></div></div>
+        <div class="ar g">→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">30</div><div class="nd-p">→</div></div></div>
+        <div class="ar g">→</div>
+        <div class="nl">NULL</div>
+      </div>
+      <p style="margin-top:8px;font-size:0.78rem;color:var(--muted2)">SLL AFTER: [5] is new HEAD, [5]→next→[10]. O(1) operation.</p>
+    </div>
+  </div>
+
   <div class="footer">
     <a href="DS_Unit3_Complete.html">← Back to DS Unit III Complete Guide</a>
   </div>
@@ -402,38 +712,48 @@ td:first-child{color:var(--text);font-weight:600;}
 <!-- ═══════════ PAGE 6: CLL INSERT END ═══════════ -->
 <div id="cll-end" class="page">
 <div class="hero">
-  <div class="hero-badge">🔄 CLL Insert End</div>
-  <h1>CLL Insert at <em>End</em></h1>
+  <div class="hero-badge">§6 · CLL Insert End</div>
+  <h1>CLL <em>insertEnd</em>(data)</h1>
   <p>O(n) — Traverse to find last, then set n→next = head (not NULL!)</p>
 </div>
 <div class="main">
-  <div class="slabel">CLL Insert at End — O(n)</div>
+  <div class="slabel">Section 6 — Code Comparison CLL vs SLL</div>
   <div class="sync-panel">
     <div class="code-pane">
-      <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_insertEnd.c</span></div>
+      <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_new.c</span></div>
       <div class="code-body">
-        <div class="cl" id="cie1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">cllInsertEnd</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head, <span class="tp">int</span> data) {</div></div>
+        <div class="cl" id="cie1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertEnd</span>(<span class="tp">int</span> data) {</div></div>
         <div class="cl" id="cie2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n = <span class="fn">createNode</span>(data);</div></div>
-        <div class="cl" id="cie3"><div class="ln">3</div><div class="la"></div><div class="lc">  n->next = n;</div></div>
-        <div class="cl" id="cie4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(*head == <span class="tp">NULL</span>){ *head = n; <span class="kw">return</span>; }</div></div>
-        <div class="cl" id="cie5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="cm">// Traverse to find last node</span></div></div>
-        <div class="cl" id="cie6"><div class="ln">6</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *last = *head;</div></div>
-        <div class="cl" id="cie7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(last->next != *head)</div></div>
-        <div class="cl" id="cie8"><div class="ln">8</div><div class="la"></div><div class="lc">    last = last->next;</div></div>
-        <div class="cl" id="cie9"><div class="ln">9</div><div class="la"></div><div class="lc">  <span class="cm">// Link: last → new → head</span></div></div>
+        <div class="cl" id="cie3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(head == <span class="tp">NULL</span>) {</div></div>
+        <div class="cl" id="cie4"><div class="ln">4</div><div class="la"></div><div class="lc">    n->next = n;</div></div>
+        <div class="cl" id="cie5"><div class="ln">5</div><div class="la"></div><div class="lc">    head = n; <span class="kw">return</span>;</div></div>
+        <div class="cl" id="cie6"><div class="ln">6</div><div class="la"></div><div class="lc">  }</div></div>
+        <div class="cl" id="cie7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *last = head;</div></div>
+        <div class="cl" id="cie8"><div class="ln">8</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(last->next != head)</div></div>
+        <div class="cl" id="cie9"><div class="ln">9</div><div class="la"></div><div class="lc">    last = last->next;</div></div>
         <div class="cl" id="cie10"><div class="ln">10</div><div class="la"></div><div class="lc">  last->next = n;</div></div>
-        <div class="cl" id="cie11"><div class="ln">11</div><div class="la"></div><div class="lc">  n->next = *head;  <span class="cm">// new node → back to head</span></div></div>
-        <div class="cl" id="cie12"><div class="ln">12</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n)</span></div></div>
+        <div class="cl" id="cie11"><div class="ln">11</div><div class="la"></div><div class="lc">  n->next = head;  <span class="cm">// close the circle</span></div></div>
+        <div class="cl" id="cie12"><div class="ln">12</div><div class="la"></div><div class="lc">}</div></div>
+        <div class="cl" id="cie13"><div class="ln">13</div><div class="la"></div><div class="lc"></div></div>
+        <div class="cl" id="cie14"><div class="ln">14</div><div class="la"></div><div class="lc"><span class="cm">// SLL - sll.c</span></div></div>
+        <div class="cl" id="cie15"><div class="ln">15</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertEnd</span>(<span class="tp">int</span> data) {</div></div>
+        <div class="cl" id="cie16"><div class="ln">16</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n = <span class="fn">createNode</span>(data);</div></div>
+        <div class="cl" id="cie17"><div class="ln">17</div><div class="la"></div><div class="lc">  <span class="kw">if</span>(head == <span class="tp">NULL</span>) { head = n; <span class="kw">return</span>; }</div></div>
+        <div class="cl" id="cie18"><div class="ln">18</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr = head;</div></div>
+        <div class="cl" id="cie19"><div class="ln">19</div><div class="la"></div><div class="lc">  <span class="kw">while</span>(curr->next != <span class="tp">NULL</span>)</div></div>
+        <div class="cl" id="cie20"><div class="ln">20</div><div class="la"></div><div class="lc">    curr = curr->next;</div></div>
+        <div class="cl" id="cie21"><div class="ln">21</div><div class="la"></div><div class="lc">  curr->next = n;  <span class="cm">// n-&gt;next stays NULL</span></div></div>
+        <div class="cl" id="cie22"><div class="ln">22</div><div class="la"></div><div class="lc">}</div></div>
       </div>
     </div>
     <div class="anim-pane">
-      <div class="anim-pane-hdr">▶ Insert 40 at end of CLL: 10→20→30→↩HEAD</div>
+      <div class="anim-pane-hdr">▶ insertEnd(40) in CLL: 10→20→30→↩HEAD</div>
       <div class="anim-body"><div class="amsg" id="cie-m">CLL: 10→20→30→↩HEAD. Insert 40 at end.</div><div class="viz" id="cie-v"></div></div>
       <div class="ctrl-row">
         <button class="cb rst" onclick="R('cie')">↺</button>
         <button class="cb prv" onclick="S('cie',-1)">◀ Prev</button>
         <div class="pb"><div class="pf" id="cie-p" style="width:0%"></div></div>
-        <div class="sc" id="cie-c">0/6</div>
+        <div class="sc" id="cie-c">0/5</div>
         <button class="cb nxt" onclick="S('cie',1)">Next ▶</button>
         <button class="cb aut" id="cie-a" onclick="A('cie')">⚡ Auto</button>
       </div>
@@ -441,8 +761,43 @@ td:first-child{color:var(--text);font-weight:600;}
   </div>
   <div class="icard g">
     <h4>Key Difference from SLL Insert End</h4>
-    <p>In SLL we set <code style="color:var(--green);font-family:JetBrains Mono,monospace">curr→next = n</code> (n→next is already NULL). In CLL we must also set <code style="color:var(--green);font-family:JetBrains Mono,monospace">n→next = head</code> to close the circle. Never leave it as NULL!</p>
+    <p>Both traverse O(n) to find the last node. CLL must also set <code style="color:var(--green);font-family:JetBrains Mono,monospace">n→next = head</code> to close the circle. SLL leaves n→next as NULL which naturally marks the new tail.</p>
   </div>
+
+  <div class="slabel" style="margin-top:8px;">SLL Comparison (Before / After)</div>
+  <div class="g2">
+    <div class="icard">
+      <h4>SLL — BEFORE insertEnd(40)</h4>
+      <div class="viz" style="flex-wrap:wrap;margin-top:6px;">
+        <div style="font-size:0.65rem;font-family:JetBrains Mono,monospace;color:var(--cyan);margin-right:4px">HEAD→</div>
+        <div class="nw"><div class="nd cc"><div class="nd-d" style="color:var(--cyan)">10</div><div class="nd-p">→</div></div></div>
+        <div class="ar">→</div>
+        <div class="nw"><div class="nd cc"><div class="nd-d" style="color:var(--cyan)">20</div><div class="nd-p">→</div></div></div>
+        <div class="ar">→</div>
+        <div class="nw"><div class="nd cc"><div class="nd-d" style="color:var(--cyan)">30</div><div class="nd-p">→</div></div><div class="pl">last</div></div>
+        <div class="ar">→</div>
+        <div class="nl">NULL</div>
+      </div>
+      <p style="margin-top:8px;font-size:0.78rem;color:var(--muted2)">SLL BEFORE: [30] is last, [30]→next = NULL</p>
+    </div>
+    <div class="icard g">
+      <h4>SLL — AFTER insertEnd(40)</h4>
+      <div class="viz" style="flex-wrap:wrap;margin-top:6px;">
+        <div style="font-size:0.65rem;font-family:JetBrains Mono,monospace;color:var(--green);margin-right:4px">HEAD→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">10</div><div class="nd-p">→</div></div></div>
+        <div class="ar g">→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">20</div><div class="nd-p">→</div></div></div>
+        <div class="ar g">→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">30</div><div class="nd-p">→</div></div></div>
+        <div class="ar g">→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">40</div><div class="nd-p">→</div></div><div class="pl">new last</div></div>
+        <div class="ar g">→</div>
+        <div class="nl">NULL</div>
+      </div>
+      <p style="margin-top:8px;font-size:0.78rem;color:var(--muted2)">SLL AFTER: [40] is new last, [40]→next = NULL</p>
+    </div>
+  </div>
+
   <div class="footer">
     <a href="DS_Unit3_Complete.html">← Back to DS Unit III Complete Guide</a>
   </div>
@@ -452,47 +807,90 @@ td:first-child{color:var(--text);font-weight:600;}
 <!-- ═══════════ PAGE 7: CLL INSERT MIDDLE ═══════════ -->
 <div id="cll-mid" class="page">
 <div class="hero">
-  <div class="hero-badge">🔄 CLL Insert Middle</div>
-  <h1>CLL Insert at <em>Middle</em></h1>
+  <div class="hero-badge">§7 · CLL Insert At</div>
+  <h1>CLL <em>insertAt</em>(data, pos)</h1>
   <p>O(n) — Same pointer trick as SLL, circular property preserved automatically</p>
 </div>
 <div class="main">
-  <div class="slabel">CLL Insert at Middle — O(n)</div>
+  <div class="slabel">Section 7 — Code Comparison CLL vs SLL</div>
   <div class="sync-panel">
     <div class="code-pane">
-      <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_insertMiddle.c</span></div>
+      <div class="code-pane-hdr"><div class="dot" style="background:#ff5f57"></div><div class="dot" style="background:#febc2e"></div><div class="dot" style="background:#28c840"></div><span style="margin-left:auto">cll_new.c</span></div>
       <div class="code-body">
-        <div class="cl" id="cim1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">cllInsertAt</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head, <span class="tp">int</span> data, <span class="tp">int</span> pos) {</div></div>
-        <div class="cl" id="cim2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n = <span class="fn">createNode</span>(data);</div></div>
-        <div class="cl" id="cim3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr = *head;</div></div>
-        <div class="cl" id="cim4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="cm">// pos >= 2: traverse to node at (pos-1)</span></div></div>
-        <div class="cl" id="cim5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">for</span>(<span class="tp">int</span> i=<span class="nu">1</span>; i &lt; pos-<span class="nu">1</span>; i++)</div></div>
+        <div class="cl" id="cim1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertAt</span>(<span class="tp">int</span> data, <span class="tp">int</span> pos) {</div></div>
+        <div class="cl" id="cim2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="tp">int</span> i;</div></div>
+        <div class="cl" id="cim3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n = <span class="fn">createNode</span>(data);</div></div>
+        <div class="cl" id="cim4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr = head;</div></div>
+        <div class="cl" id="cim5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">for</span>(i=<span class="nu">1</span>; i &lt; pos; i++)</div></div>
         <div class="cl" id="cim6"><div class="ln">6</div><div class="la"></div><div class="lc">    curr = curr->next;</div></div>
-        <div class="cl" id="cim7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="cm">// Same pointer trick as SLL!</span></div></div>
-        <div class="cl" id="cim8"><div class="ln">8</div><div class="la"></div><div class="lc">  n->next = curr->next;  <span class="cm">// Step A</span></div></div>
-        <div class="cl" id="cim9"><div class="ln">9</div><div class="la"></div><div class="lc">  curr->next = n;         <span class="cm">// Step B</span></div></div>
-        <div class="cl" id="cim10"><div class="ln">10</div><div class="la"></div><div class="lc">  <span class="cm">// ✅ No special NULL handling needed</span></div></div>
-        <div class="cl" id="cim11"><div class="ln">11</div><div class="la"></div><div class="lc">  <span class="cm">// Circle is automatically maintained</span></div></div>
-        <div class="cl" id="cim12"><div class="ln">12</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n)</span></div></div>
+        <div class="cl" id="cim7"><div class="ln">7</div><div class="la"></div><div class="lc">  n->next = curr->next;  <span class="cm">// Step A</span></div></div>
+        <div class="cl" id="cim8"><div class="ln">8</div><div class="la"></div><div class="lc">  curr->next = n;        <span class="cm">// Step B</span></div></div>
+        <div class="cl" id="cim9"><div class="ln">9</div><div class="la"></div><div class="lc">}</div></div>
+        <div class="cl" id="cim10"><div class="ln">10</div><div class="la"></div><div class="lc"></div></div>
+        <div class="cl" id="cim11"><div class="ln">11</div><div class="la"></div><div class="lc"><span class="cm">// SLL - sll.c (code identical!)</span></div></div>
+        <div class="cl" id="cim12"><div class="ln">12</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertAt</span>(<span class="tp">int</span> data, <span class="tp">int</span> pos) {</div></div>
+        <div class="cl" id="cim13"><div class="ln">13</div><div class="la"></div><div class="lc">  <span class="tp">int</span> i;</div></div>
+        <div class="cl" id="cim14"><div class="ln">14</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n = <span class="fn">createNode</span>(data);</div></div>
+        <div class="cl" id="cim15"><div class="ln">15</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr = head;</div></div>
+        <div class="cl" id="cim16"><div class="ln">16</div><div class="la"></div><div class="lc">  <span class="kw">for</span>(i=<span class="nu">1</span>; i &lt; pos; i++)</div></div>
+        <div class="cl" id="cim17"><div class="ln">17</div><div class="la"></div><div class="lc">    curr = curr->next;</div></div>
+        <div class="cl" id="cim18"><div class="ln">18</div><div class="la"></div><div class="lc">  n->next = curr->next;</div></div>
+        <div class="cl" id="cim19"><div class="ln">19</div><div class="la"></div><div class="lc">  curr->next = n;</div></div>
+        <div class="cl" id="cim20"><div class="ln">20</div><div class="la"></div><div class="lc">}</div></div>
       </div>
     </div>
     <div class="anim-pane">
-      <div class="anim-pane-hdr">▶ Insert 25 after pos 2 in CLL: 10→20→30→↩HEAD</div>
-      <div class="anim-body"><div class="amsg" id="cim-m">CLL: 10→20→30→↩HEAD. Insert 25 after position 2 (after node 20).</div><div class="viz" id="cim-v"></div></div>
+      <div class="anim-pane-hdr">▶ insertAt(15, 1) in CLL: 10→20→30→↩HEAD</div>
+      <div class="anim-body"><div class="amsg" id="cim-m">CLL: 10→20→30→↩HEAD. Insert 15 at pos=1 (after node 10).</div><div class="viz" id="cim-v"></div></div>
       <div class="ctrl-row">
         <button class="cb rst" onclick="R('cim')">↺</button>
         <button class="cb prv" onclick="S('cim',-1)">◀ Prev</button>
         <div class="pb"><div class="pf" id="cim-p" style="width:0%"></div></div>
-        <div class="sc" id="cim-c">0/7</div>
+        <div class="sc" id="cim-c">0/4</div>
         <button class="cb nxt" onclick="S('cim',1)">Next ▶</button>
         <button class="cb aut" id="cim-a" onclick="A('cim')">⚡ Auto</button>
       </div>
     </div>
   </div>
   <div class="icard">
-    <h4>Middle Insertion in CLL = Identical to SLL!</h4>
-    <p>The circular property is automatically preserved since we only re-link middle pointers. Node 30's <code style="color:var(--cyan);font-family:JetBrains Mono,monospace">next</code> still points to head — we never touch the last node.</p>
+    <h4>insertAt — CLL code is IDENTICAL to SLL!</h4>
+    <p>The difference is behavioural only. In CLL, curr→next of the last node points to HEAD (not NULL), so inserting at the last position automatically maintains the circular structure. In SLL, curr→next of the last node is NULL.</p>
   </div>
+
+  <div class="slabel" style="margin-top:8px;">SLL Comparison (Before / After)</div>
+  <div class="g2">
+    <div class="icard">
+      <h4>SLL — BEFORE insertAt(15, 1)</h4>
+      <div class="viz" style="flex-wrap:wrap;margin-top:6px;">
+        <div style="font-size:0.65rem;font-family:JetBrains Mono,monospace;color:var(--cyan);margin-right:4px">HEAD→</div>
+        <div class="nw"><div class="nd cc"><div class="nd-d" style="color:var(--cyan)">10</div><div class="nd-p">→</div></div></div>
+        <div class="ar">→</div>
+        <div class="nw"><div class="nd cc"><div class="nd-d" style="color:var(--cyan)">20</div><div class="nd-p">→</div></div></div>
+        <div class="ar">→</div>
+        <div class="nw"><div class="nd cc"><div class="nd-d" style="color:var(--cyan)">30</div><div class="nd-p">→</div></div></div>
+        <div class="ar">→</div>
+        <div class="nl">NULL</div>
+      </div>
+      <p style="margin-top:8px;font-size:0.78rem;color:var(--muted2)">SLL BEFORE: 10 → 20 → 30 → NULL</p>
+    </div>
+    <div class="icard g">
+      <h4>SLL — AFTER insertAt(15, 1)</h4>
+      <div class="viz" style="flex-wrap:wrap;margin-top:6px;">
+        <div style="font-size:0.65rem;font-family:JetBrains Mono,monospace;color:var(--green);margin-right:4px">HEAD→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">10</div><div class="nd-p">→</div></div></div>
+        <div class="ar g">→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">15</div><div class="nd-p">→</div></div><div class="pl">inserted</div></div>
+        <div class="ar g">→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">20</div><div class="nd-p">→</div></div></div>
+        <div class="ar g">→</div>
+        <div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">30</div><div class="nd-p">→</div></div></div>
+        <div class="ar g">→</div>
+        <div class="nl">NULL</div>
+      </div>
+      <p style="margin-top:8px;font-size:0.78rem;color:var(--muted2)">SLL AFTER: 10 → 15 → 20 → 30 → NULL (same logic, ends in NULL)</p>
+    </div>
+  </div>
+
   <div class="footer">
     <a href="DS_Unit3_Complete.html">← Back to DS Unit III Complete Guide</a>
   </div>
@@ -518,7 +916,7 @@ td:first-child{color:var(--text);font-weight:600;}
       </tr>
       <tr>
         <td>Insert Begin</td>
-        <td><code style="font-family:JetBrains Mono,monospace;color:var(--cyan)">n→next=*head; *head=n</code></td>
+        <td><code style="font-family:JetBrains Mono,monospace;color:var(--cyan)">n→next=head; head=n</code></td>
         <td>Also: <code style="font-family:JetBrains Mono,monospace;color:var(--yellow)">last→next=n</code> (update last!)</td>
         <td><span class="badge-g">SLL: O(1)</span> <span class="badge-o">CLL: O(n)</span></td>
       </tr>
@@ -595,7 +993,7 @@ td:first-child{color:var(--text);font-weight:600;}
 function P(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const pages=['overview','sll-beg','sll-end','sll-mid','cll-beg','cll-end','cll-mid','compare'];
+  const pages=['overview','keyprops','applications','createnode','traverse','cll-beg','cll-end','cll-mid','compare'];
   document.querySelectorAll('.nav-btn').forEach((b,i)=>{
     b.classList.toggle('active',pages[i]===id);
   });
@@ -668,136 +1066,167 @@ mkStepper('ov',[
 mkStepper('sib',[
   ()=>{HL(null);
     V('sib-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
-    M('sib-m','Starting list: 10→20→30→NULL. We will insert 5 at the beginning. O(1)!');PRG('sib',0,4);},
+    M('sib-m','Starting list: 10→20→30→NULL. We will insert 5 at the beginning. O(1)!');PRG('sib',0,3);},
   ()=>{HL(['sib2','sib3']);
-    V('sib-v',`${N(5,'cy','new node[5]')}${AR()}<span style="font-size:0.7rem;color:var(--muted2);margin:0 8px">?</span>${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
-    M('sib-m','Step 1: Allocate new node [5]. next = ? (not set yet).','y');PRG('sib',1,4);},
-  ()=>{HL(['sib4','sib5']);
     V('sib-v',`${N(5,'cy','n')}${AR('g')}${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
-    M('sib-m','Step 2: n→next = *head (old head = 10). New node now points to 10!','y');PRG('sib',2,4);},
-  ()=>{HL(['sib6','sib7']);
+    M('sib-m','Step 1: Allocate [5], set n→next = head (10). New node forward link set.','y');PRG('sib',1,3);},
+  ()=>{HL('sib4');
     V('sib-v',`${N(5,'cg','head (new!)')}${AR()}${N(10,'cc')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
-    M('sib-m','Step 3: *head = n. HEAD now points to node 5! List: 5→10→20→30→NULL. O(1) done! ✓','g');PRG('sib',3,4);},
+    M('sib-m','Step 2: head = n. HEAD now points to node 5! List: 5→10→20→30→NULL. O(1) done! ✓','g');PRG('sib',2,3);},
+  ()=>{HL(null);
+    V('sib-v',`${N(5,'cg','head')}${AR()}${N(10,'cc')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
+    M('sib-m','✓ SLL insertBegin(5): 5→10→20→30→NULL. O(1) — no traversal needed!','g');PRG('sib',3,3);},
 ]);
 
 // SIE — SLL Insert End
 mkStepper('sie',[
   ()=>{HL(null);
     V('sie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
-    M('sie-m','Starting list: 10→20→30→NULL. Insert 40 at end.');PRG('sie',0,6);},
+    M('sie-m','Starting list: 10→20→30→NULL. Insert 40 at end.');PRG('sie',0,5);},
   ()=>{HL('sie2');
     V('sie-v',`${N(40,'cy','new node[40]')}${AR()}${NL()}<span style="font-size:0.7rem;color:var(--muted2);margin-left:10px">not linked yet</span>`);
-    M('sie-m','Allocate new node [40]. next=NULL.','y');PRG('sie',1,6);},
-  ()=>{HL('sie5');
+    M('sie-m','Allocate new node [40]. next=NULL.','y');PRG('sie',1,5);},
+  ()=>{HL(['sie4','sie5','sie6']);
     V('sie-v',`${N(10,'cg','head, curr')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
-    M('sie-m','curr = head (10). Check curr→next (20) ≠ NULL → keep going.');PRG('sie',2,6);},
-  ()=>{HL(['sie6','sie7']);
+    M('sie-m','curr = head (10). Traverse while curr→next != NULL.','y');PRG('sie',2,5);},
+  ()=>{HL('sie6');
     V('sie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','curr — LAST')}${AR()}${NL()}`);
-    M('sie-m','Traverse: 10→20→30. curr→next==NULL → EXIT loop! curr is the last node (30).','y');PRG('sie',3,6);},
-  ()=>{HL('sie8');
-    V('sie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','curr')}${AR('g')}${N(40,'cg','new node')}${AR()}${NL()}`);
-    M('sie-m','curr→next = n. Last node (30) now points to [40]!','g');PRG('sie',4,6);},
+    M('sie-m','curr→next==NULL → EXIT loop! curr is the last node (30).','y');PRG('sie',3,5);},
+  ()=>{HL('sie7');
+    V('sie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','curr')}${AR('g')}${N(40,'cg','new tail')}${AR()}${NL()}`);
+    M('sie-m','curr→next = n. Node [40] appended. n→next stays NULL.','g');PRG('sie',4,5);},
   ()=>{HL(null);
     V('sie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${N(40,'cg','new tail')}${AR()}${NL()}`);
-    M('sie-m','✓ Done! List: 10→20→30→40→NULL. Traversed n nodes → O(n).','g');PRG('sie',5,6);},
+    M('sie-m','✓ Done! List: 10→20→30→40→NULL. Traversed n nodes → O(n).','g');PRG('sie',5,5);},
 ]);
 
-// SIM — SLL Insert Middle
+// SIM — SLL insertAt
 mkStepper('sim',[
   ()=>{HL(null);
     V('sim-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
-    M('sim-m','Starting list: 10→20→30→NULL. Insert 25 after position 2 (after node 20).');PRG('sim',0,6);},
-  ()=>{HL('sim2');
-    V('sim-v',`${N(25,'cy','new node[25]')}${AR()}${NL()}<div style="margin-left:10px;font-size:0.7rem;color:var(--muted2)">not linked</div>`);
-    M('sim-m','Allocate new node [25]. curr = head (10).','y');PRG('sim',1,6);},
+    M('sim-m','Starting list: 10→20→30→NULL. insertAt(15, 1): insert 15 after position 1 (after node 10).');PRG('sim',0,4);},
   ()=>{HL(['sim3','sim4','sim5','sim6']);
-    V('sim-v',`${N(10,'cc','head')}${AR()}${N(20,'cg','curr (pos 2)')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
-    M('sim-m','Traverse loop: i=1, go to pos-1=1 step. curr lands on node 20 (position 2).','y');PRG('sim',2,6);},
+    V('sim-v',`${N(10,'cg','head, curr')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
+    M('sim-m','Allocate [15]. curr = head [10]. for(i=1; i<1; i++) → loop does NOT run. curr stays at [10].','y');PRG('sim',1,4);},
+  ()=>{HL('sim7');
+    V('sim-v',`${N(10,'cc','head')}${AR()}${N(20,'cy','curr')}${AR('g')}${N(15,'cy','n→20')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
+    M('sim-m','Step A: n→next = curr→next (15 points to 20). Saves link to 20!','y');PRG('sim',2,4);},
   ()=>{HL('sim8');
-    V('sim-v',`${N(10,'cc','head')}${AR()}${N(20,'cy','curr')}${AR('g')}${N(25,'cy','n→30')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
-    M('sim-m','Step A: n→next = curr→next (30). ⚠️ MUST do this FIRST — saves link to 30!','y');PRG('sim',3,6);},
-  ()=>{HL('sim9');
-    V('sim-v',`${N(10,'cc','head')}${AR()}${N(20,'cg','curr')}${AR('g')}${N(25,'cg','inserted!')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
-    M('sim-m','Step B: curr→next = n (20 → 25). List now: 10→20→25→30→NULL.','g');PRG('sim',4,6);},
+    V('sim-v',`${N(10,'cg','head')}${AR('g')}${N(15,'cg','inserted!')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
+    M('sim-m','Step B: curr→next = n (10 → 15). ✓ Done! 10→15→20→30→NULL','g');PRG('sim',3,4);},
   ()=>{HL(null);
-    V('sim-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(25,'cg','inserted!')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
-    M('sim-m','✓ Done! List: 10→20→25→30→NULL. Order A before B is critical!','g');PRG('sim',5,6);},
+    V('sim-v',`${N(10,'cc','head')}${AR()}${N(15,'cg','inserted!')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
+    M('sim-m','✓ SLL insertAt(15,1): 10→15→20→30→NULL. Order A before B critical!','g');PRG('sim',4,4);},
 ]);
 
 // CIB — CLL Insert Begin
 mkStepper('cib',[
   ()=>{HL(null);
     V('cib-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
-    M('cib-m','CLL: 10→20→30→↩HEAD. Insert 5 at beginning.');PRG('cib',0,7);},
-  ()=>{HL(['cib2','cib3']);
-    V('cib-v',`<div class="nw"><div class="nd cy"><div class="nd-d" style="color:var(--yellow)">5</div><div class="nd-p" style="color:var(--yellow)">↩</div></div><div class="pl">n→next=n (self)</div></div>
-      <span style="font-size:0.7rem;color:var(--muted2);margin:0 12px;align-self:center">not linked to list</span>
-      ${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}`);
-    M('cib-m','Allocate [5], n→next = n (self-loop for now).','y');PRG('cib',1,7);},
-  ()=>{HL(['cib5','cib6','cib7','cib8']);
+    M('cib-m','CLL: 10→20→30→↩HEAD. Insert 5 at beginning.');PRG('cib',0,6);},
+  ()=>{HL(['cib2']);
+    V('cib-v',`${N(5,'cy','new node[5]')}${AR()}<span style="font-size:0.7rem;color:var(--muted2);margin:0 8px">not linked</span>${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
+    M('cib-m','Step 1: Create new node [5]. Initially n→next = NULL.','y');PRG('cib',1,6);},
+  ()=>{HL(['cib7','cib8','cib9']);
     V('cib-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cy','finding last...')}`);
-    M('cib-m','Find LAST node: traverse until last→next == head.','y');PRG('cib',2,7);},
-  ()=>{HL(['cib7','cib8']);
+    M('cib-m','Step 2: head != NULL. Find LAST node: traverse until last→next == head.','y');PRG('cib',2,6);},
+  ()=>{HL(['cib8','cib9']);
     V('cib-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cy','last (30→next==head ✓)')}`);
-    M('cib-m','last = node 30. Confirmed: last→next = head (10). Found the last!','y');PRG('cib',3,7);},
+    M('cib-m','Step 3: last = node 30. last→next == HEAD → stop traversal.','y');PRG('cib',3,6);},
   ()=>{HL('cib10');
     V('cib-v',`${N(5,'cy','n')}${AR('g')}${NC(10,'cg','old head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cy','last')}`);
-    M('cib-m','n→next = old head (5 → 10). New node points to old head!','y');PRG('cib',4,7);},
-  ()=>{HL('cib12');
+    M('cib-m','Step 4: n→next = head (5 → 10). New node forward link set to old HEAD.','y');PRG('cib',4,6);},
+  ()=>{HL('cib11');
     V('cib-v',`${N(5,'cy','n')}${AR('g')}${NC(10,'cg','old head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last→5')}`);
-    M('cib-m','last→next = n (30 → 5). Circle is now maintained through new node!','g');PRG('cib',5,7);},
-  ()=>{HL('cib14');
+    M('cib-m','Step 5: last→next = n (30 → 5). Circle restored through new node!','g');PRG('cib',5,6);},
+  ()=>{HL('cib12');
     V('cib-v',`${NC(5,'cg','head (new!)')}${AR('g')}${NC(10,'cg')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
-    M('cib-m','✓ *head = n. CLL: 5→10→20→30→↩HEAD. Circle maintained!','g');PRG('cib',6,7);},
+    M('cib-m','Step 6: head = n. ✓ CLL: 5→10→20→30→↩HEAD. Circle maintained!','g');PRG('cib',6,6);},
 ]);
 
 // CIE — CLL Insert End
 mkStepper('cie',[
   ()=>{HL(null);
     V('cie-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
-    M('cie-m','CLL: 10→20→30→↩HEAD. Insert 40 at end.');PRG('cie',0,6);},
-  ()=>{HL(['cie2','cie3']);
-    V('cie-v',`<div class="nw"><div class="nd cy"><div class="nd-d" style="color:var(--yellow)">40</div><div class="nd-p" style="color:var(--yellow)">↩</div></div><div class="pl">n→next=n</div></div>
-      <span style="font-size:0.7rem;color:var(--muted2);margin:0 10px;align-self:center">not linked</span>`);
-    M('cie-m','Allocate [40], n→next = n (self-loop initially).','y');PRG('cie',1,6);},
-  ()=>{HL(['cie6','cie7','cie8']);
+    M('cie-m','CLL: 10→20→30→↩HEAD. Insert 40 at end.');PRG('cie',0,5);},
+  ()=>{HL(['cie2']);
+    V('cie-v',`${N(40,'cy','new node[40]')}${AR()}${NL()}<span style="font-size:0.7rem;color:var(--muted2);margin-left:10px">not linked</span>`);
+    M('cie-m','Step 1: Create new node [40]. Initially n→next = NULL.','y');PRG('cie',1,5);},
+  ()=>{HL(['cie7','cie8','cie9']);
     V('cie-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cy','last (found!)')}`);
-    M('cie-m','Traverse: find last where last→next == head. last = node 30.','y');PRG('cie',2,6);},
+    M('cie-m','Step 2: Set last = head [10]. Traverse while last→next != head. last = node 30.','y');PRG('cie',2,5);},
   ()=>{HL('cie10');
     V('cie-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cy','last')}${AR('g')}${N(40,'cy','n')}`);
-    M('cie-m','last→next = n. Old last (30) now points to [40]!','g');PRG('cie',3,6);},
+    M('cie-m','Step 3: last→next = n. Old last node [30] now points to [40]!','g');PRG('cie',3,5);},
   ()=>{HL('cie11');
     V('cie-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg')}${AR('g')}${NC(40,'cg','new last')}${CLBL()}`);
-    M('cie-m','n→next = head (40 → 10). Circle closed! New node is the new last.','g');PRG('cie',4,6);},
+    M('cie-m','Step 4: n→next = head (40 → 10). Circle closed! ✓','g');PRG('cie',4,5);},
   ()=>{HL(null);
     V('cie-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg')}${AR('g')}${NC(40,'cg','new last')}${CLBL()}`);
-    M('cie-m','✓ Done! CLL: 10→20→30→40→↩HEAD. Circle maintained! O(n).','g');PRG('cie',5,6);},
+    M('cie-m','✓ Done! CLL: 10→20→30→40→↩HEAD. Circle maintained! O(n).','g');PRG('cie',5,5);},
 ]);
 
-// CIM — CLL Insert Middle
+// CIM — CLL insertAt
 mkStepper('cim',[
   ()=>{HL(null);
     V('cim-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
-    M('cim-m','CLL: 10→20→30→↩HEAD. Insert 25 after position 2 (after node 20).');PRG('cim',0,7);},
-  ()=>{HL('cim2');
-    V('cim-v',`${N(25,'cy','new node[25]')}${AR()}${NL()}<div style="margin-left:10px;font-size:0.7rem;color:var(--muted2)">not linked</div>`);
-    M('cim-m','Allocate new node [25].','y');PRG('cim',1,7);},
+    M('cim-m','CLL: 10→20→30→↩HEAD. insertAt(15, 1): insert 15 after position 1 (after node 10).');PRG('cim',0,4);},
   ()=>{HL(['cim3','cim4','cim5','cim6']);
-    V('cim-v',`${NC(10,'cg','head, curr (pos 1)')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}`);
-    M('cim-m','curr = head (10). Traverse to pos-1 = position 1.','y');PRG('cim',2,7);},
-  ()=>{HL(['cim5','cim6']);
-    V('cim-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cy','curr (pos 2)')}${AR('g')}${NC(30,'cg','last')}`);
-    M('cim-m','curr = node 20 (position 2 = target predecessor).','y');PRG('cim',3,7);},
+    V('cim-v',`${NC(10,'cy','head, curr')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
+    M('cim-m','Step 1: Allocate [15]. curr = head [10]. for(i=1; i<1; i++) → loop does NOT run. curr stays at [10].','y');PRG('cim',1,4);},
+  ()=>{HL('cim7');
+    V('cim-v',`${NC(10,'cy','curr')}${AR('g')}${N(15,'cy','n→20')}${AR()}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
+    M('cim-m','Step 2: n→next = curr→next (15 points to 20). Saves link to rest!','y');PRG('cim',2,4);},
   ()=>{HL('cim8');
-    V('cim-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cy','curr')}${AR('g')}${N(25,'cy','n→30')}${AR()}${NC(30,'cg','last')}`);
-    M('cim-m','Step A: n→next = curr→next (25 points to 30). Saves link to rest!','y');PRG('cim',4,7);},
-  ()=>{HL('cim9');
-    V('cim-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg','curr')}${AR('g')}${NC(25,'cg','inserted!')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
-    M('cim-m','Step B: curr→next = n (20 → 25). Circle still intact — 30→next still = head!','g');PRG('cim',5,7);},
+    V('cim-v',`${NC(10,'cg','head')}${AR('g')}${NC(15,'cg','inserted!')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
+    M('cim-m','Step 3: curr→next = n (10 → 15). Circle still intact — 30→next still = head!','g');PRG('cim',3,4);},
   ()=>{HL(null);
-    V('cim-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(25,'cg','inserted!')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
-    M('cim-m','✓ Done! CLL: 10→20→25→30→↩HEAD. Circle intact, O(n).','g');PRG('cim',6,7);},
+    V('cim-v',`${NC(10,'cg','head')}${AR('g')}${NC(15,'cg','inserted!')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
+    M('cim-m','✓ CLL insertAt(15,1): 10→15→20→30→↩HEAD. Circle intact, O(n).','g');PRG('cim',4,4);},
 ]);
+
+// CN — createNode
+mkStepper('cn',[
+  ()=>{HL(null);V('cn-v','');M('cn-m','Press Next ▶ to walk through createNode(v) step by step');PRG('cn',0,4);},
+  ()=>{HL(['cn1','cn2','cn3','cn4']);
+    V('cn-v',`<div class="nw"><div class="nd cy" style="border-style:dashed"><div class="nd-d" style="color:var(--yellow)">NEW</div><div class="nd-p" style="color:var(--muted)">NULL</div></div><div class="pl">next=NULL</div></div>`);
+    M('cn-m','Step 1: Call malloc() to allocate memory for a new node on the heap.','y');PRG('cn',1,4);},
+  ()=>{HL('cn5');
+    V('cn-v',`<div class="nw"><div class="nd cy"><div class="nd-d" style="color:var(--yellow)">v</div><div class="nd-p" style="color:var(--muted)">NULL</div></div><div class="pl">data = v</div></div>`);
+    M('cn-m','Step 2: n→data = v — store the given integer value inside the data field.','y');PRG('cn',2,4);},
+  ()=>{HL('cn6');
+    V('cn-v',`<div class="nw"><div class="nd cy"><div class="nd-d" style="color:var(--yellow)">v</div><div class="nd-p" style="color:var(--muted)">NULL</div></div><div class="pl">next = NULL (temp)</div></div>`);
+    M('cn-m','Step 3: n→next = NULL — temporary. Caller will set the correct next pointer.','y');PRG('cn',3,4);},
+  ()=>{HL('cn7');
+    V('cn-v',`<div class="nw"><div class="nd cg"><div class="nd-d" style="color:var(--green)">v</div><div class="nd-p" style="color:var(--muted)">NULL</div></div><div class="pl">returned!</div></div><span style="font-size:0.75rem;color:var(--green);margin-left:12px;align-self:center">In CLL: caller sets last→next = n, n→next = head</span>`);
+    M('cn-m','Step 4: return n — node returned to caller. In CLL: caller fixes next to close the circle.','g');PRG('cn',4,4);},
+]);
+
+// TR — traverse
+mkStepper('tr',[
+  ()=>{HL(null);
+    V('tr-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
+    M('tr-m','CLL: 10→20→30→↩HEAD. Press Next ▶ to step through traverse().');PRG('tr',0,6);},
+  ()=>{HL('tr2');
+    V('tr-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
+    M('tr-m','Step 1: Check head == NULL. List is not empty, so continue execution.','y');PRG('tr',1,6);},
+  ()=>{HL('tr3');
+    V('tr-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
+    M('tr-m','Step 2: curr = head. curr now points to the first node [10] (orange = active pointer).','y');PRG('tr',2,6);},
+  ()=>{HL(['tr4','tr5','tr6','tr7']);
+    V('tr-v',`${NC(10,'cy','curr→printed')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
+    M('tr-m','Step 3: Enter do-while loop. Print curr→data = 10. Move curr = curr→next → curr now at [20].','y');PRG('tr',3,6);},
+  ()=>{HL(['tr5','tr6','tr7']);
+    V('tr-v',`${NC(10,'cg')}${AR('g')}${NC(20,'cy','curr→printed')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
+    M('tr-m','Step 4: Print curr→data = 20. Move curr = curr→next → curr now at [30].','y');PRG('tr',4,6);},
+  ()=>{HL('tr7');
+    V('tr-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cy','curr→printed')}${CLBL()}`);
+    M('tr-m','Step 5: Print curr→data = 30. Move curr = curr→next → curr returns to HEAD [10]. while(curr != head) → FALSE. Exit loop!','y');PRG('tr',5,6);},
+  ()=>{HL('tr8');
+    V('tr-v',`${NC(10,'cg','head ← printed')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
+    M('tr-m','Step 6: printf("%d(HEAD)", head→data) → prints "10(HEAD)". ✓ Output: 10→20→30→10(HEAD)','g');PRG('tr',6,6);},
+]);
+
 </script>
 </body>
 </html>
