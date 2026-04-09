@@ -193,7 +193,7 @@ td:first-child{color:var(--text);font-weight:600;}
       <tr><th>Feature</th><th>SLL</th><th>CLL</th></tr>
       <tr><td>Last node next</td><td>NULL</td><td>head</td></tr>
       <tr><td>Traversal stop</td><td>curr == NULL</td><td>curr == head</td></tr>
-      <tr><td>Insert at end</td><td>O(n) — find NULL</td><td>O(1) if tail ptr kept</td></tr>
+      <tr><td>Insert at end</td><td>O(n) — find NULL</td><td>O(n) — find head (as shown); O(1) only with explicit tail pointer</td></tr>
       <tr><td>Memory</td><td>data + next</td><td>data + next (same)</td></tr>
       <tr><td>Use case</td><td>Stack, queue</td><td>Round-robin scheduling</td></tr>
     </table>
@@ -314,12 +314,13 @@ td:first-child{color:var(--text);font-weight:600;}
         <div class="cl" id="sim1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertAt</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head, <span class="tp">int</span> data, <span class="tp">int</span> pos) {</div></div>
         <div class="cl" id="sim2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n = <span class="fn">createNode</span>(data);</div></div>
         <div class="cl" id="sim3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr = *head;</div></div>
-        <div class="cl" id="sim4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">for</span>(<span class="tp">int</span> i=<span class="nu">1</span>; i &lt; pos-<span class="nu">1</span>; i++)</div></div>
-        <div class="cl" id="sim5"><div class="ln">5</div><div class="la"></div><div class="lc">    curr = curr->next;  <span class="cm">// reach pos-1</span></div></div>
-        <div class="cl" id="sim6"><div class="ln">6</div><div class="la"></div><div class="lc">  <span class="cm">// ⚠️ ORDER MATTERS! A before B</span></div></div>
-        <div class="cl" id="sim7"><div class="ln">7</div><div class="la"></div><div class="lc">  n->next = curr->next;  <span class="cm">// Step A</span></div></div>
-        <div class="cl" id="sim8"><div class="ln">8</div><div class="la"></div><div class="lc">  curr->next = n;         <span class="cm">// Step B</span></div></div>
-        <div class="cl" id="sim9"><div class="ln">9</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n)</span></div></div>
+        <div class="cl" id="sim4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="cm">// pos >= 2: traverse to node at (pos-1)</span></div></div>
+        <div class="cl" id="sim5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">for</span>(<span class="tp">int</span> i=<span class="nu">1</span>; i &lt; pos-<span class="nu">1</span>; i++)</div></div>
+        <div class="cl" id="sim6"><div class="ln">6</div><div class="la"></div><div class="lc">    curr = curr->next;  <span class="cm">// reach predecessor</span></div></div>
+        <div class="cl" id="sim7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="cm">// ⚠️ ORDER MATTERS! A before B</span></div></div>
+        <div class="cl" id="sim8"><div class="ln">8</div><div class="la"></div><div class="lc">  n->next = curr->next;  <span class="cm">// Step A</span></div></div>
+        <div class="cl" id="sim9"><div class="ln">9</div><div class="la"></div><div class="lc">  curr->next = n;         <span class="cm">// Step B</span></div></div>
+        <div class="cl" id="sim10"><div class="ln">10</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n)</span></div></div>
       </div>
     </div>
     <div class="anim-pane">
@@ -464,14 +465,15 @@ td:first-child{color:var(--text);font-weight:600;}
         <div class="cl" id="cim1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">cllInsertAt</span>(<span class="kw">struct</span> <span class="tp">Node</span> **head, <span class="tp">int</span> data, <span class="tp">int</span> pos) {</div></div>
         <div class="cl" id="cim2"><div class="ln">2</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *n = <span class="fn">createNode</span>(data);</div></div>
         <div class="cl" id="cim3"><div class="ln">3</div><div class="la"></div><div class="lc">  <span class="kw">struct</span> <span class="tp">Node</span> *curr = *head;</div></div>
-        <div class="cl" id="cim4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="kw">for</span>(<span class="tp">int</span> i=<span class="nu">1</span>; i &lt; pos-<span class="nu">1</span>; i++)</div></div>
-        <div class="cl" id="cim5"><div class="ln">5</div><div class="la"></div><div class="lc">    curr = curr->next;</div></div>
-        <div class="cl" id="cim6"><div class="ln">6</div><div class="la"></div><div class="lc">  <span class="cm">// Same pointer trick as SLL!</span></div></div>
-        <div class="cl" id="cim7"><div class="ln">7</div><div class="la"></div><div class="lc">  n->next = curr->next;  <span class="cm">// Step A</span></div></div>
-        <div class="cl" id="cim8"><div class="ln">8</div><div class="la"></div><div class="lc">  curr->next = n;         <span class="cm">// Step B</span></div></div>
-        <div class="cl" id="cim9"><div class="ln">9</div><div class="la"></div><div class="lc">  <span class="cm">// ✅ No special NULL handling needed</span></div></div>
-        <div class="cl" id="cim10"><div class="ln">10</div><div class="la"></div><div class="lc">  <span class="cm">// Circle is automatically maintained</span></div></div>
-        <div class="cl" id="cim11"><div class="ln">11</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n)</span></div></div>
+        <div class="cl" id="cim4"><div class="ln">4</div><div class="la"></div><div class="lc">  <span class="cm">// pos >= 2: traverse to node at (pos-1)</span></div></div>
+        <div class="cl" id="cim5"><div class="ln">5</div><div class="la"></div><div class="lc">  <span class="kw">for</span>(<span class="tp">int</span> i=<span class="nu">1</span>; i &lt; pos-<span class="nu">1</span>; i++)</div></div>
+        <div class="cl" id="cim6"><div class="ln">6</div><div class="la"></div><div class="lc">    curr = curr->next;</div></div>
+        <div class="cl" id="cim7"><div class="ln">7</div><div class="la"></div><div class="lc">  <span class="cm">// Same pointer trick as SLL!</span></div></div>
+        <div class="cl" id="cim8"><div class="ln">8</div><div class="la"></div><div class="lc">  n->next = curr->next;  <span class="cm">// Step A</span></div></div>
+        <div class="cl" id="cim9"><div class="ln">9</div><div class="la"></div><div class="lc">  curr->next = n;         <span class="cm">// Step B</span></div></div>
+        <div class="cl" id="cim10"><div class="ln">10</div><div class="la"></div><div class="lc">  <span class="cm">// ✅ No special NULL handling needed</span></div></div>
+        <div class="cl" id="cim11"><div class="ln">11</div><div class="la"></div><div class="lc">  <span class="cm">// Circle is automatically maintained</span></div></div>
+        <div class="cl" id="cim12"><div class="ln">12</div><div class="la"></div><div class="lc">} <span class="cm">// Time: O(n)</span></div></div>
       </div>
     </div>
     <div class="anim-pane">
@@ -708,13 +710,13 @@ mkStepper('sim',[
   ()=>{HL('sim2');
     V('sim-v',`${N(25,'cy','new node[25]')}${AR()}${NL()}<div style="margin-left:10px;font-size:0.7rem;color:var(--muted2)">not linked</div>`);
     M('sim-m','Allocate new node [25]. curr = head (10).','y');PRG('sim',1,6);},
-  ()=>{HL(['sim3','sim4','sim5']);
+  ()=>{HL(['sim3','sim4','sim5','sim6']);
     V('sim-v',`${N(10,'cc','head')}${AR()}${N(20,'cg','curr (pos 2)')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
     M('sim-m','Traverse loop: i=1, go to pos-1=1 step. curr lands on node 20 (position 2).','y');PRG('sim',2,6);},
-  ()=>{HL('sim7');
+  ()=>{HL('sim8');
     V('sim-v',`${N(10,'cc','head')}${AR()}${N(20,'cy','curr')}${AR('g')}${N(25,'cy','n→30')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
     M('sim-m','Step A: n→next = curr→next (30). ⚠️ MUST do this FIRST — saves link to 30!','y');PRG('sim',3,6);},
-  ()=>{HL('sim8');
+  ()=>{HL('sim9');
     V('sim-v',`${N(10,'cc','head')}${AR()}${N(20,'cg','curr')}${AR('g')}${N(25,'cg','inserted!')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
     M('sim-m','Step B: curr→next = n (20 → 25). List now: 10→20→25→30→NULL.','g');PRG('sim',4,6);},
   ()=>{HL(null);
@@ -780,16 +782,16 @@ mkStepper('cim',[
   ()=>{HL('cim2');
     V('cim-v',`${N(25,'cy','new node[25]')}${AR()}${NL()}<div style="margin-left:10px;font-size:0.7rem;color:var(--muted2)">not linked</div>`);
     M('cim-m','Allocate new node [25].','y');PRG('cim',1,7);},
-  ()=>{HL(['cim3','cim4','cim5']);
+  ()=>{HL(['cim3','cim4','cim5','cim6']);
     V('cim-v',`${NC(10,'cg','head, curr (pos 1)')}${AR('g')}${NC(20,'cg')}${AR('g')}${NC(30,'cg','last')}`);
     M('cim-m','curr = head (10). Traverse to pos-1 = position 1.','y');PRG('cim',2,7);},
-  ()=>{HL(['cim4','cim5']);
+  ()=>{HL(['cim5','cim6']);
     V('cim-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cy','curr (pos 2)')}${AR('g')}${NC(30,'cg','last')}`);
     M('cim-m','curr = node 20 (position 2 = target predecessor).','y');PRG('cim',3,7);},
-  ()=>{HL('cim7');
+  ()=>{HL('cim8');
     V('cim-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cy','curr')}${AR('g')}${N(25,'cy','n→30')}${AR()}${NC(30,'cg','last')}`);
     M('cim-m','Step A: n→next = curr→next (25 points to 30). Saves link to rest!','y');PRG('cim',4,7);},
-  ()=>{HL('cim8');
+  ()=>{HL('cim9');
     V('cim-v',`${NC(10,'cg','head')}${AR('g')}${NC(20,'cg','curr')}${AR('g')}${NC(25,'cg','inserted!')}${AR('g')}${NC(30,'cg','last')}${CLBL()}`);
     M('cim-m','Step B: curr→next = n (20 → 25). Circle still intact — 30→next still = head!','g');PRG('cim',5,7);},
   ()=>{HL(null);
