@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLL vs SLL — Insertion Operations | Ramakrishna</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#080c14;--panel:#0e1420;--card:#131d2e;--elevated:#192338;
+  --border:#1e2d45;--border2:#243450;
+  --cyan:#00e5ff;--cyan-dim:rgba(0,229,255,0.12);
+  --green:#00ff88;--green-dim:rgba(0,255,136,0.12);
+  --yellow:#ffd60a;--yellow-dim:rgba(255,214,10,0.12);
+  --red:#ff4757;--red-dim:rgba(255,71,87,0.12);
+  --purple:#be63f9;--purple-dim:rgba(190,99,249,0.12);
+  --orange:#ff9f43;--text:#dde4f0;--muted:#4a5e7a;--muted2:#6b7e99;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden;}
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(8,12,20,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);height:52px;display:flex;align-items:center;padding:0 16px;gap:6px;overflow-x:auto;}
+.topbar::-webkit-scrollbar{height:0;}
+.topbar-logo{font-weight:900;font-size:0.95rem;color:var(--cyan);margin-right:10px;white-space:nowrap;}
+.nav-btn{background:transparent;border:1px solid var(--border);color:var(--muted2);padding:4px 10px;border-radius:5px;cursor:pointer;font-size:0.68rem;font-family:'Outfit',sans-serif;font-weight:600;transition:all 0.2s;white-space:nowrap;}
+.nav-btn:hover,.nav-btn.active{background:var(--cyan);color:#000;border-color:var(--cyan);}
+.page{display:none;padding-top:64px;min-height:100vh;}
+.page.active{display:block;}
+.hero{padding:36px 24px 24px;text-align:center;position:relative;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--cyan-dim);border:1px solid rgba(0,229,255,0.3);color:var(--cyan);padding:3px 12px;border-radius:20px;font-size:0.68rem;font-family:'JetBrains Mono',monospace;margin-bottom:12px;}
+.hero h1{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:900;letter-spacing:-1px;line-height:1.1;margin-bottom:6px;}
+.hero h1 em{font-style:normal;color:var(--cyan);}
+.hero p{color:var(--muted2);font-size:0.83rem;max-width:520px;margin:0 auto;}
+.main{max-width:1080px;margin:0 auto;padding:20px 16px;}
+.slabel{font-size:0.65rem;font-family:'JetBrains Mono',monospace;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px;}
+.slabel::after{content:'';flex:1;height:1px;background:var(--border);}
+/* SYNC PANEL */
+.sync-panel{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:16px;}
+@media(max-width:680px){.sync-panel{grid-template-columns:1fr;}}
+.code-pane{background:#080b12;border-right:1px solid var(--border);}
+.code-pane-hdr{background:var(--panel);padding:8px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--muted2);}
+.dot{width:9px;height:9px;border-radius:50%;}
+.code-body{overflow:auto;max-height:400px;}
+.cl{display:flex;align-items:stretch;min-height:24px;transition:background 0.2s;}
+.cl.hl{background:#0f2d0f!important;}
+.cl.hl2{background:#2a1f00!important;}
+.cl.hl3{background:#1a0f2a!important;}
+.cl.hl4{background:#2a0f0f!important;}
+.ln{width:34px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:0.68rem;padding:2px 6px 2px 10px;text-align:right;border-right:1px solid var(--border);flex-shrink:0;user-select:none;}
+.cl.hl .ln{color:var(--green);font-weight:700;}
+.la{width:18px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;flex-shrink:0;}
+.cl.hl .la::before{content:'▶';color:var(--green);}
+.lc{padding:2px 10px 2px 3px;font-family:'JetBrains Mono',monospace;font-size:0.7rem;line-height:1.65;white-space:pre;color:var(--text);}
+.kw{color:#ff79c6;}.fn{color:#8be9fd;}.tp{color:#f1fa8c;}.st{color:#f1fa8c;}.cm{color:#5c6878;font-style:italic;}.nu{color:#bd93f9;}
+.anim-pane{background:var(--panel);}
+.anim-pane-hdr{background:var(--elevated);padding:8px 14px;border-bottom:1px solid var(--border);font-size:0.7rem;color:var(--muted2);font-family:'JetBrains Mono',monospace;}
+.anim-body{padding:16px;min-height:180px;}
+.amsg{background:var(--elevated);border:1px solid var(--border);border-radius:7px;padding:9px 12px;font-size:0.76rem;color:var(--cyan);font-family:'JetBrains Mono',monospace;margin-bottom:12px;min-height:40px;line-height:1.5;}
+.amsg.g{color:var(--green);background:var(--green-dim);border-color:rgba(0,255,136,0.2);}
+.amsg.y{color:var(--yellow);background:var(--yellow-dim);border-color:rgba(255,214,10,0.2);}
+.amsg.r{color:var(--red);background:var(--red-dim);border-color:rgba(255,71,87,0.2);}
+/* NODE COMPONENTS */
+.viz{display:flex;align-items:center;flex-wrap:wrap;gap:3px;padding:6px 0;}
+.nw{display:flex;flex-direction:column;align-items:center;}
+.nd{display:inline-flex;border-radius:7px;overflow:hidden;border:2px solid var(--border2);transition:all 0.3s;}
+.nd.cc{border-color:var(--cyan);box-shadow:0 0 10px rgba(0,229,255,0.2);}
+.nd.cg{border-color:var(--green);box-shadow:0 0 10px rgba(0,255,136,0.2);}
+.nd.cy{border-color:var(--yellow);box-shadow:0 0 10px rgba(255,214,10,0.2);}
+.nd.cr{border-color:var(--red);box-shadow:0 0 10px rgba(255,71,87,0.2);opacity:0.7;}
+.nd.cp{border-color:var(--purple);box-shadow:0 0 10px rgba(190,99,249,0.2);}
+.nd-d{padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:0.82rem;font-weight:700;background:#0d1424;}
+.nd-p{padding:6px 6px;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--muted2);background:#0a0e18;border-left:1px solid var(--border);}
+.ar{color:var(--cyan);font-size:0.95rem;padding:0 2px;align-self:center;}
+.ar.g{color:var(--green);}
+.ar.r{color:var(--red);}
+.nl{background:#0d1424;border:1px dashed var(--border2);border-radius:5px;padding:5px 8px;font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--muted);}
+.pl{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--muted2);text-align:center;margin-top:2px;}
+/* DOUBLY */
+.dnd{display:inline-flex;border-radius:7px;overflow:hidden;border:2px solid var(--purple);background:#0d0a18;}
+.dp{padding:6px 5px;font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--purple);background:#100d1f;width:34px;text-align:center;}
+.dd{padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:0.82rem;font-weight:700;border-left:1px solid #2a1a4a;border-right:1px solid #2a1a4a;}
+.da{color:var(--purple);font-size:0.95rem;padding:0 3px;align-self:center;}
+/* CTRL ROW */
+.ctrl-row{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--elevated);border-top:1px solid var(--border);flex-wrap:wrap;}
+.pb{flex:1;height:3px;background:var(--border);border-radius:2px;min-width:60px;}
+.pf{height:100%;background:var(--cyan);border-radius:2px;transition:width 0.3s;}
+.sc{font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--muted2);white-space:nowrap;}
+.cb{padding:5px 12px;border-radius:5px;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:0.74rem;font-weight:700;transition:all 0.2s;}
+.cb.prv{background:var(--elevated);color:var(--muted2);border:1px solid var(--border);}
+.cb.prv:hover{color:var(--text);}
+.cb.nxt{background:var(--cyan);color:#000;}
+.cb.nxt:hover{background:#00c0d4;}
+.cb.rst{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,71,87,0.3);}
+.cb.aut{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,255,136,0.3);}
+.cb.aut.run{background:var(--yellow-dim);color:var(--yellow);border-color:rgba(255,214,10,0.3);}
+/* TABS */
+.stabs{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap;}
+.stab{padding:5px 12px;border-radius:5px;cursor:pointer;font-size:0.7rem;font-weight:700;color:var(--muted2);background:var(--elevated);border:1px solid var(--border);transition:all 0.2s;}
+.stab:hover{color:var(--text);}
+.stab.active{background:var(--cyan);color:#000;border-color:var(--cyan);}
+.stab-content{display:none;}
+.stab-content.active{display:block;}
+/* INFO */
+.icard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px;}
+.icard h4{font-weight:700;font-size:0.85rem;margin-bottom:6px;color:var(--cyan);}
+.icard p{font-size:0.8rem;color:var(--muted2);line-height:1.6;}
+table{width:100%;border-collapse:collapse;font-size:0.76rem;}
+th{background:rgba(0,229,255,0.1);color:var(--cyan);padding:8px 10px;text-align:left;font-weight:700;border-bottom:1px solid var(--border);}
+td{padding:7px 10px;border-bottom:1px solid var(--border);color:var(--muted2);}
+td:first-child{color:var(--text);font-weight:600;}
+/* QUIZ */
+.qcard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:12px;}
+.gtag{display:inline-block;background:linear-gradient(135deg,var(--purple),#5b21b6);color:#fff;padding:2px 8px;border-radius:3px;font-size:0.6rem;font-family:'JetBrains Mono',monospace;margin-bottom:5px;}
+.ptag{display:inline-block;background:linear-gradient(135deg,#0891b2,#0e7490);color:#fff;padding:2px 8px;border-radius:3px;font-size:0.6rem;font-family:'JetBrains Mono',monospace;margin-bottom:5px;}
+.qnum{font-size:0.62rem;color:var(--muted2);font-family:'JetBrains Mono',monospace;margin-bottom:4px;}
+.qtext{font-size:0.82rem;line-height:1.5;margin-bottom:12px;}
+.qtext code{background:rgba(0,229,255,0.1);color:var(--cyan);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.75rem;}
+.opts{display:flex;flex-direction:column;gap:6px;}
+.opt{background:var(--elevated);border:1px solid var(--border);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:0.78rem;transition:all 0.2s;display:flex;gap:9px;}
+.opt:hover:not(.lk){border-color:var(--cyan);color:var(--cyan);}
+.opt.ok{background:var(--green-dim)!important;border-color:var(--green)!important;color:var(--green)!important;}
+.opt.no{background:var(--red-dim)!important;border-color:var(--red)!important;color:var(--red)!important;}
+.opt.lk{cursor:default;}
+.ol{font-family:'JetBrains Mono',monospace;font-size:0.66rem;opacity:0.5;flex-shrink:0;}
+.exp{display:none;background:rgba(0,255,136,0.06);border:1px solid rgba(0,255,136,0.2);border-radius:6px;padding:10px;margin-top:8px;font-size:0.76rem;color:var(--green);line-height:1.5;}
+.exp.show{display:block;}
+.exp code{background:rgba(0,255,136,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;}
+/* EXERCISE */
+.excard{background:var(--card);border-left:3px solid var(--yellow);border-radius:0 9px 9px 0;padding:16px;margin-bottom:10px;}
+.ex-ttl{color:var(--yellow);font-weight:700;font-size:0.85rem;margin-bottom:5px;}
+.excard p{font-size:0.79rem;line-height:1.5;color:var(--muted2);}
+.excard pre{background:#050810;border:1px solid var(--border);border-radius:6px;padding:10px;font-family:'JetBrains Mono',monospace;font-size:0.68rem;line-height:1.6;margin-top:6px;overflow-x:auto;}
+.ans-btn{background:transparent;border:1px solid var(--yellow);color:var(--yellow);padding:4px 10px;border-radius:4px;cursor:pointer;font-size:0.72rem;margin-top:7px;font-family:'Outfit',sans-serif;font-weight:600;}
+.ans-box{display:none;background:var(--yellow-dim);border:1px solid rgba(255,214,10,0.2);border-radius:6px;padding:10px;margin-top:8px;font-size:0.77rem;line-height:1.6;color:var(--text);}
+.ans-box.show{display:block;}
+.ans-box code{background:rgba(255,214,10,0.1);color:var(--yellow);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;}
+.ans-box pre{background:#0a0805;border:1px solid rgba(255,214,10,0.2);border-radius:5px;padding:9px;font-family:'JetBrains Mono',monospace;font-size:0.68rem;line-height:1.6;margin-top:6px;overflow-x:auto;color:var(--text);}
+/* OUTPUT BOX */
+.out-box{background:var(--elevated);border-radius:7px;padding:9px 12px;margin-top:10px;}
+.out-lbl{font-size:0.65rem;color:var(--muted2);font-family:'JetBrains Mono',monospace;margin-bottom:3px;}
+.out-txt{font-family:'JetBrains Mono',monospace;font-size:0.78rem;color:var(--green);min-height:20px;}
+/* SECTION DIVIDER */
+.sdiv{margin:28px 0 16px;display:flex;align-items:center;gap:10px;}
+.sdiv-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:1rem;white-space:nowrap;}
+.sdiv::after{content:'';flex:1;height:1px;background:var(--border);}
+/* ANIM */
+@keyframes popIn{from{opacity:0;transform:scale(0.4);}to{opacity:1;transform:scale(1);}}
+@keyframes glow{0%,100%{box-shadow:0 0 4px rgba(0,229,255,0.3);}50%{box-shadow:0 0 16px rgba(0,229,255,0.7);}}
+.pop{animation:popIn 0.35s cubic-bezier(0.34,1.56,0.64,1);}
+.glow{animation:glow 1.5s ease-in-out infinite;}
+/* GRID */
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">CLL Ref</div>
+  <button class="nav-btn active" onclick="P('sll-basics')">SLL Basics</button>
+  <button class="nav-btn" onclick="P('sll-ins-beg')">Insert Begin</button>
+  <button class="nav-btn" onclick="P('sll-ins-end')">Insert End</button>
+  <button class="nav-btn" onclick="P('sll-ins-mid')">Insert Mid</button>
+  <button class="nav-btn" onclick="P('cll-concept')">CLL Concept</button>
+  <button class="nav-btn" onclick="P('cll-ins-beg')">CLL Ins Begin</button>
+  <button class="nav-btn" onclick="P('cll-ins-end')">CLL Ins End</button>
+  <button class="nav-btn" onclick="P('compare')">Compare</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- PAGE 1: SLL BASICS                                           -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="page active" id="sll-basics">
+  <div class="hero">
+    <div class="hero-badge">📄 CLL Step-by-Step Reference | Ramakrishna</div>
+    <h1>CLL vs SLL — <em>Insertion Operations</em></h1>
+    <p>Circular Linked List vs Singly Linked List — Node Structure, Insert Begin, End, Middle — with synchronized C code + animation</p>
+  </div>
+  <div class="main">
+    <div class="slabel">SLL Node Structure &amp; createNode</div>
+    <div class="sync-panel">
+      <div class="code-pane">
+        <div class="code-pane-hdr">
+          <div class="dot" style="background:#ff5f57"></div>
+          <div class="dot" style="background:#ffbd2e"></div>
+          <div class="dot" style="background:#28c840"></div>
+          node.c
+        </div>
+        <div class="code-body">
+          <div class="cl" id="sb1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span> {</div></div>
+          <div class="cl" id="sb2"><div class="ln">2</div><div class="la"></div><div class="lc">    <span class="kw">int</span> data;</div></div>
+          <div class="cl" id="sb3"><div class="ln">3</div><div class="la"></div><div class="lc">    <span class="kw">struct</span> <span class="tp">Node</span>* next;</div></div>
+          <div class="cl" id="sb4"><div class="ln">4</div><div class="la"></div><div class="lc">};</div></div>
+          <div class="cl" id="sb5"><div class="ln">5</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span>* <span class="fn">createNode</span>(<span class="kw">int</span> val) {</div></div>
+          <div class="cl" id="sb6"><div class="ln">6</div><div class="la"></div><div class="lc">    <span class="kw">struct</span> <span class="tp">Node</span>* n = (<span class="kw">struct</span> <span class="tp">Node</span>*)<span class="fn">malloc</span>(<span class="kw">sizeof</span>(<span class="kw">struct</span> <span class="tp">Node</span>));</div></div>
+          <div class="cl" id="sb7"><div class="ln">7</div><div class="la"></div><div class="lc">    n-&gt;data = val;</div></div>
+          <div class="cl" id="sb8"><div class="ln">8</div><div class="la"></div><div class="lc">    n-&gt;next = <span class="tp">NULL</span>;</div></div>
+          <div class="cl" id="sb9"><div class="ln">9</div><div class="la"></div><div class="lc">    <span class="kw">return</span> n;</div></div>
+          <div class="cl" id="sb10"><div class="ln">10</div><div class="la"></div><div class="lc">}</div></div>
+        </div>
+      </div>
+      <div class="anim-pane">
+        <div class="anim-pane-hdr">▶ Animation</div>
+        <div class="anim-body">
+          <div class="amsg" id="sb-m">Press Next ▶ to explore SLL node structure</div>
+          <div class="viz" id="sb-v"></div>
+        </div>
+        <div class="ctrl-row">
+          <button class="cb rst" onclick="R('sb')">↺</button>
+          <button class="cb prv" onclick="S('sb',-1)">◀ Prev</button>
+          <div class="pb"><div class="pf" id="sb-p" style="width:0%"></div></div>
+          <span class="sc" id="sb-c">0/4</span>
+          <button class="cb nxt" onclick="S('sb',1)">Next ▶</button>
+          <button class="cb aut" id="sb-a" onclick="A('sb')">⚡</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- PAGE 2: SLL INSERT BEGIN                                      -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="page" id="sll-ins-beg">
+  <div class="hero">
+    <div class="hero-badge">🔗 SLL — Insert at Beginning</div>
+    <h1>SLL Insert <em>Begin</em></h1>
+    <p>O(1) — No traversal needed. 4 steps: allocate, link new→head, update head.</p>
+  </div>
+  <div class="main">
+    <div class="slabel">insertBegin — O(1) Operation</div>
+    <div class="sync-panel">
+      <div class="code-pane">
+        <div class="code-pane-hdr">
+          <div class="dot" style="background:#ff5f57"></div>
+          <div class="dot" style="background:#ffbd2e"></div>
+          <div class="dot" style="background:#28c840"></div>
+          insertBegin.c
+        </div>
+        <div class="code-body">
+          <div class="cl" id="ib1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertBegin</span>(<span class="kw">struct</span> <span class="tp">Node</span>** head, <span class="kw">int</span> data) {</div></div>
+          <div class="cl" id="ib2"><div class="ln">2</div><div class="la"></div><div class="lc">    <span class="kw">struct</span> <span class="tp">Node</span>* n = <span class="fn">createNode</span>(data);</div></div>
+          <div class="cl" id="ib3"><div class="ln">3</div><div class="la"></div><div class="lc">    <span class="cm">// Step 1: new node's next = old head</span></div></div>
+          <div class="cl" id="ib4"><div class="ln">4</div><div class="la"></div><div class="lc">    n-&gt;next = *head;</div></div>
+          <div class="cl" id="ib5"><div class="ln">5</div><div class="la"></div><div class="lc">    <span class="cm">// Step 2: head = new node</span></div></div>
+          <div class="cl" id="ib6"><div class="ln">6</div><div class="la"></div><div class="lc">    *head = n;</div></div>
+          <div class="cl" id="ib7"><div class="ln">7</div><div class="la"></div><div class="lc">}</div></div>
+          <div class="cl" id="ib8"><div class="ln">8</div><div class="la"></div><div class="lc"><span class="cm">// Time: O(1) — no traversal needed</span></div></div>
+        </div>
+      </div>
+      <div class="anim-pane">
+        <div class="anim-pane-hdr">▶ Animation</div>
+        <div class="anim-body">
+          <div class="amsg" id="ib-m">List: 10→20→30→NULL. Insert 5 at beginning.</div>
+          <div class="viz" id="ib-v"></div>
+        </div>
+        <div class="ctrl-row">
+          <button class="cb rst" onclick="R('ib')">↺</button>
+          <button class="cb prv" onclick="S('ib',-1)">◀ Prev</button>
+          <div class="pb"><div class="pf" id="ib-p" style="width:0%"></div></div>
+          <span class="sc" id="ib-c">0/3</span>
+          <button class="cb nxt" onclick="S('ib',1)">Next ▶</button>
+          <button class="cb aut" id="ib-a" onclick="A('ib')">⚡</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- PAGE 3: SLL INSERT END                                        -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="page" id="sll-ins-end">
+  <div class="hero">
+    <div class="hero-badge">🔗 SLL — Insert at End</div>
+    <h1>SLL Insert <em>End</em></h1>
+    <p>O(n) — Must traverse to last node. 6 steps: allocate, traverse, link.</p>
+  </div>
+  <div class="main">
+    <div class="slabel">insertEnd — O(n) Operation</div>
+    <div class="sync-panel">
+      <div class="code-pane">
+        <div class="code-pane-hdr">
+          <div class="dot" style="background:#ff5f57"></div>
+          <div class="dot" style="background:#ffbd2e"></div>
+          <div class="dot" style="background:#28c840"></div>
+          insertEnd.c
+        </div>
+        <div class="code-body">
+          <div class="cl" id="ie1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertEnd</span>(<span class="kw">struct</span> <span class="tp">Node</span>** head, <span class="kw">int</span> data) {</div></div>
+          <div class="cl" id="ie2"><div class="ln">2</div><div class="la"></div><div class="lc">    <span class="kw">struct</span> <span class="tp">Node</span>* n = <span class="fn">createNode</span>(data);</div></div>
+          <div class="cl" id="ie3"><div class="ln">3</div><div class="la"></div><div class="lc">    <span class="kw">if</span> (*head == <span class="tp">NULL</span>) { *head = n; <span class="kw">return</span>; }</div></div>
+          <div class="cl" id="ie4"><div class="ln">4</div><div class="la"></div><div class="lc">    <span class="kw">struct</span> <span class="tp">Node</span>* curr = *head;</div></div>
+          <div class="cl" id="ie5"><div class="ln">5</div><div class="la"></div><div class="lc">    <span class="kw">while</span> (curr-&gt;next != <span class="tp">NULL</span>)</div></div>
+          <div class="cl" id="ie6"><div class="ln">6</div><div class="la"></div><div class="lc">        curr = curr-&gt;next;   <span class="cm">// find last node</span></div></div>
+          <div class="cl" id="ie7"><div class="ln">7</div><div class="la"></div><div class="lc">    curr-&gt;next = n;          <span class="cm">// link last→new</span></div></div>
+          <div class="cl" id="ie8"><div class="ln">8</div><div class="la"></div><div class="lc">}</div></div>
+          <div class="cl" id="ie9"><div class="ln">9</div><div class="la"></div><div class="lc"><span class="cm">// Time: O(n)</span></div></div>
+        </div>
+      </div>
+      <div class="anim-pane">
+        <div class="anim-pane-hdr">▶ Animation</div>
+        <div class="anim-body">
+          <div class="amsg" id="ie-m">List: 10→20→30→NULL. Insert 40 at end.</div>
+          <div class="viz" id="ie-v"></div>
+        </div>
+        <div class="ctrl-row">
+          <button class="cb rst" onclick="R('ie')">↺</button>
+          <button class="cb prv" onclick="S('ie',-1)">◀ Prev</button>
+          <div class="pb"><div class="pf" id="ie-p" style="width:0%"></div></div>
+          <span class="sc" id="ie-c">0/5</span>
+          <button class="cb nxt" onclick="S('ie',1)">Next ▶</button>
+          <button class="cb aut" id="ie-a" onclick="A('ie')">⚡</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- PAGE 4: SLL INSERT MIDDLE                                     -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="page" id="sll-ins-mid">
+  <div class="hero">
+    <div class="hero-badge">🔗 SLL — Insert at Middle</div>
+    <h1>SLL Insert <em>Middle</em></h1>
+    <p>O(n) — Traverse to position, then relink. ⚠️ Order matters: A before B!</p>
+  </div>
+  <div class="main">
+    <div class="slabel">insertAt(pos) — O(n) Operation</div>
+    <div class="sync-panel">
+      <div class="code-pane">
+        <div class="code-pane-hdr">
+          <div class="dot" style="background:#ff5f57"></div>
+          <div class="dot" style="background:#ffbd2e"></div>
+          <div class="dot" style="background:#28c840"></div>
+          insertMiddle.c
+        </div>
+        <div class="code-body">
+          <div class="cl" id="im1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">void</span> <span class="fn">insertAt</span>(<span class="kw">struct</span> <span class="tp">Node</span>** head, <span class="kw">int</span> data, <span class="kw">int</span> pos) {</div></div>
+          <div class="cl" id="im2"><div class="ln">2</div><div class="la"></div><div class="lc">    <span class="kw">struct</span> <span class="tp">Node</span>* n = <span class="fn">createNode</span>(data);</div></div>
+          <div class="cl" id="im3"><div class="ln">3</div><div class="la"></div><div class="lc">    <span class="kw">struct</span> <span class="tp">Node</span>* curr = *head;</div></div>
+          <div class="cl" id="im4"><div class="ln">4</div><div class="la"></div><div class="lc">    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="nu">1</span>; i &lt; pos - <span class="nu">1</span>; i++)</div></div>
+          <div class="cl" id="im5"><div class="ln">5</div><div class="la"></div><div class="lc">        curr = curr-&gt;next;</div></div>
+          <div class="cl" id="im6"><div class="ln">6</div><div class="la"></div><div class="lc">    <span class="cm">// ⚠️ ORDER MATTERS! A before B</span></div></div>
+          <div class="cl" id="im7"><div class="ln">7</div><div class="la"></div><div class="lc">    n-&gt;next = curr-&gt;next;  <span class="cm">// Step A</span></div></div>
+          <div class="cl" id="im8"><div class="ln">8</div><div class="la"></div><div class="lc">    curr-&gt;next = n;        <span class="cm">// Step B</span></div></div>
+          <div class="cl" id="im9"><div class="ln">9</div><div class="la"></div><div class="lc">}</div></div>
+          <div class="cl" id="im10"><div class="ln">10</div><div class="la"></div><div class="lc"><span class="cm">// Time: O(n)</span></div></div>
+        </div>
+      </div>
+      <div class="anim-pane">
+        <div class="anim-pane-hdr">▶ Animation</div>
+        <div class="anim-body">
+          <div class="amsg" id="im-m">List: 10→20→30→NULL. Insert 25 after pos 2</div>
+          <div class="viz" id="im-v"></div>
+        </div>
+        <div class="ctrl-row">
+          <button class="cb rst" onclick="R('im')">↺</button>
+          <button class="cb prv" onclick="S('im',-1)">◀ Prev</button>
+          <div class="pb"><div class="pf" id="im-p" style="width:0%"></div></div>
+          <span class="sc" id="im-c">0/4</span>
+          <button class="cb nxt" onclick="S('im',1)">Next ▶</button>
+          <button class="cb aut" id="im-a" onclick="A('im')">⚡</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- PAGE 5: CLL CONCEPT                                           -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="page" id="cll-concept">
+  <div class="hero">
+    <div class="hero-badge">🔄 CLL vs SLL — Key Difference</div>
+    <h1>CLL <em>Concept</em></h1>
+    <p>SLL: last→next = NULL (dead end). CLL: last→next = head (circle!). Never use curr==NULL in CLL!</p>
+  </div>
+  <div class="main">
+    <div class="slabel">SLL vs CLL: The Key Difference</div>
+    <div class="icard" style="margin-bottom:16px;">
+      <h4>What makes CLL different from SLL?</h4>
+      <p>In a <strong style="color:var(--cyan)">Singly Linked List (SLL)</strong>, the last node's <code style="color:var(--cyan);background:rgba(0,229,255,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.73rem">next</code> pointer is <code style="color:var(--cyan);background:rgba(0,229,255,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.73rem">NULL</code> — a dead end. In a <strong style="color:var(--green)">Circular Linked List (CLL)</strong>, the last node's <code style="color:var(--green);background:rgba(0,255,136,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.73rem">next</code> points back to <code style="color:var(--green);background:rgba(0,255,136,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.73rem">head</code>, forming a circle. This means traversal never naturally hits NULL — you must use <code style="color:var(--yellow);background:rgba(255,214,10,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.73rem">do-while(curr != head)</code> to stop.</p>
+    </div>
+    <div class="slabel">Concept Animation</div>
+    <div class="sync-panel">
+      <div class="code-pane">
+        <div class="code-pane-hdr">
+          <div class="dot" style="background:#ff5f57"></div>
+          <div class="dot" style="background:#ffbd2e"></div>
+          <div class="dot" style="background:#28c840"></div>
+          cll_concept.c
+        </div>
+        <div class="code-body">
+          <div class="cl" id="cc1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="cm">// SLL: last node points to NULL</span></div></div>
+          <div class="cl" id="cc2"><div class="ln">2</div><div class="la"></div><div class="lc">last-&gt;next = <span class="tp">NULL</span>;  <span class="cm">// dead end!</span></div></div>
+          <div class="cl" id="cc3"><div class="ln">3</div><div class="la"></div><div class="lc"></div></div>
+          <div class="cl" id="cc4"><div class="ln">4</div><div class="la"></div><div class="lc"><span class="cm">// CLL: last node points to HEAD</span></div></div>
+          <div class="cl" id="cc5"><div class="ln">5</div><div class="la"></div><div class="lc">last-&gt;next = head;  <span class="cm">// circle!</span></div></div>
+          <div class="cl" id="cc6"><div class="ln">6</div><div class="la"></div><div class="lc"></div></div>
+          <div class="cl" id="cc7"><div class="ln">7</div><div class="la"></div><div class="lc"><span class="cm">// Single node CLL:</span></div></div>
+          <div class="cl" id="cc8"><div class="ln">8</div><div class="la"></div><div class="lc">n-&gt;next = n;   <span class="cm">// points to itself!</span></div></div>
+          <div class="cl" id="cc9"><div class="ln">9</div><div class="la"></div><div class="lc">head = n;</div></div>
+          <div class="cl" id="cc10"><div class="ln">10</div><div class="la"></div><div class="lc"></div></div>
+          <div class="cl" id="cc11"><div class="ln">11</div><div class="la"></div><div class="lc"><span class="cm">// ⚠️ NEVER use curr==NULL in CLL!</span></div></div>
+          <div class="cl" id="cc12"><div class="ln">12</div><div class="la"></div><div class="lc"><span class="cm">// Use do-while instead:</span></div></div>
+          <div class="cl" id="cc13"><div class="ln">13</div><div class="la"></div><div class="lc"><span class="kw">do</span> {</div></div>
+          <div class="cl" id="cc14"><div class="ln">14</div><div class="la"></div><div class="lc">    <span class="cm">// process curr</span></div></div>
+          <div class="cl" id="cc15"><div class="ln">15</div><div class="la"></div><div class="lc">    curr = curr-&gt;next;</div></div>
+          <div class="cl" id="cc16"><div class="ln">16</div><div class="la"></div><div class="lc">} <span class="kw">while</span> (curr != head);</div></div>
+        </div>
+      </div>
+      <div class="anim-pane">
+        <div class="anim-pane-hdr">▶ Animation</div>
+        <div class="anim-body">
+          <div class="amsg" id="cc-m">SLL: last→next = NULL. Dead end — cannot loop back to head!</div>
+          <div class="viz" id="cc-v"></div>
+        </div>
+        <div class="ctrl-row">
+          <button class="cb rst" onclick="R('cc')">↺</button>
+          <button class="cb prv" onclick="S('cc',-1)">◀ Prev</button>
+          <div class="pb"><div class="pf" id="cc-p" style="width:0%"></div></div>
+          <span class="sc" id="cc-c">0/3</span>
+          <button class="cb nxt" onclick="S('cc',1)">Next ▶</button>
+          <button class="cb aut" id="cc-a" onclick="A('cc')">⚡</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- PAGE 6: CLL INSERT BEGIN                                      -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="page" id="cll-ins-beg">
+  <div class="hero">
+    <div class="hero-badge">🔄 CLL — Insert at Beginning</div>
+    <h1>CLL Insert <em>Begin</em></h1>
+    <p>O(n) — Must find last node first. 6 steps: allocate, find last, relink circle.</p>
+  </div>
+  <div class="main">
+    <div class="slabel">cllInsertBegin — O(n) Operation</div>
+    <div class="sync-panel">
+      <div class="code-pane">
+        <div class="code-pane-hdr">
+          <div class="dot" style="background:#ff5f57"></div>
+          <div class="dot" style="background:#ffbd2e"></div>
+          <div class="dot" style="background:#28c840"></div>
+          cllInsertBegin.c
+        </div>
+        <div class="code-body">
+          <div class="cl" id="cib1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span>* <span class="fn">cllInsertBegin</span>(<span class="kw">struct</span> <span class="tp">Node</span>* head, <span class="kw">int</span> d) {</div></div>
+          <div class="cl" id="cib2"><div class="ln">2</div><div class="la"></div><div class="lc">    <span class="kw">struct</span> <span class="tp">Node</span>* n = <span class="fn">createNode</span>(d);</div></div>
+          <div class="cl" id="cib3"><div class="ln">3</div><div class="la"></div><div class="lc">    <span class="kw">if</span> (head == <span class="tp">NULL</span>) { n-&gt;next = n; <span class="kw">return</span> n; }</div></div>
+          <div class="cl" id="cib4"><div class="ln">4</div><div class="la"></div><div class="lc">    <span class="cm">// find last node (whose next == head)</span></div></div>
+          <div class="cl" id="cib5"><div class="ln">5</div><div class="la"></div><div class="lc">    <span class="kw">struct</span> <span class="tp">Node</span>* last = head;</div></div>
+          <div class="cl" id="cib6"><div class="ln">6</div><div class="la"></div><div class="lc">    <span class="kw">while</span> (last-&gt;next != head) last = last-&gt;next;</div></div>
+          <div class="cl" id="cib7"><div class="ln">7</div><div class="la"></div><div class="lc">    n-&gt;next = head;    <span class="cm">// new→old head</span></div></div>
+          <div class="cl" id="cib8"><div class="ln">8</div><div class="la"></div><div class="lc">    last-&gt;next = n;    <span class="cm">// last→new</span></div></div>
+          <div class="cl" id="cib9"><div class="ln">9</div><div class="la"></div><div class="lc">    <span class="kw">return</span> n;          <span class="cm">// new is head</span></div></div>
+          <div class="cl" id="cib10"><div class="ln">10</div><div class="la"></div><div class="lc">}</div></div>
+          <div class="cl" id="cib11"><div class="ln">11</div><div class="la"></div><div class="lc"><span class="cm">// Time: O(n) — must find last node!</span></div></div>
+        </div>
+      </div>
+      <div class="anim-pane">
+        <div class="anim-pane-hdr">▶ Animation</div>
+        <div class="anim-body">
+          <div class="amsg" id="cib-m">Initial CLL: 10→20→30→(head). Insert 5 at beginning.</div>
+          <div class="viz" id="cib-v"></div>
+        </div>
+        <div class="ctrl-row">
+          <button class="cb rst" onclick="R('cib')">↺</button>
+          <button class="cb prv" onclick="S('cib',-1)">◀ Prev</button>
+          <div class="pb"><div class="pf" id="cib-p" style="width:0%"></div></div>
+          <span class="sc" id="cib-c">0/5</span>
+          <button class="cb nxt" onclick="S('cib',1)">Next ▶</button>
+          <button class="cb aut" id="cib-a" onclick="A('cib')">⚡</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- PAGE 7: CLL INSERT END                                        -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="page" id="cll-ins-end">
+  <div class="hero">
+    <div class="hero-badge">🔄 CLL — Insert at End</div>
+    <h1>CLL Insert <em>End</em></h1>
+    <p>O(n) — Find last node, insert after it, relink to head. 6 steps.</p>
+  </div>
+  <div class="main">
+    <div class="slabel">cllInsertEnd — O(n) Operation</div>
+    <div class="sync-panel">
+      <div class="code-pane">
+        <div class="code-pane-hdr">
+          <div class="dot" style="background:#ff5f57"></div>
+          <div class="dot" style="background:#ffbd2e"></div>
+          <div class="dot" style="background:#28c840"></div>
+          cllInsertEnd.c
+        </div>
+        <div class="code-body">
+          <div class="cl" id="cie1"><div class="ln">1</div><div class="la"></div><div class="lc"><span class="kw">struct</span> <span class="tp">Node</span>* <span class="fn">cllInsertEnd</span>(<span class="kw">struct</span> <span class="tp">Node</span>* head, <span class="kw">int</span> d) {</div></div>
+          <div class="cl" id="cie2"><div class="ln">2</div><div class="la"></div><div class="lc">    <span class="kw">struct</span> <span class="tp">Node</span>* n = <span class="fn">createNode</span>(d);</div></div>
+          <div class="cl" id="cie3"><div class="ln">3</div><div class="la"></div><div class="lc">    <span class="kw">if</span> (head == <span class="tp">NULL</span>) { n-&gt;next = n; <span class="kw">return</span> n; }</div></div>
+          <div class="cl" id="cie4"><div class="ln">4</div><div class="la"></div><div class="lc">    <span class="kw">struct</span> <span class="tp">Node</span>* last = head;</div></div>
+          <div class="cl" id="cie5"><div class="ln">5</div><div class="la"></div><div class="lc">    <span class="kw">while</span> (last-&gt;next != head) last = last-&gt;next;</div></div>
+          <div class="cl" id="cie6"><div class="ln">6</div><div class="la"></div><div class="lc">    last-&gt;next = n;    <span class="cm">// old last→new</span></div></div>
+          <div class="cl" id="cie7"><div class="ln">7</div><div class="la"></div><div class="lc">    n-&gt;next = head;    <span class="cm">// new→head ✓</span></div></div>
+          <div class="cl" id="cie8"><div class="ln">8</div><div class="la"></div><div class="lc">    <span class="kw">return</span> head;       <span class="cm">// head unchanged</span></div></div>
+          <div class="cl" id="cie9"><div class="ln">9</div><div class="la"></div><div class="lc">}</div></div>
+          <div class="cl" id="cie10"><div class="ln">10</div><div class="la"></div><div class="lc"><span class="cm">// Time: O(n)</span></div></div>
+        </div>
+      </div>
+      <div class="anim-pane">
+        <div class="anim-pane-hdr">▶ Animation</div>
+        <div class="anim-body">
+          <div class="amsg" id="cie-m">Initial CLL: 10→20→30→(head). Insert 40 at end.</div>
+          <div class="viz" id="cie-v"></div>
+        </div>
+        <div class="ctrl-row">
+          <button class="cb rst" onclick="R('cie')">↺</button>
+          <button class="cb prv" onclick="S('cie',-1)">◀ Prev</button>
+          <div class="pb"><div class="pf" id="cie-p" style="width:0%"></div></div>
+          <span class="sc" id="cie-c">0/5</span>
+          <button class="cb nxt" onclick="S('cie',1)">Next ▶</button>
+          <button class="cb aut" id="cie-a" onclick="A('cie')">⚡</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════ -->
+<!-- PAGE 8: COMPARE                                               -->
+<!-- ══════════════════════════════════════════════════════════════ -->
+<div class="page" id="compare">
+  <div class="hero">
+    <div class="hero-badge">📊 SLL vs CLL Comparison</div>
+    <h1>SLL vs CLL — <em>Complete Comparison</em></h1>
+    <p>Time complexity, structural differences, traversal rules — side by side.</p>
+  </div>
+  <div class="main">
+    <div class="slabel">Complexity Comparison Table</div>
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Operation</th>
+            <th>SLL</th>
+            <th>CLL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Insert at Begin</td>
+            <td style="color:var(--green);font-weight:700;">O(1)</td>
+            <td style="color:var(--yellow);font-weight:700;">O(n) — must find last</td>
+          </tr>
+          <tr>
+            <td>Insert at End</td>
+            <td style="color:var(--yellow);">O(n)</td>
+            <td style="color:var(--yellow);">O(n)</td>
+          </tr>
+          <tr>
+            <td>Insert at Middle</td>
+            <td style="color:var(--yellow);">O(n)</td>
+            <td style="color:var(--yellow);">O(n)</td>
+          </tr>
+          <tr>
+            <td>Traversal stop condition</td>
+            <td style="color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:0.72rem;">curr == NULL</td>
+            <td style="color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:0.72rem;">curr == head (do-while)</td>
+          </tr>
+          <tr>
+            <td>Single node points to</td>
+            <td style="color:var(--muted2);">NULL</td>
+            <td style="color:var(--green);">itself (n→next = n)</td>
+          </tr>
+          <tr>
+            <td>Last node points to</td>
+            <td style="color:var(--muted2);">NULL</td>
+            <td style="color:var(--green);">head</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="slabel">Key Structural Differences</div>
+    <div class="g2">
+      <div class="icard" style="border-color:rgba(0,229,255,0.4);">
+        <h4 style="color:var(--cyan);">SLL Structure</h4>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--text);margin-bottom:8px;">HEAD → [10|→] → [20|→] → [30|NULL]</p>
+        <p>Dead end at NULL. The last node's <code style="color:var(--cyan);background:rgba(0,229,255,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem">next</code> pointer is <code style="color:var(--cyan);background:rgba(0,229,255,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem">NULL</code>. Traversal naturally stops when <code style="color:var(--cyan);background:rgba(0,229,255,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem">curr == NULL</code>.</p>
+      </div>
+      <div class="icard" style="border-color:rgba(0,255,136,0.4);">
+        <h4 style="color:var(--green);">CLL Structure</h4>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--text);margin-bottom:8px;">HEAD → [10|→] → [20|→] → [30|→HEAD]</p>
+        <p>Wraps back to head. The last node's <code style="color:var(--green);background:rgba(0,255,136,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem">next</code> points back to <code style="color:var(--green);background:rgba(0,255,136,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem">head</code>. Forms a complete circle — no NULL sentinel.</p>
+      </div>
+      <div class="icard" style="border-color:rgba(255,214,10,0.4);">
+        <h4 style="color:var(--yellow);">⚠️ Critical Rule</h4>
+        <p>NEVER use <code style="color:var(--red);background:rgba(255,71,87,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem">curr==NULL</code> to stop traversal in CLL! It will loop forever. Use:</p>
+        <p style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--green);background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.2);padding:8px;border-radius:5px;">do { ... } while(curr != head)</p>
+      </div>
+    </div>
+
+    <div class="slabel" style="margin-top:20px;">Why CLL Insert Begin is O(n) but SLL Insert Begin is O(1)</div>
+    <div class="icard" style="border-color:rgba(190,99,249,0.4);">
+      <h4 style="color:var(--purple);">The O(n) vs O(1) Insert-Begin Puzzle</h4>
+      <p>In <strong style="color:var(--cyan)">SLL</strong>, head is given directly, so we just prepend: set <code style="color:var(--cyan);background:rgba(0,229,255,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem">n→next = head</code>, then <code style="color:var(--cyan);background:rgba(0,229,255,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem">head = n</code>. No traversal needed — pure O(1).</p>
+      <p style="margin-top:8px;">In <strong style="color:var(--green)">CLL</strong>, the circle must be maintained — the last node's <code style="color:var(--green);background:rgba(0,255,136,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem">next</code> must be updated to point to the <em>new</em> head. To find the last node, we must traverse the entire list: <code style="color:var(--yellow);background:rgba(255,214,10,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem">while(last→next != head)</code>. This traversal makes it O(n).</p>
+      <p style="margin-top:8px;font-size:0.75rem;color:var(--muted2);">💡 Tip: If we maintained a <code style="color:var(--purple);background:rgba(190,99,249,0.1);padding:1px 5px;border-radius:3px;font-family:'JetBrains Mono',monospace;font-size:0.72rem">tail</code> pointer, CLL insert-begin could also be O(1)!</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── HELPERS ─────────────────────────────────
+function P(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach((b,i)=>{
+    const pages=['sll-basics','sll-ins-beg','sll-ins-end','sll-ins-mid','cll-concept','cll-ins-beg','cll-ins-end','compare'];
+    b.classList.toggle('active',pages[i]===id);
+  });
+  window.scrollTo(0,0);
+}
+function ST(page,tab,el){
+  const pg=document.getElementById(page);
+  pg.querySelectorAll('.stab-content').forEach(c=>c.classList.remove('active'));
+  pg.querySelectorAll('.stab').forEach(s=>s.classList.remove('active'));
+  const tc=document.getElementById(`${page}-${tab}`);
+  if(tc) tc.classList.add('active');
+  if(el) el.classList.add('active');
+}
+function HL(ids,cls='hl'){
+  document.querySelectorAll('.cl.hl,.cl.hl2,.cl.hl3,.cl.hl4')
+    .forEach(el=>{el.classList.remove('hl','hl2','hl3','hl4');});
+  if(!ids) return;
+  (Array.isArray(ids)?ids:[ids]).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.classList.add(cls);
+  });
+}
+function V(id,html){const el=document.getElementById(id);if(el)el.innerHTML=html;}
+function M(id,txt,cls=''){const el=document.getElementById(id);if(!el)return;el.textContent=txt;el.className='amsg'+(cls?' '+cls:'');}
+function PRG(pre,cur,tot){
+  const pf=document.getElementById(pre+'-p');const sc=document.getElementById(pre+'-c');
+  if(pf)pf.style.width=`${(cur/tot)*100}%`;if(sc)sc.textContent=`${cur}/${tot}`;
+}
+// Node builders
+function N(v,c='cc',lbl=''){return `<div class="nw"><div class="nd ${c}"><div class="nd-d">${v}</div><div class="nd-p">→</div></div>${lbl?`<div class="pl">${lbl}</div>`:''}</div>`;}
+function AR(c=''){return `<div class="ar ${c}">→</div>`;}
+function NL(){return `<div class="nl">NULL</div>`;}
+function CLR(v,lbl=''){return `<div class="nw"><div class="nd cc"><div class="nd-d">${v}</div><div class="nd-p">↩</div></div>${lbl?`<div class="pl">${lbl}</div>`:''}</div>`;}
+
+// ─── STEPPER ENGINE ──────────────────────────
+const steppers={};
+function mkStepper(id,steps){
+  let cur=0;let tmr=null;
+  function run(){if(steps[cur])steps[cur]();}
+  const ctrl={
+    step:function(d){clearInterval(tmr);tmr=null;const ab=document.getElementById(id+'-a');if(ab){ab.textContent='⚡';ab.classList.remove('run');}cur=Math.max(0,Math.min(steps.length-1,cur+d));run();},
+    reset:function(){clearInterval(tmr);tmr=null;const ab=document.getElementById(id+'-a');if(ab){ab.textContent='⚡';ab.classList.remove('run');}cur=0;run();},
+    auto:function(){const ab=document.getElementById(id+'-a');if(tmr){clearInterval(tmr);tmr=null;if(ab){ab.textContent='⚡';ab.classList.remove('run');}return;}if(ab){ab.textContent='⏸';ab.classList.add('run');}tmr=setInterval(()=>{if(cur>=steps.length-1){clearInterval(tmr);tmr=null;if(ab){ab.textContent='⚡';ab.classList.remove('run');}return;}cur++;run();},1100);}
+  };
+  steppers[id]=ctrl;run();return ctrl;
+}
+function S(id,d){if(steppers[id])steppers[id].step(d);}
+function R(id){if(steppers[id])steppers[id].reset();}
+function A(id){if(steppers[id])steppers[id].auto();}
+
+// ═════════════════════════════════════════════
+// ALL STEPPERS
+// ═════════════════════════════════════════════
+
+// SB — SLL Basics / Node Structure
+mkStepper('sb',[
+  ()=>{HL(null);V('sb-v','');M('sb-m','Press Next ▶ to explore SLL node structure');PRG('sb',0,4);},
+  ()=>{HL(['sb1','sb2','sb3','sb4']);V('sb-v',`<div class="nw"><div class="nd cc"><div class="nd-d" style="display:flex;flex-direction:column;padding:8px 14px;gap:3px;"><span style="font-size:0.65rem;color:var(--muted2);">int data</span><span style="font-size:0.85rem;font-weight:700;">?</span><span style="font-size:0.55rem;color:var(--muted);margin-top:4px;border-top:1px solid var(--border);padding-top:3px;">Node* next</span></div></div><div class="pl">struct Node</div></div>`);M('sb-m','struct Node: 2 fields — data (int) and next (pointer to next Node)');PRG('sb',1,4);},
+  ()=>{HL(['sb5','sb6']);V('sb-v',`<div style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:0.72rem;"><span style="color:var(--yellow);">malloc(</span><span style="color:var(--cyan);">sizeof(Node)</span><span style="color:var(--yellow);">)</span><span style="color:var(--green);font-size:0.9rem;">→</span><div class="nd cy"><div class="nd-d" style="padding:6px 14px;">?</div><div class="nd-p">→</div></div></div>`);M('sb-m','createNode(val): malloc allocates sizeof(struct Node) bytes on heap','y');PRG('sb',2,4);},
+  ()=>{HL(['sb7','sb8']);V('sb-v',`<div class="nw"><div class="nd cy"><div class="nd-d" style="display:flex;flex-direction:column;padding:8px 14px;gap:2px;"><span style="font-size:0.65rem;color:var(--yellow);">data=val</span><span style="font-size:0.85rem;font-weight:700;">val</span><span style="font-size:0.55rem;color:var(--muted);margin-top:4px;border-top:1px solid var(--border);padding-top:3px;">next=NULL</span></div></div></div>`);M('sb-m','n->data = val (store value). n->next = NULL (no next node yet)','y');PRG('sb',3,4);},
+  ()=>{HL('sb9');V('sb-v',`${N(10,'cg','n returned')}${AR()}${NL()}`);M('sb-m','return n. A new node [10] with next=NULL is ready!','g');PRG('sb',4,4);},
+]);
+
+// IB — SLL Insert Begin
+mkStepper('ib',[
+  ()=>{HL(null);V('ib-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('ib-m','List: 10→20→30→NULL. Insert 5 at beginning.');PRG('ib',0,3);},
+  ()=>{HL(['ib2']);V('ib-v',`${N(5,'cy','newNode')}${AR()}<span style="font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--muted2);margin:0 6px;">?</span>${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('ib-m','Step 1: createNode(5) — allocate new node [5]','y');PRG('ib',1,3);},
+  ()=>{HL(['ib3','ib4']);V('ib-v',`${N(5,'cy','newNode')}${AR('g')}${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('ib-m','Step 2: n→next = *head (5 points to 10) ✓ newNode now linked to old head','y');PRG('ib',2,3);},
+  ()=>{HL(['ib5','ib6']);V('ib-v',`${N(5,'cg','head(new!)')}${AR()}${N(10,'cc')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('ib-m','Step 3: *head = n — head now points to 5. ✅ 5→10→20→30→NULL. O(1)!','g');PRG('ib',3,3);},
+]);
+
+// IE — SLL Insert End
+mkStepper('ie',[
+  ()=>{HL(null);V('ie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('ie-m','List: 10→20→30→NULL. Insert 40 at end.');PRG('ie',0,5);},
+  ()=>{HL('ie2');V('ie-v',`${N(40,'cy','newNode')}${AR()}${NL()}`);M('ie-m','createNode(40) — allocate new node [40], next=NULL','y');PRG('ie',1,5);},
+  ()=>{HL('ie4');V('ie-v',`${N(10,'cg','head,curr')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('ie-m','curr = head (10). curr→next(20) ≠ NULL → keep going');PRG('ie',2,5);},
+  ()=>{HL(['ie5','ie6']);V('ie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','curr—LAST')}${AR()}${NL()}`);M('ie-m','curr traverses 10→20→30. At 30: next==NULL → EXIT loop! curr is last.','y');PRG('ie',3,5);},
+  ()=>{HL('ie7');V('ie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','curr')}${AR('g')}${N(40,'cg','newNode')}${AR()}${NL()}`);M('ie-m','curr→next = n ✓ Last node (30) now points to 40!','g');PRG('ie',4,5);},
+  ()=>{HL(null);V('ie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${N(40,'cg','new tail')}${AR()}${NL()}`);M('ie-m','✅ 10→20→30→40→NULL. Traversed n nodes → O(n).','g');PRG('ie',5,5);},
+]);
+
+// IM — SLL Insert Middle
+mkStepper('im',[
+  ()=>{HL(null);V('im-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('im-m','List: 10→20→30→NULL. Insert 25 after pos 2');PRG('im',0,4);},
+  ()=>{HL(['im2','im3']);V('im-v',`${N(25,'cy','newNode')}${AR()}${NL()}<span style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--muted2);margin:0 10px;">not linked</span>${N(10,'cc','head,curr')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('im-m','createNode(25): newNode ready. curr = head (10).','y');PRG('im',1,4);},
+  ()=>{HL(['im4','im5']);V('im-v',`${N(10,'cc','head')}${AR()}${N(20,'cg','curr (pos 2)')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('im-m','Traverse to pos-1: curr lands on node 20 (position 2)');PRG('im',2,4);},
+  ()=>{HL(['im6','im7']);V('im-v',`${N(10,'cc','head')}${AR()}${N(20,'cy','curr')}${AR('g')}${N(25,'cy','newNode→30')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('im-m','Step A: n→next = curr→next (30). ⚠️ MUST do this FIRST — saves connection to rest!','y');PRG('im',3,4);},
+  ()=>{HL('im8');V('im-v',`${N(10,'cc','head')}${AR()}${N(20,'cg','curr')}${AR('g')}${N(25,'cg','inserted!')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('im-m','✅ Step B: curr→next = n. 10→20→25→30→NULL. Order A before B is critical!','g');PRG('im',4,4);},
+]);
+
+// CC — CLL Concept
+mkStepper('cc',[
+  ()=>{HL(null);V('cc-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);M('cc-m','SLL: last→next = NULL. Dead end — cannot loop back to head!');PRG('cc',0,3);},
+  ()=>{HL(['cc1','cc2']);V('cc-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}<div class="nl" style="border-color:var(--red);color:var(--red);">NULL ✗</div>`);M('cc-m','SLL: 10→20→30→NULL. After visiting 30, journey ends — no way back!','r');PRG('cc',1,3);},
+  ()=>{HL(['cc4','cc5']);V('cc-v',`${N(10,'cg','head')}${AR()}${N(20,'cc')}${AR()}${CLR(30,'→back to head')}${AR('g')}<span style="font-size:0.8rem;color:var(--green);align-self:center;">↩ HEAD</span>`);M('cc-m','CLL: last→next = head! Last node (30) wraps BACK to head (10). Circle formed!','g');PRG('cc',2,3);},
+  ()=>{HL(['cc7','cc8']);V('cc-v',`<div class="nw glow"><div class="nd cg"><div class="nd-d">n</div><div class="nd-p">↩</div></div><div class="pl">n→next = n</div></div><span style="font-size:0.75rem;color:var(--yellow);margin-left:10px;align-self:center;">self-loop!</span>`);M('cc-m','Single node CLL: n→next = n (points to itself!). ⚠️ Always use do-while(curr != head) to traverse CLL!','y');PRG('cc',3,3);},
+]);
+
+// CIB — CLL Insert Begin
+mkStepper('cib',[
+  ()=>{HL(null);V('cib-v',`${N(10,'cg','head')}${AR()}${N(20,'cc')}${AR()}${CLR(30,'→head')}${AR()}<span style="font-size:0.7rem;color:var(--green);">↩</span>`);M('cib-m','Initial CLL: 10→20→30→(head). Insert 5 at beginning.');PRG('cib',0,5);},
+  ()=>{HL('cib2');V('cib-v',`${N(5,'cy','newNode')}${AR()}${NL()}<span style="font-size:0.7rem;color:var(--muted2);margin:0 10px;">not linked</span>${N(10,'cg','head')}${AR()}${N(20,'cc')}${AR()}${CLR(30,'→head')}`);M('cib-m','createNode(5) — new node [5] allocated.','y');PRG('cib',1,5);},
+  ()=>{HL(['cib5','cib6']);V('cib-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','last (found!)')}`);M('cib-m','Find last node: traverse until last→next == head. Found: last = node(30)','y');PRG('cib',2,5);},
+  ()=>{HL('cib7');V('cib-v',`${N(5,'cy','newNode')}${AR('g')}${N(10,'cg','old head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','last')}`);M('cib-m','n→next = head (5 points to 10) ✓ newNode points to old head.','y');PRG('cib',3,5);},
+  ()=>{HL('cib8');V('cib-v',`${N(5,'cg','head(new!)')}${AR()}${N(10,'cc')}${AR()}${N(20,'cc')}${AR()}${CLR(30,'→5(new head)')}<span style="font-size:0.7rem;color:var(--green);margin-left:4px;">↩</span>`);M('cib-m','last→next = n (30 points to 5) ✓ Circle re-established with new head!','g');PRG('cib',4,5);},
+  ()=>{HL('cib9');V('cib-v',`${N(5,'cg','head(new!)')}${AR()}${N(10,'cc')}${AR()}${N(20,'cc')}${AR()}${CLR(30,'→5(new head)')}<span style="font-size:0.7rem;color:var(--green);margin-left:4px;">↩</span>`);M('cib-m','✅ Return n as new head. CLL: 5→10→20→30→(5). Circle maintained! O(n).','g');PRG('cib',5,5);},
+]);
+
+// CIE — CLL Insert End
+mkStepper('cie',[
+  ()=>{HL(null);V('cie-v',`${N(10,'cg','head')}${AR()}${N(20,'cc')}${AR()}${CLR(30,'→head')}<span style="font-size:0.7rem;color:var(--green);margin-left:4px;">↩</span>`);M('cie-m','Initial CLL: 10→20→30→(head). Insert 40 at end.');PRG('cie',0,5);},
+  ()=>{HL('cie2');V('cie-v',`${N(40,'cy','newNode')}${AR()}${NL()}`);M('cie-m','createNode(40) — new node [40] allocated.','y');PRG('cie',1,5);},
+  ()=>{HL(['cie4','cie5']);V('cie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','last (found!)')}`);M('cie-m','Find last node: traverse until last→next == head. Found: last = node(30)','y');PRG('cie',2,5);},
+  ()=>{HL('cie6');V('cie-v',`${N(10,'cc','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cy','last')}${AR('g')}${N(40,'cy','newNode')}`);M('cie-m','last→next = n (30 points to 40) ✓ Old last now points to new node.','g');PRG('cie',3,5);},
+  ()=>{HL('cie7');V('cie-v',`${N(10,'cg','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${CLR(40,'→head(10)')}<span style="font-size:0.7rem;color:var(--green);margin-left:4px;">↩</span>`);M('cie-m','n→next = head (40 points to 10) ✓ New node points back to head. Circle closed!','g');PRG('cie',4,5);},
+  ()=>{HL(null);V('cie-v',`${N(10,'cg','head')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${CLR(40,'→head(10)')}<span style="font-size:0.7rem;color:var(--green);margin-left:4px;">↩</span>`);M('cie-m','✅ Return head (unchanged). CLL: 10→20→30→40→(10). O(n)!','g');PRG('cie',5,5);},
+]);
+</script>
+</body>
+</html>
