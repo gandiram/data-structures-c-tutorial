@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Structures in C — Tutorial Index</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c14;
+    --panel: #0e1420;
+    --card: #131d2e;
+    --border: #1e2d45;
+    --cyan: #00e5ff;
+    --green: #00ff88;
+    --yellow: #ffd60a;
+    --purple: #be63f9;
+    --text: #dde4f0;
+    --muted: #4a5e7a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 20px 80px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  header h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    font-weight: 300;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    width: 100%;
+    max-width: 1000px;
+  }
+  .unit-label {
+    grid-column: 1 / -1;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 8px 0 4px;
+    border-bottom: 1px solid var(--border);
+    margin-top: 16px;
+  }
+  a.card {
+    display: block;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 28px 24px;
+    text-decoration: none;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  a.card:hover {
+    border-color: var(--cyan);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0, 229, 255, 0.1);
+  }
+  a.card .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+  a.card h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  a.card p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .cyan  { background: rgba(0,229,255,0.12); color: #00e5ff; }
+  .green { background: rgba(0,255,136,0.12); color: #00ff88; }
+  .yellow{ background: rgba(255,214,10,0.12); color: #ffd60a; }
+  .purple{ background: rgba(190,99,249,0.12); color: #be63f9; }
+
+  footer {
+    margin-top: 80px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-align: center;
+  }
+  footer a { color: var(--cyan); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Data Structures in C</h1>
+  <p>Interactive tutorial pages — Geethanjali College of Engineering &amp; Technology</p>
+</header>
+
+<div class="grid">
+
+  <div class="unit-label">Unit I — Structures &amp; Pointers</div>
+
+  <a class="card" href="Unit-I/Description.html">
+    <span class="tag cyan">Unit I</span>
+    <h2>Data Structures Description</h2>
+    <p>Overview of structures, self-referential structures, bit fields, enumerations, unions, and typedef in C.</p>
+  </a>
+
+  <div class="unit-label">Unit III — Linked Lists</div>
+
+  <a class="card" href="Unit-III/DS_Unit3_Complete.html">
+    <span class="tag green">Unit III</span>
+    <h2>DS Unit III — Complete Animated Guide</h2>
+    <p>Full animated walkthrough of Unit III concepts including singly, doubly, and circular linked lists.</p>
+  </a>
+
+  <a class="card" href="Unit-III/CLL_vs_SLL_upto_InsertionOperation.html">
+    <span class="tag yellow">Unit III</span>
+    <h2>CLL vs SLL — Insertion Operations</h2>
+    <p>Side-by-side animated comparison of Circular and Singly Linked List properties, traversal, createNode, and all insertion operations.</p>
+  </a>
+
+</div>
+
+<footer>
+  <p>Source on <a href="https://github.com/gandiram/data-structures-c-tutorial" target="_blank" rel="noopener">GitHub</a></p>
+</footer>
+
+</body>
+</html>
