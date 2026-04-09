@@ -627,13 +627,13 @@ function P(id){
   });
   window.scrollTo(0,0);
 }
-function ST(page,tab){
+function ST(page,tab,el){
   const pg=document.getElementById(page);
   pg.querySelectorAll('.stab-content').forEach(c=>c.classList.remove('active'));
   pg.querySelectorAll('.stab').forEach(s=>s.classList.remove('active'));
   const tc=document.getElementById(`${page}-${tab}`);
   if(tc) tc.classList.add('active');
-  event.target.classList.add('active');
+  if(el) el.classList.add('active');
 }
 function HL(ids,cls='hl'){
   document.querySelectorAll('.cl.hl,.cl.hl2,.cl.hl3,.cl.hl4')
