@@ -125,7 +125,7 @@ td:first-child{color:var(--text);font-weight:600;}
 <div class="topbar">
   <div class="topbar-logo">CLL vs SLL</div>
   <button class="nav-btn active" onclick="P('overview')">§1 Overview</button>
-  <button class="nav-btn" onclick="P('keyprops')">§1 Key Props</button>
+  <button class="nav-btn" onclick="P('keyprops')">§1b Key Props</button>
   <button class="nav-btn" onclick="P('applications')">§2 Applications</button>
   <button class="nav-btn" onclick="P('createnode')">§3 createNode</button>
   <button class="nav-btn" onclick="P('traverse')">§4 Traverse</button>
@@ -1109,10 +1109,10 @@ mkStepper('sim',[
     V('sim-v',`${N(10,'cg','head, curr')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
     M('sim-m','Allocate [15]. curr = head [10]. for(i=1; i<1; i++) → loop does NOT run. curr stays at [10].','y');PRG('sim',1,4);},
   ()=>{HL('sim7');
-    V('sim-v',`${N(10,'cc','head')}${AR()}${N(20,'cy','curr')}${AR('g')}${N(15,'cy','n→20')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
-    M('sim-m','Step A: n→next = curr→next (15 points to 20). Saves link to 20!','y');PRG('sim',2,4);},
+    V('sim-v',`${N(10,'cy','head, curr')}${AR('g')}${N(15,'cy','n→20')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
+    M('sim-m','Step A: n→next = curr→next (15 points to 20). curr is [10]. Saves link to 20!','y');PRG('sim',2,4);},
   ()=>{HL('sim8');
-    V('sim-v',`${N(10,'cg','head')}${AR('g')}${N(15,'cg','inserted!')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
+    V('sim-v',`${N(10,'cg','head')}${AR('g')}${N(15,'cg','inserted!')}${AR('g')}${N(20,'cg')}${AR('g')}${N(30,'cg')}${AR('g')}${NL()}`);
     M('sim-m','Step B: curr→next = n (10 → 15). ✓ Done! 10→15→20→30→NULL','g');PRG('sim',3,4);},
   ()=>{HL(null);
     V('sim-v',`${N(10,'cc','head')}${AR()}${N(15,'cg','inserted!')}${AR()}${N(20,'cc')}${AR()}${N(30,'cc')}${AR()}${NL()}`);
