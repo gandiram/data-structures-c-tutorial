@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLL vs SLL Delete Operations - Beginner Friendly Notes</title>
+<style>
+:root {
+  --bg: #f4f7fb;
+  --paper: #ffffff;
+  --ink: #1f2937;
+  --muted: #5b6472;
+  --line: #d9e1ec;
+  --accent: #1d4ed8;
+  --accent-soft: #dbeafe;
+  --green: #15803d;
+  --green-soft: #dcfce7;
+  --orange: #c2410c;
+  --orange-soft: #ffedd5;
+  --rose: #be123c;
+  --rose-soft: #ffe4e6;
+  --gold: #a16207;
+  --gold-soft: #fef3c7;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+  color: var(--ink);
+  background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 100%);
+  line-height: 1.6;
+}
+
+.page {
+  width: min(1180px, calc(100% - 32px));
+  margin: 24px auto 56px;
+}
+
+.hero {
+  background: linear-gradient(135deg, #17396f 0%, #24549a 45%, #4c75c6 100%);
+  color: #fff;
+  border-radius: 24px;
+  padding: 36px;
+  box-shadow: var(--shadow);
+}
+
+.hero h1 {
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.1;
+}
+
+.hero p {
+  margin: 0;
+  max-width: 900px;
+  color: rgba(255, 255, 255, 0.93);
+  font-size: 1.02rem;
+}
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.pill {
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 0.92rem;
+}
+
+.card,
+.section {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+
+.section {
+  margin-top: 24px;
+  padding: 28px;
+}
+
+.section h2 {
+  margin: 0 0 14px;
+  font-size: 1.8rem;
+  color: #0f2e6e;
+}
+
+.section h3 {
+  margin: 24px 0 10px;
+  font-size: 1.2rem;
+  color: #153e75;
+}
+
+.section p,
+.section li {
+  color: var(--ink);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.toc {
+  margin-top: 24px;
+  padding: 22px 24px;
+}
+
+.toc ol {
+  margin: 12px 0 0 20px;
+  padding: 0;
+}
+
+.toc li {
+  margin: 6px 0;
+}
+
+.grid-2,
+.grid-3,
+.steps {
+  display: grid;
+  gap: 18px;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.steps {
+  grid-template-columns: 1fr;
+}
+
+.mini-card,
+.step-card,
+.diagram-card,
+.compare-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 18px;
+  background: #fbfdff;
+  page-break-inside: avoid;
+}
+
+.mini-card h4,
+.step-card h4,
+.compare-card h4 {
+  margin: 0 0 8px;
+  color: #184186;
+}
+
+.step-card p {
+  margin: 0 0 12px;
+}
+
+.note-box,
+.difference-box,
+.complexity-box,
+.warning-box {
+  border-radius: 16px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  margin: 14px 0;
+}
+
+.difference-box {
+  background: var(--gold-soft);
+}
+
+.note-box {
+  background: #eefbf4;
+}
+
+.complexity-box {
+  background: #eff6ff;
+}
+
+.warning-box {
+  background: #fff4e5;
+  border-color: #f1cf97;
+}
+
+.code-box {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: 16px;
+  padding: 18px;
+  overflow-x: auto;
+  font-family: Consolas, "Courier New", monospace;
+}
+
+.code-box pre,
+.function-table pre {
+  margin: 0;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+  tab-size: 4;
+}
+
+.code-title {
+  margin: 0 0 8px;
+  color: #bfdbfe;
+  font-weight: 700;
+}
+
+.list-diagram {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  border: 1px dashed #bfd0ea;
+  border-radius: 14px;
+  background: #f8fbff;
+  overflow-x: auto;
+  min-height: 96px;
+}
+
+.node {
+  min-width: 110px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 2px solid #8aa6d8;
+  background: #fff;
+  text-align: center;
+  flex: 0 0 auto;
+}
+
+.node strong {
+  display: block;
+  font-size: 1rem;
+}
+
+.node small {
+  display: block;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.node.head {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.node.active {
+  border-color: var(--orange);
+  background: var(--orange-soft);
+}
+
+.node.delete {
+  border-color: var(--rose);
+  background: var(--rose-soft);
+}
+
+.arrow,
+.back-arrow,
+.null-box {
+  font-weight: 700;
+  color: #31538d;
+  white-space: nowrap;
+}
+
+.back-arrow {
+  color: var(--rose);
+}
+
+.null-box {
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 2px dashed #94a3b8;
+  background: #f8fafc;
+}
+
+.step-tip {
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-left: 4px solid var(--accent);
+  background: #eff6ff;
+  border-radius: 0 12px 12px 0;
+  font-size: 0.95rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+th,
+td {
+  border: 1px solid var(--line);
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+th {
+  background: #eaf2ff;
+  color: #163f7b;
+}
+
+tr:nth-child(even) td {
+  background: #fbfdff;
+}
+
+.function-table {
+  margin: 18px 0 22px;
+}
+
+.function-table .code-head {
+  width: 50%;
+}
+
+.function-table .code-cell {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+.footer {
+  margin-top: 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+@media (max-width: 720px) {
+  .page {
+    width: calc(100% - 20px);
+    margin: 10px auto 28px;
+  }
+
+  .hero,
+  .section {
+    padding: 20px;
+    border-radius: 18px;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+  }
+
+  .page {
+    width: 100%;
+    margin: 0;
+  }
+
+  .hero,
+  .section,
+  .card,
+  .mini-card,
+  .step-card,
+  .diagram-card,
+  .compare-card {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <h1>CLL vs SLL Delete Operations</h1>
+      <p>This document is created by analyzing the attached source files <strong>cll_new.c</strong> and <strong>sll.c</strong> and presenting the delete operations in the same beginner-friendly style as the earlier PDF. Each operation is explained step by step with separate horizontal diagrams, clear code comparison tables, proper indentation, and print-safe spacing.</p>
+      <div class="hero-meta">
+        <span class="pill">Topics: delete at begin, delete in middle, delete at end</span>
+        <span class="pill">Compared: Circular Linked List vs Singly Linked List</span>
+        <span class="pill">Based on source files: cll_new.c and sll.c</span>
+      </div>
+    </header>
+
+    <section class="card toc">
+      <h2>Document Flow</h2>
+      <p class="muted">Read in this order for easiest understanding.</p>
+      <ol>
+        <li>What makes delete operations different in CLL and SLL</li>
+        <li>Source-code observations from the attached files</li>
+        <li>Function-wise comparison table</li>
+        <li>deleteBegin() step by step</li>
+        <li>deleteVal() as delete in middle step by step</li>
+        <li>deleteEnd() step by step</li>
+        <li>Quick revision summary</li>
+      </ol>
+    </section>
+
+    <section class="section" id="basics">
+      <h2>1. Delete Operation Basics</h2>
+      <p>Deleting a node means removing that node from the list and then freeing its memory. The main idea is simple, but the pointer updates are different in CLL and SLL.</p>
+
+      <div class="grid-3">
+        <div class="mini-card">
+          <h4>SLL End Rule</h4>
+          <p>The last node points to <strong>NULL</strong>.</p>
+        </div>
+        <div class="mini-card">
+          <h4>CLL End Rule</h4>
+          <p>The last node points back to <strong>HEAD</strong>.</p>
+        </div>
+        <div class="mini-card">
+          <h4>Delete Impact</h4>
+          <p>In CLL, you often need one extra relink so the circle remains closed.</p>
+        </div>
+      </div>
+
+      <div class="difference-box">
+        <strong>Main difference:</strong> In SLL, deletion usually reconnects the chain toward <strong>NULL</strong>. In CLL, deletion must preserve the circular connection back to <strong>HEAD</strong>.
+      </div>
+    </section>
+
+    <section class="section" id="source-analysis">
+      <h2>2. Source-Code Observations</h2>
+      <p>The new PDF is based on the actual delete functions found in the attached C files.</p>
+
+      <div class="warning-box">
+        <strong>Important source behavior:</strong> The function <strong>deleteVal(int key)</strong> in both files works like "delete by value in middle / non-head deletion". In the attached source code, deleting the head node by value is not handled separately. This document therefore explains <strong>delete in middle</strong> using a middle node example, which matches the code behavior more safely.
+      </div>
+
+      <div class="grid-2">
+        <div class="mini-card">
+          <h4>CLL source observations</h4>
+          <ul>
+            <li><strong>deleteBegin()</strong> finds the last node and reconnects it to the new head.</li>
+            <li><strong>deleteEnd()</strong> uses the second-last node to remove the last node.</li>
+            <li><strong>deleteVal()</strong> uses <strong>prev</strong> and <strong>curr</strong> inside a circular traversal.</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>SLL source observations</h4>
+          <ul>
+            <li><strong>deleteBegin()</strong> simply moves head to the next node.</li>
+            <li><strong>deleteEnd()</strong> uses <strong>prev</strong> and <strong>curr</strong> to unlink the tail.</li>
+            <li><strong>deleteVal()</strong> also uses <strong>prev</strong> and <strong>curr</strong> to bypass the target node.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="function-table">
+      <h2>3. Function-Wise CLL vs SLL Comparison</h2>
+      <p>These tables compare the delete functions directly, one function at a time, so the PDF remains clear and no code gets cut on the right side.</p>
+
+      <div class="function-table">
+        <table>
+          <thead>
+            <tr>
+              <th colspan="2">deleteBegin()</th>
+            </tr>
+            <tr>
+              <th class="code-head">CLL - cll_new.c</th>
+              <th class="code-head">SLL - sll.c</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="code-cell"><pre>void deleteBegin() {
+    if (head == NULL) {
+        printf("CLL is Empty\n");
+        return;
+    }
+    if (head-&gt;next == head) {
+        head = NULL;
+        return;
+    }
+    struct Node *last = head;
+    while (last-&gt;next != head)
+        last = last-&gt;next;
+    last-&gt;next = head-&gt;next;
+    struct Node *temp = head;
+    head = head-&gt;next;
+    free(temp);
+}</pre></td>
+              <td class="code-cell"><pre>void deleteBegin() {
+    if (head == NULL) {
+        printf("Empty list\n");
+        return;
+    }
+    struct Node *temp = head;
+    head = head-&gt;next;
+    free(temp);
+}</pre></td>
+            </tr>
+            <tr>
+              <th colspan="2">Main Difference</th>
+            </tr>
+            <tr>
+              <td colspan="2">CLL must reconnect the last node to the new head so the circle is preserved. SLL only moves the head forward and frees the old head.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="function-table">
+        <table>
+          <thead>
+            <tr>
+              <th colspan="2">deleteVal(int key) - delete in middle</th>
+            </tr>
+            <tr>
+              <th class="code-head">CLL - cll_new.c</th>
+              <th class="code-head">SLL - sll.c</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="code-cell"><pre>void deleteVal(int key) {
+    struct Node *curr = head, *prev = NULL;
+    do {
+        if (curr-&gt;data == key)
+            break;
+        prev = curr;
+        curr = curr-&gt;next;
+    } while (curr != head);
+
+    if (curr == head &amp;&amp; curr-&gt;data != key) {
+        printf("not found\n");
+        return;
+    }
+    prev-&gt;next = curr-&gt;next;
+    free(curr);
+}</pre></td>
+              <td class="code-cell"><pre>void deleteVal(int key) {
+    struct Node *curr = head, *prev = NULL;
+    while (curr != NULL &amp;&amp; curr-&gt;data != key) {
+        prev = curr;
+        curr = curr-&gt;next;
+    }
+    if (curr == NULL) {
+        printf("Not found");
+        return;
+    }
+    prev-&gt;next = curr-&gt;next;
+    free(curr);
+}</pre></td>
+            </tr>
+            <tr>
+              <th colspan="2">Main Difference</th>
+            </tr>
+            <tr>
+              <td colspan="2">The bypass step is similar in both lists. The search loop differs because CLL searches in a circle and must detect when it returns to HEAD, while SLL stops at NULL.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="function-table">
+        <table>
+          <thead>
+            <tr>
+              <th colspan="2">deleteEnd()</th>
+            </tr>
+            <tr>
+              <th class="code-head">CLL - cll_new.c</th>
+              <th class="code-head">SLL - sll.c</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="code-cell"><pre>void deleteEnd() {
+    if (head == NULL) {
+        printf("CLL is empty\n");
+        return;
+    }
+    if (head-&gt;next == head) {
+        free(head);
+        head = NULL;
+        return;
+    }
+    struct Node *sec_last = head;
+    while (sec_last-&gt;next-&gt;next != head)
+        sec_last = sec_last-&gt;next;
+    struct Node *temp = sec_last-&gt;next;
+    sec_last-&gt;next = temp-&gt;next;
+    free(temp);
+}</pre></td>
+              <td class="code-cell"><pre>void deleteEnd() {
+    if (head == NULL)
+        return;
+    if (head-&gt;next == NULL) {
+        free(head);
+        head = NULL;
+        return;
+    }
+    struct Node *prev = NULL, *curr = head;
+    while (curr-&gt;next != NULL) {
+        prev = curr;
+        curr = curr-&gt;next;
+    }
+    prev-&gt;next = NULL;
+    free(curr);
+}</pre></td>
+            </tr>
+            <tr>
+              <th colspan="2">Main Difference</th>
+            </tr>
+            <tr>
+              <td colspan="2">CLL uses the second-last node and reconnects it to HEAD. SLL uses prev and curr, then makes the new tail point to NULL.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Operation</th>
+              <th>Purpose and Key Rule</th>
+              <th>Complexity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>deleteBegin()</strong></td>
+              <td>Delete the first node. CLL must reconnect the last node to the new head. SLL only advances head.</td>
+              <td>CLL: O(n)<br>SLL: O(1)</td>
+            </tr>
+            <tr>
+              <td><strong>deleteVal()</strong></td>
+              <td>Delete a target value from the middle. Both bypass the target using prev and curr. CLL loops until HEAD, SLL loops until NULL.</td>
+              <td>CLL: O(n)<br>SLL: O(n)</td>
+            </tr>
+            <tr>
+              <td><strong>deleteEnd()</strong></td>
+              <td>Delete the last node. CLL reconnects the second-last node to HEAD. SLL reconnects it to NULL.</td>
+              <td>CLL: O(n)<br>SLL: O(n)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="delete-begin">
+      <h2>4. deleteBegin()</h2>
+      <div class="difference-box">
+        <strong>Main difference:</strong> SLL removes the head and moves forward. CLL removes the head, moves forward, and also repairs the circular link from the last node to the new head.
+      </div>
+      <div class="complexity-box">
+        <strong>Time Complexity:</strong> CLL = O(n), SLL = O(1)</div>
+
+      <h3>Example Used</h3>
+      <div class="diagram-card">
+        <div class="list-diagram">
+          <div class="node head delete"><strong>10</strong><small>head to delete</small></div>
+          <div class="arrow">next -&gt;</div>
+          <div class="node"><strong>20</strong><small>new head later</small></div>
+          <div class="arrow">next -&gt;</div>
+          <div class="node"><strong>30</strong><small>last node</small></div>
+          <div class="back-arrow">next -&gt; HEAD</div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <article class="step-card">
+          <h4>Step 1: Check whether the list is empty</h4>
+          <p>If <strong>head == NULL</strong>, deletion is not possible.</p>
+          <div class="list-diagram"><div class="null-box">head = NULL</div></div>
+        </article>
+        <article class="step-card">
+          <h4>Step 2: Handle single-node case</h4>
+          <p>In CLL, if <strong>head-&gt;next == head</strong>, that one node is the whole circle.</p>
+          <div class="list-diagram">
+            <div class="node head delete"><strong>10</strong><small>only node</small></div>
+            <div class="back-arrow">next -&gt; same node</div>
+          </div>
+        </article>
+        <article class="step-card">
+          <h4>Step 3: Find the last node in CLL</h4>
+          <p>Move <strong>last</strong> until <strong>last-&gt;next == head</strong>.</p>
+          <div class="list-diagram">
+            <div class="node head delete"><strong>10</strong><small>old head</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node"><strong>20</strong><small></small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node active"><strong>30</strong><small>last pointer here</small></div>
+            <div class="back-arrow">30 points to 10</div>
+          </div>
+        </article>
+        <article class="step-card">
+          <h4>Step 4: Reconnect the circle</h4>
+          <p>Set <strong>last-&gt;next = head-&gt;next</strong>. So 30 now points to 20.</p>
+          <div class="list-diagram">
+            <div class="node delete"><strong>10</strong><small>about to remove</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node head"><strong>20</strong><small>new head target</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node"><strong>30</strong><small>last</small></div>
+            <div class="back-arrow">30 now points to 20</div>
+          </div>
+        </article>
+        <article class="step-card">
+          <h4>Step 5: Move head and free the old node</h4>
+          <p>Set <strong>temp = head</strong>, then <strong>head = head-&gt;next</strong>, then <strong>free(temp)</strong>.</p>
+          <div class="list-diagram">
+            <div class="node head"><strong>20</strong><small>new HEAD</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node"><strong>30</strong><small>last</small></div>
+            <div class="back-arrow">next -&gt; HEAD</div>
+          </div>
+          <div class="step-tip">Final CLL result: 20 -&gt; 30 -&gt; HEAD</div>
+        </article>
+      </div>
+
+      <h3>SLL Comparison</h3>
+      <div class="compare-card">
+        <div class="list-diagram">
+          <div class="node delete"><strong>10</strong><small>old head</small></div>
+          <div class="arrow">next -&gt;</div>
+          <div class="node head"><strong>20</strong><small>new head</small></div>
+          <div class="arrow">next -&gt;</div>
+          <div class="node"><strong>30</strong><small>tail</small></div>
+          <div class="arrow">next -&gt;</div>
+          <div class="null-box">NULL</div>
+        </div>
+        <p class="muted">SLL only updates head to the next node, then frees the old head.</p>
+      </div>
+    </section>
+
+    <section class="section" id="delete-middle">
+      <h2>5. deleteVal(int key) as Delete in Middle</h2>
+      <div class="warning-box">
+        <strong>Source-based note:</strong> The attached code uses <strong>deleteVal(int key)</strong> for deletion in the middle. This explanation uses the example <strong>delete 20</strong> from the list 10, 20, 30.
+      </div>
+      <div class="difference-box">
+        <strong>Main difference:</strong> The bypass step is almost the same in both lists. The search loop differs because CLL must know when a full circle has been completed.
+      </div>
+      <div class="complexity-box">
+        <strong>Time Complexity:</strong> CLL = O(n), SLL = O(n)</div>
+
+      <div class="steps">
+        <article class="step-card">
+          <h4>Step 1: Start with prev = NULL and curr = head</h4>
+          <p>At first, curr points to 10.</p>
+          <div class="list-diagram">
+            <div class="node head active"><strong>10</strong><small>curr</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node delete"><strong>20</strong><small>target key</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node"><strong>30</strong><small></small></div>
+            <div class="back-arrow">next -&gt; HEAD</div>
+          </div>
+        </article>
+        <article class="step-card">
+          <h4>Step 2: Move until the key is found</h4>
+          <p>After one move, prev becomes 10 and curr becomes 20.</p>
+          <div class="list-diagram">
+            <div class="node head"><strong>10</strong><small>prev</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node active delete"><strong>20</strong><small>curr found key</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node"><strong>30</strong><small></small></div>
+            <div class="back-arrow">next -&gt; HEAD</div>
+          </div>
+        </article>
+        <article class="step-card">
+          <h4>Step 3: Bypass the target node</h4>
+          <p>Set <strong>prev-&gt;next = curr-&gt;next</strong>. So 10 now points directly to 30.</p>
+          <div class="list-diagram">
+            <div class="node head"><strong>10</strong><small>prev</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node"><strong>30</strong><small>curr next</small></div>
+            <div class="back-arrow">next -&gt; HEAD</div>
+            <div class="node delete"><strong>20</strong><small>detached target</small></div>
+          </div>
+        </article>
+        <article class="step-card">
+          <h4>Step 4: Free the removed node</h4>
+          <p>Call <strong>free(curr)</strong>.</p>
+          <div class="list-diagram">
+            <div class="node head"><strong>10</strong><small>HEAD</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node"><strong>30</strong><small>last node</small></div>
+            <div class="back-arrow">next -&gt; HEAD</div>
+          </div>
+          <div class="step-tip">Final CLL result after deleting 20: 10 -&gt; 30 -&gt; HEAD</div>
+        </article>
+      </div>
+
+      <h3>SLL Comparison</h3>
+      <div class="compare-card">
+        <div class="list-diagram">
+          <div class="node head"><strong>10</strong><small>prev</small></div>
+          <div class="arrow">next -&gt;</div>
+          <div class="node delete"><strong>20</strong><small>target removed</small></div>
+          <div class="arrow">next -&gt;</div>
+          <div class="node"><strong>30</strong><small>tail</small></div>
+          <div class="arrow">next -&gt;</div>
+          <div class="null-box">NULL</div>
+        </div>
+        <p class="muted">In SLL, the bypass is similar, but the chain still ends at NULL instead of returning to HEAD.</p>
+      </div>
+    </section>
+
+    <section class="section" id="delete-end">
+      <h2>6. deleteEnd()</h2>
+      <div class="difference-box">
+        <strong>Main difference:</strong> CLL must reconnect the second-last node to HEAD. SLL reconnects the second-last node to NULL.
+      </div>
+      <div class="complexity-box">
+        <strong>Time Complexity:</strong> CLL = O(n), SLL = O(n)</div>
+
+      <div class="steps">
+        <article class="step-card">
+          <h4>Step 1: Start from the list</h4>
+          <p>Example list: 10, 20, 30. We want to delete the last node 30.</p>
+          <div class="list-diagram">
+            <div class="node head"><strong>10</strong><small>HEAD</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node active"><strong>20</strong><small>second-last later</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node delete"><strong>30</strong><small>last to delete</small></div>
+            <div class="back-arrow">next -&gt; HEAD</div>
+          </div>
+        </article>
+        <article class="step-card">
+          <h4>Step 2: Find the second-last node in CLL</h4>
+          <p>The code uses <strong>sec_last</strong> and moves until <strong>sec_last-&gt;next-&gt;next == head</strong>.</p>
+          <div class="list-diagram">
+            <div class="node head"><strong>10</strong><small></small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node active"><strong>20</strong><small>sec_last</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node delete"><strong>30</strong><small>temp</small></div>
+            <div class="back-arrow">30 points to 10</div>
+          </div>
+        </article>
+        <article class="step-card">
+          <h4>Step 3: Store the last node in temp</h4>
+          <p>Set <strong>temp = sec_last-&gt;next</strong>. So temp is 30.</p>
+          <div class="list-diagram">
+            <div class="node"><strong>20</strong><small>sec_last</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node delete"><strong>30</strong><small>temp</small></div>
+          </div>
+        </article>
+        <article class="step-card">
+          <h4>Step 4: Reconnect second-last node</h4>
+          <p>Set <strong>sec_last-&gt;next = temp-&gt;next</strong>. Because temp-&gt;next is HEAD, 20 now points to 10.</p>
+          <div class="list-diagram">
+            <div class="node head"><strong>10</strong><small>HEAD</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node"><strong>20</strong><small>new last</small></div>
+            <div class="back-arrow">next -&gt; HEAD</div>
+            <div class="node delete"><strong>30</strong><small>detached</small></div>
+          </div>
+        </article>
+        <article class="step-card">
+          <h4>Step 5: Free the old last node</h4>
+          <p>Call <strong>free(temp)</strong>.</p>
+          <div class="list-diagram">
+            <div class="node head"><strong>10</strong><small>HEAD</small></div>
+            <div class="arrow">next -&gt;</div>
+            <div class="node"><strong>20</strong><small>last node now</small></div>
+            <div class="back-arrow">next -&gt; HEAD</div>
+          </div>
+          <div class="step-tip">Final CLL result after deleteEnd: 10 -&gt; 20 -&gt; HEAD</div>
+        </article>
+      </div>
+
+      <h3>SLL Comparison</h3>
+      <div class="compare-card">
+        <div class="list-diagram">
+          <div class="node head"><strong>10</strong><small></small></div>
+          <div class="arrow">next -&gt;</div>
+          <div class="node"><strong>20</strong><small>new tail</small></div>
+          <div class="arrow">next -&gt;</div>
+          <div class="null-box">NULL</div>
+          <div class="node delete"><strong>30</strong><small>removed tail</small></div>
+        </div>
+        <p class="muted">In SLL, the second-last node simply becomes the new tail and points to NULL.</p>
+      </div>
+    </section>
+
+    <section class="section" id="summary">
+      <h2>7. Quick Summary</h2>
+      <div class="grid-2">
+        <div class="mini-card">
+          <h4>What to remember</h4>
+          <ul>
+            <li>CLL deletion must preserve the circular link.</li>
+            <li>SLL deletion preserves a straight chain ending in NULL.</li>
+            <li>deleteBegin is simpler in SLL than CLL.</li>
+            <li>deleteEnd needs traversal in both lists.</li>
+            <li>deleteVal uses bypass logic in both lists.</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h4>Complexity recap</h4>
+          <ul>
+            <li>deleteBegin: CLL O(n), SLL O(1)</li>
+            <li>deleteVal: CLL O(n), SLL O(n)</li>
+            <li>deleteEnd: CLL O(n), SLL O(n)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>Print-safe note:</strong> This file uses narrow comparison tables, separate diagrams, and isolated section cards so no code or explanation should get cut off on the right side when exported to PDF.
+      </div>
+    </section>
+
+    <div class="footer">
+      Revised beginner-friendly delete-operations notes based on cll_new.c and sll.c
+    </div>
+  </div>
+</body>
+</html>
